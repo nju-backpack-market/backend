@@ -1,5 +1,11 @@
 language: java
-
 jdk: oraclejdk8
-
 before_install: chmod +x ./mvnw
+before_deploy: "./mvnw package"
+deploy:
+  provider: releases
+  api_key:
+    secure: F6VqknU6JtWWQw9P5H5vn4ScTl0quXrk37Ov92+Sv+rn+7S7cfPT5iOkDYxxMFNG+Y7AE6XFcW/C43J67xLhCN/DZMLgUipH+YbkRzuX012S07rYGqvKZ51ieQJRVF5dD5/VSCJHDePBRR80GGqFLyBDqa/Zj/n2hClJDMZVG+qlHmNNHGKKAy4pVuek1YK7NVabtEgdtBq9zzXtidg8mUlpA+2mcFZ68xGPt9FmpG+g/CPL7O7OE1ujmJUkKi8Vq+z6HRx3/intuiPlw03IjPrx9MJxTFPOWDplIG0fSfaosKu+ul70/CE/XG06Yl0EeLJfCw4vogNX/vyGBJH4zj+s85+kRxhinuTlXvPX0QgUtEHuxAI86j2TfD9Dt19TLxBctU/O2SEWpT/HLHzyY31BWuoaR1d0O+iKYI0yBEPDfsyOWUfHHslrQvrf9GeuJsNz90dUCpRF8hoGuHtuLcWm/TK0BaTNbhQ9QiouqYpbDYy4WWtct7estAMH/qS/MFFBPDVsteyqVFuQtv+2mVG+UoRxTMwbweshBmxweNg18X6umDaq3PATAXjkK7r1TqqlRvRnTyq16v5BKbbsvltHiM7GRsa/TJaSx2OsNPNx8st6RrAm0j3Xa81D/hAWv2FncdUSIkubyDSVlxyNsdzIvMQ7s+daRJU9bHr3Ogw=
+  file: target/backend.jar
+  on:
+      tags: true
