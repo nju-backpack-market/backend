@@ -17,6 +17,7 @@ deploy:
   on:
     tags: true
 after_success:
+    - chmod 0600 ./id_rsa
     - ssh -fn -i ./id_rsa root@123.206.119.37 "/root/dplbak.sh"
 addons:
   ssh_known_hosts:
