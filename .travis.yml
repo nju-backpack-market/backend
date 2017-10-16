@@ -5,7 +5,7 @@ before_install:
   -in id_rsa.enc -out id_rsa -d
 - chmod +x ./mvnw
 before_deploy:
-- "./mvnw package -DskipTest=true"
+- ./mvnw package -DskipTest=true
 - chmod +x ./remote_dpl.sh
 deploy:
 - provider: releases
@@ -16,9 +16,8 @@ deploy:
   overwrite: true
   on:
     tags: true
-- provider: script
-  skip_cleanup: true
-  script: "./remote_dpl.sh"
+after_success:
+    - ./remote_dpl.sh
 addons:
   ssh_known_hosts:
   - 123.206.119.37
