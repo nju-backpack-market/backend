@@ -6,7 +6,6 @@ before_install:
 - chmod +x ./mvnw
 before_deploy:
 - ./mvnw package -DskipTest=true
-- chmod +x ./remote_dpl.sh
 deploy:
 - provider: releases
   api_key:
