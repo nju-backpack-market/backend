@@ -17,7 +17,7 @@ deploy:
   on:
     tags: true
 after_success:
-    - ./remote_dpl.sh
+    - ssh -fn -i ./id_rsa root@123.206.119.37 "/root/dplbak.sh"
 addons:
   ssh_known_hosts:
   - 123.206.119.37
