@@ -5,7 +5,7 @@ package cn.sansotta.market.domain
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-data class Order @JvmOverloads constructor(
+data class Order(
         /**
          * Order's id.
          * */
@@ -13,13 +13,7 @@ data class Order @JvmOverloads constructor(
         /**
          * Shopping list of order.
          * */
-        var shoppingList: ShoppingList,
-        /**
-         * Final price of order.
-         *
-         * It can differ from the total price of shopping list, for some promotion strategy.
-         * */
-        var strikePrice: Int,
+        var shoppingList: Bill,
         /**
          * Order's state.
          * */
@@ -29,5 +23,5 @@ data class Order @JvmOverloads constructor(
          * */
         var deliveryInfo: DeliveryInfo
 ) {
-    constructor() : this(-1, ShoppingList(), 0, OrderState.CREATED, DeliveryInfo())
+    constructor() : this(-1, Bill(), OrderState.CREATED, DeliveryInfo())
 }

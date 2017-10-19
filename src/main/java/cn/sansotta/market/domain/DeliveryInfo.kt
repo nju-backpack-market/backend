@@ -5,7 +5,7 @@ package cn.sansotta.market.domain
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-data class DeliveryInfo @JvmOverloads constructor(
+data class DeliveryInfo (
         /**
          * Customer's name.
          * */
