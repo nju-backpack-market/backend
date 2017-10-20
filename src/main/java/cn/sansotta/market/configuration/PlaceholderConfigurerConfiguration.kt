@@ -14,18 +14,22 @@ import javax.crypto.SecretKey
  */
 @Configuration
 class PlaceholderConfigurerConfiguration {
-    @Bean("propertySourcesPlaceholderConfigurer")
-    @Profile("dev_local")
-    fun devLocal()
-            = EncryptedPropertyConfigurer(readKey(readFromClasspath("des_key")))
+    companion object {
+        @Bean("propertySourcesPlaceholderConfigurer")
+        @Profile("dev_remote")
+        @JvmStatic
+        fun devLocal()
+                = EncryptedPropertyConfigurer(readKey(readFromClasspath("des_key")))
 
-    @Bean("propertySourcesPlaceholderConfigurer")
-    @Profile("dev_remote")
-    fun devRemote()
-            = EncryptedPropertyConfigurer(readKey(readFromFile("/root/des_key")))
+        @Bean("propertySourcesPlaceholderConfigurer")
+        @Profile("dev_deploy")
+        @JvmStatic
+        fun devRemote()
+                = EncryptedPropertyConfigurer(readKey(readFromFile("/root/des_key")))
 
-    private fun readKey(stream: InputStream) =
-            ObjectInputStream(stream).use { it.readObject() as SecretKey }
+        private fun readKey(stream: InputStream) =
+                ObjectInputStream(stream).use { it.readObject() as SecretKey }
+    }
 }
 
 
