@@ -20,7 +20,7 @@ class PlaceholderConfigurerConfiguration {
             = EncryptedPropertyConfigurer(readKey(readFromClasspath("des_key")))
 
     @Bean("propertySourcesPlaceholderConfigurer")
-    @Profile("dev_local")
+    @Profile("dev_remote")
     fun devRemote()
             = EncryptedPropertyConfigurer(readKey(readFromFile("/root/des_key")))
 

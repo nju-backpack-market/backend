@@ -1,16 +1,16 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <!DOCTYPE mapper PUBLIC
-        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mybatis.mapper.OrderMapper">
-    <resultMap id="id" type="cn.sansotta.market.domain.Order">
+    <resultMap id="orderMap" type="cn.sansotta.market.domain.Order">
         <result property="id" column="id"/>
-
-
     </resultMap>
 
-    <select id="selectOrderById" resultType="Order">
-        select * from order where id = #{id}
+    <select id="selectOrderById" resultType="Order" resultMap="orderMap">
+        SELECT *
+        FROM order_t
+        WHERE id = #{id}
     </select>
 
 </mapper>
