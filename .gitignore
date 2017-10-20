@@ -1,6 +1,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+src/main/resources/des_key
 ### STS ###
 .apt_generated
 .classpath
