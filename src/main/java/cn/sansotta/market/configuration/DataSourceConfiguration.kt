@@ -1,4 +1,4 @@
-package cn.sansotta.market.common
+package cn.sansotta.market.configuration
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.annotation.EnableTransactionManagement

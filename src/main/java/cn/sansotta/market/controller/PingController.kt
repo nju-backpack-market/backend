@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class PingController {
     @GetMapping("/ping")
-    fun ping() = "Hello!"
+    fun ping() = "Hello"
 }
