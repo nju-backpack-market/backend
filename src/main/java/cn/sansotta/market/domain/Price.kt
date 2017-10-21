@@ -41,4 +41,5 @@ data class Price(
     constructor() : this(0, null, null)
 
     constructor(origin: Int) : this(origin, null, null)
+
 }

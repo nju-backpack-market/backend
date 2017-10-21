@@ -5,8 +5,8 @@ import cn.sansotta.market.common.readFromFile
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.core.ConfigurableObjectInputStream
 import java.io.InputStream
-import java.io.ObjectInputStream
 import javax.crypto.SecretKey
 
 /**
@@ -28,7 +28,8 @@ class PlaceholderConfigurerConfiguration {
                 = EncryptedPropertyConfigurer(readKey(readFromFile("/root/des_key")))
 
         private fun readKey(stream: InputStream) =
-                ObjectInputStream(stream).use { it.readObject() as SecretKey }
+                ConfigurableObjectInputStream(stream, Thread.currentThread().contextClassLoader)
+                        .readObject() as SecretKey
     }
 }
 
