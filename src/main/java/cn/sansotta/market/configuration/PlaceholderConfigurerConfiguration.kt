@@ -5,8 +5,8 @@ import cn.sansotta.market.common.readFromFile
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.core.ConfigurableObjectInputStream
 import java.io.InputStream
-import java.io.ObjectInputStream
 import javax.crypto.SecretKey
 
 /**
@@ -14,18 +14,23 @@ import javax.crypto.SecretKey
  */
 @Configuration
 class PlaceholderConfigurerConfiguration {
-    @Bean("propertySourcesPlaceholderConfigurer")
-    @Profile("dev_local")
-    fun devLocal()
-            = EncryptedPropertyConfigurer(readKey(readFromClasspath("des_key")))
+    companion object {
+        @Bean("propertySourcesPlaceholderConfigurer")
+        @Profile("dev_remote")
+        @JvmStatic
+        fun devLocal()
+                = EncryptedPropertyConfigurer(readKey(readFromClasspath("des_key")))
 
-    @Bean("propertySourcesPlaceholderConfigurer")
-    @Profile("dev_local")
-    fun devRemote()
-            = EncryptedPropertyConfigurer(readKey(readFromFile("/root/des_key")))
+        @Bean("propertySourcesPlaceholderConfigurer")
+        @Profile("dev_deploy")
+        @JvmStatic
+        fun devRemote()
+                = EncryptedPropertyConfigurer(readKey(readFromFile("/root/des_key")))
 
-    private fun readKey(stream: InputStream) =
-            ObjectInputStream(stream).use { it.readObject() as SecretKey }
+        private fun readKey(stream: InputStream) =
+                ConfigurableObjectInputStream(stream, Thread.currentThread().contextClassLoader)
+                        .readObject() as SecretKey
+    }
 }
 
 

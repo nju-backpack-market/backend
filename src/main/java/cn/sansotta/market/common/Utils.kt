@@ -13,3 +13,4 @@ fun ObjectMapper.getCollectionType(collectionType: Class<out Collection<*>>, ele
 
 inline fun <reified C : Collection<*>, reified E>
         ObjectMapper.getCollectionType() = getCollectionType(C::class.java, E::class.java)
+
