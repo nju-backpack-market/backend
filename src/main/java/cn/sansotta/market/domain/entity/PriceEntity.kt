@@ -8,7 +8,7 @@ package cn.sansotta.market.domain.entity
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 data class PriceEntity(
-        val origin: Int,
-        val actual: Int,
+        val origin: Double,
+        val actual: Double,
         val reason: String
 )

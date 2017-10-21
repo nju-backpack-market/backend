@@ -10,7 +10,7 @@ package cn.sansotta.market.domain.entity
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 data class ShoppingItemEntity(
-        val pid: Int,
+        val pid: Long,
         val count: Int,
         val unitPrice: PriceEntity,
         val subtotalPrice: PriceEntity

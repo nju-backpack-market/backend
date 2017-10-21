@@ -10,5 +10,23 @@
         <typeAlias alias="LinkedHashMap" type="java.util.LinkedHashMap"/>
         <typeAlias alias="ArrayList" type="java.util.ArrayList"/>
         <typeAlias alias="LinkedList" type="java.util.LinkedList"/>
+        <package name="cn.sansotta.market.domain.entity"/>
     </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${spring.datasource.driver-class-name}"/>
+                <property name="url" value="${spring.datasource.url}"/>
+                <property name="username" value="${spring.datasource.username}"/>
+                <property name="password" value="${spring.datasource.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="cn.sansotta.market.mapper.ProductMapper"/>
+    </mappers>
+
 </configuration>

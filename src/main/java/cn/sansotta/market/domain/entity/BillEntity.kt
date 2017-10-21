@@ -13,7 +13,7 @@ import cn.sansotta.market.domain.ShoppingItem
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 data class BillEntity(
-        val orderId: Int,
+        val orderId: Long,
         val shoppingList: List<ShoppingItem>,
         val totalPrice: Price
 )

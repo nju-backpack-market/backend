@@ -13,7 +13,7 @@ import org.apache.ibatis.type.BaseTypeHandler
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 data class OrderEntity(
-        var id: Int,
+        var id: Long,
         var shoppingList: BillEntity,
         var state: OrderState,
         var deliveryInfo: DeliveryInfoEntity
