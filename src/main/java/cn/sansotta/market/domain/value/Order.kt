@@ -1,4 +1,7 @@
-package cn.sansotta.market.domain
+package cn.sansotta.market.domain.value
+
+import cn.sansotta.market.domain.ValueObject
+import cn.sansotta.market.domain.entity.OrderEntity
 
 /**
  * Order.
@@ -9,11 +12,11 @@ data class Order(
         /**
          * Order's id.
          * */
-        var id: Int,
+        var id: Long,
         /**
-         * Shopping list of order.
+         * Bill of order.
          * */
-        var shoppingList: Bill,
+        var bill: Bill,
         /**
          * Order's state.
          * */
@@ -22,6 +25,10 @@ data class Order(
          * Delivery information of order.
          * */
         var deliveryInfo: DeliveryInfo
-) {
+) : ValueObject<OrderEntity> {
     constructor() : this(-1, Bill(), OrderState.CREATED, DeliveryInfo())
+
+    constructor(po: OrderEntity) : this(po.id, Bill(po.bill), po.state, DeliveryInfo(po.deliveryInfo))
+
+    override fun toEntity() = OrderEntity(id, bill.toEntity(), state, deliveryInfo.toEntity())
 }

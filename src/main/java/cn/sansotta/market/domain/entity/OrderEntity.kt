@@ -1,6 +1,6 @@
 package cn.sansotta.market.domain.entity
 
-import cn.sansotta.market.domain.OrderState
+import cn.sansotta.market.domain.value.OrderState
 import org.apache.ibatis.type.BaseTypeHandler
 
 /**
@@ -14,7 +14,7 @@ import org.apache.ibatis.type.BaseTypeHandler
  */
 data class OrderEntity(
         var id: Long,
-        var shoppingList: BillEntity,
+        var bill: BillEntity,
         var state: OrderState,
         var deliveryInfo: DeliveryInfoEntity
 )

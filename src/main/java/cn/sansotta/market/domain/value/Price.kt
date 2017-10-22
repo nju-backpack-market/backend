@@ -1,8 +1,8 @@
-package cn.sansotta.market.domain
+package cn.sansotta.market.domain.value
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect
+import cn.sansotta.market.domain.ValueObject
+import cn.sansotta.market.domain.entity.PriceEntity
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * Price.
@@ -23,23 +23,20 @@ data class Price(
          * * the origin subtotal totalPrice is $600, actual subtotal totalPrice is $240
          * * the origin total totalPrice is $600, actual subtotal totalPrice is $220
          * */
-        var origin: Int,
+        var origin: Double,
         /**
          * Actual totalPrice. Null if no discount.
          *
          * See [origin]'s document for detail.
          * */
         @get:JsonInclude(JsonInclude.Include.NON_NULL)
-        var actual: Int?,
-        /**
-         * Reason for discount. Null if no discount.
-         * */
-        @get:JsonInclude(JsonInclude.Include.NON_NULL)
-        @get:JsonProperty("discount_reason")
-        var reason: String?
-) {
-    constructor() : this(0, null, null)
+        var actual: Double?
+) : ValueObject<PriceEntity> {
+    constructor() : this(0.0, null)
 
-    constructor(origin: Int) : this(origin, null, null)
+    constructor(origin: Double) : this(origin, null)
 
+    constructor(po: PriceEntity) : this(po.origin, po.actual)
+
+    override fun toEntity() = PriceEntity(origin, actual)
 }

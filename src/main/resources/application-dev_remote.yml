@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    username: dev
+    password: "{{enc:67 58 88 68 -95 25 80 73 21 -78 111 -55 -10 -37 86 122"
+    url: jdbc:mysql://123.206.119.37:3306/test
+    driver-class-name: com.mysql.cj.jdbc.Driver

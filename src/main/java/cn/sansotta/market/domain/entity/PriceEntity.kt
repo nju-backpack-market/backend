@@ -9,6 +9,5 @@ package cn.sansotta.market.domain.entity
  */
 data class PriceEntity(
         val origin: Double,
-        val actual: Double,
-        val reason: String
+        val actual: Double?
 )

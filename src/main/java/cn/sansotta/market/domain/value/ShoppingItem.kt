@@ -1,5 +1,7 @@
-package cn.sansotta.market.domain
+package cn.sansotta.market.domain.value
 
+import cn.sansotta.market.domain.ValueObject
+import cn.sansotta.market.domain.entity.ShoppingItemEntity
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 
 /**
@@ -13,7 +15,7 @@ data class ShoppingItem(
         /**
          * Id of production.
          * */
-        var pid: Int,
+        var pid: Long,
         /**
          * Count of production.
          * */
@@ -29,17 +31,20 @@ data class ShoppingItem(
          * because of sale promotion strategy.
          * */
         private val subtotalPrice: Price
-) {
-    constructor() : this(0, 0, Price(), Price())
+) : ValueObject<ShoppingItemEntity> {
+    constructor() : this(0L, 0, Price(), Price())
 
-    constructor(pid: Int, count: Int, originUnitPrice: Int)
+    constructor(pid: Long, count: Int, originUnitPrice: Double)
             : this(pid, count, Price(originUnitPrice), Price())
+
+    constructor(po: ShoppingItemEntity)
+            : this(po.pid, po.count, Price(po.unitPrice), Price(po.subtotalPrice))
 
     var originalUnitPrice
         get() = unitPrice.origin
         set(value) {
             unitPrice.origin = value
-            subtotalPrice.origin = originalSubtotalPrice
+            subtotalPrice.origin = originalSubtotalPrice // a trigger to update subtotalPrice.origin
         }
     val originalSubtotalPrice get() = originalUnitPrice * count
     val defaultSubtotalPrice get() = actualUnitPrice?.times(count)
@@ -55,14 +60,6 @@ data class ShoppingItem(
             subtotalPrice.actual = value
         }
 
-    var unitPriceDiscountReason
-        get() = unitPrice.reason
-        set(value) {
-            unitPrice.reason = value
-        }
-    var subtotalPriceDiscountReason
-        get() = subtotalPrice.reason
-        set(value) {
-            subtotalPrice.reason = value
-        }
+    override fun toEntity() =
+            ShoppingItemEntity(pid, count, unitPrice.toEntity(), subtotalPrice.toEntity())
 }

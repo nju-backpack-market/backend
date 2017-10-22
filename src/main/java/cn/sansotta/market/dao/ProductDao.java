@@ -1,20 +1,14 @@
 package cn.sansotta.market.dao;
 
-import cn.sansotta.market.domain.Order;
-import cn.sansotta.market.domain.entity.ProductEntity;
-import cn.sansotta.market.mapper.ProductMapper;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.stereotype.Component;
+import com.github.pagehelper.PageInfo;
 
-import java.util.List;
+import cn.sansotta.market.domain.entity.ProductEntity;
 
 /**
  * Created by Hiki on 2017/10/20.
  */
-@Component
-public interface ProductDao{
+public interface ProductDao {
+    ProductEntity selectProductById(long id);
 
-	public ProductEntity selectProductById(long id);
-
+    PageInfo<ProductEntity> selectAllProducts(int pageNum, int pageSize);
 }
