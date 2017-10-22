@@ -37,8 +37,8 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public PageInfo<ProductEntity> selectAllProducts(int pageNum, int pageSize) {
+    public PageInfo<ProductEntity> selectAllProducts(int pageNum) {
         // example:
-        return template.paged(pageNum, pageSize, ProductMapper::selectAllProduct);
+        return template.paged(pageNum, 30, ProductMapper::selectAllProduct);
     }
 }

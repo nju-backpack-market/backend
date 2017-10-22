@@ -10,16 +10,16 @@ import org.springframework.hateoas.core.Relation
  */
 @Relation("product", collectionRelation = "products")
 data class Product(
-        var id: Long,
+        var pid: Long,
         var name: String,
         var price: Double,
         var description: String
 ) : ValueObject<ProductEntity>, Identifiable<Long> {
-    override fun getId() = id
+    override fun getId() = pid
 
     constructor() : this(-1, "", -1.0, "")
 
     constructor(po: ProductEntity) : this(po.id, po.name, po.price, po.description)
 
-    override fun toEntity() = ProductEntity(id, name, price, description)
+    override fun toEntity() = ProductEntity(pid, name, price, description)
 }

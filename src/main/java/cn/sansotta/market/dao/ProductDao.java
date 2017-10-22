@@ -10,5 +10,5 @@ import cn.sansotta.market.domain.entity.ProductEntity;
 public interface ProductDao {
     ProductEntity selectProductById(long id);
 
-    PageInfo<ProductEntity> selectAllProducts(int pageNum, int pageSize);
+    PageInfo<ProductEntity> selectAllProducts(int pageNum);
 }
