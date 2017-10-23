@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 
+@JvmField
+val HAL_MIME_TYPE = "application/hal+json"
+
 fun <T> notFoundEntity() = ResponseEntity<T>(HttpStatus.NOT_FOUND)
 
 @JvmOverloads

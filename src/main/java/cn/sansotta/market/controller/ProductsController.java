@@ -17,6 +17,7 @@ import cn.sansotta.market.controller.resource.ProductResource;
 import cn.sansotta.market.domain.value.Product;
 import cn.sansotta.market.service.ProductService;
 
+import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.notFoundEntity;
 import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
@@ -39,14 +40,14 @@ public class ProductsController {
         this.link = link;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<ProductResource> product(@PathVariable("id") long id) {
 
         Product product = productService.product(id);
         return product == null ? notFoundEntity() : toResponse(assembleResource(product));
     }
 
-    @GetMapping
+    @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<ProductResource>>
     allProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         PageInfo<Product> pageInfo = productService.allProducts(page);
