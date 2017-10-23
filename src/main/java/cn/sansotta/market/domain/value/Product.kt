@@ -22,4 +22,9 @@ data class Product(
     constructor(po: ProductEntity) : this(po.id, po.name, po.price, po.description)
 
     override fun toEntity() = ProductEntity(pid, name, price, description)
+
+//    companion object {
+//        @JvmStatic
+//        fun mockObject() = Product(1, "MockProduct", 10000.0, "MOCK")
+//    }
 }

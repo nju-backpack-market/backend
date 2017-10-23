@@ -16,7 +16,6 @@ import cn.sansotta.market.controller.resource.ProductAssembler;
 import cn.sansotta.market.controller.resource.ProductResource;
 import cn.sansotta.market.domain.value.Product;
 import cn.sansotta.market.service.ProductService;
-
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.notFoundEntity;
 import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
@@ -62,7 +61,7 @@ public class ProductsController {
 
     private PagedResources<ProductResource> assembleResources(PageInfo<Product> info) {
         PagedResources<ProductResource> resources = pagedResourcesBatch(info, assembler::toResources);
-        resources.add(// a known bug in spring hateoas library forces code as follow
+        resources.add(
                 linkTo(methodOn(getClass()).allProducts(info.getPageNum())).withSelfRel(),
                 linkTo(methodOn(getClass()).allProducts(info.getNavigateFirstPage())).withRel("first"),
                 linkTo(methodOn(getClass()).allProducts(info.getNavigateLastPage())).withRel("last")

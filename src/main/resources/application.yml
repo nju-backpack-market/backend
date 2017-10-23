@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: dev_local
+  data:
+    rest:
+      base-path: /api/v1
 pagehelper: # configuration for PageHelper
   helper-dialect: mysql
   auto-dialect: "true"
