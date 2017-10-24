@@ -13,9 +13,12 @@ import org.springframework.http.HttpMethod
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-open class ApiInfoResource internal constructor() : Resource<ApiInfo>(apiInfo) {
+open class DocumentResource internal constructor() : Resource<String>("Document") {
     init {
-        apis<PingController> { api("self", HttpMethod.GET) { api() } }
+        apis<PingController> {
+            api("self", HttpMethod.GET) { api() }
+            api("get_api_info", HttpMethod.GET) { apiInfo() }
+        }
         apis<ProductsController> {
             api("get_all_products", HttpMethod.GET) { allProducts(0) }
             api("get_product", HttpMethod.GET) { product(1) }
@@ -35,21 +38,3 @@ open class ApiInfoResource internal constructor() : Resource<ApiInfo>(apiInfo) {
         CustomizedCurieProvider.registerMethod(apiName, method)
     }
 }
-
-data class ApiInfo(
-        val version: String,
-        val description: String,
-        val convention: Array<String>)
-
-val apiInfo = ApiInfo(
-        "v0.0.1",
-        "后端的API列表，附带例子和文档，点击左边的链接查看",
-        arrayOf("endpoint形如/{res_type}, res_type均为复数形式。直接GET返回所有资源，/{res_type}/[id]返回单个资源",
-                "返回所有资源时默认分页，页大小20，用?page=[int]来指示页数，缺省则page=0",
-                "GET方法没有文档，直接看例子。 POST请查看文档并复制其中的例子，用例子进行NON-GET请求并查看返回值",
-                "POST成功默认状态值201，DELETE成功默认状态值204，未找到资源状态值404，无授权访问受限API状态值403").
-                mapIndexed { index, s -> "${index + 1}. $s" }.toTypedArray()
-)
-
-val apiInfoResource = ApiInfoResource()
-
