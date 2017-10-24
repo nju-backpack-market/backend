@@ -4,6 +4,8 @@ spring:
   data:
     rest:
       base-path: /api/v1
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 pagehelper: # configuration for PageHelper
   helper-dialect: mysql
   auto-dialect: "true"
@@ -16,3 +18,4 @@ pagehelper: # configuration for PageHelper
   reasonable: "true"
 mybatis:
   type-aliases-package: cn.sansotta.market.domain.entity
+

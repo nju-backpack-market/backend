@@ -3,6 +3,8 @@ package cn.sansotta.market.domain.value
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.ShoppingItemEntity
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonUnwrapped
+import org.springframework.hateoas.core.Relation
 
 /**
  * Shopping item in shopping list.
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
  */
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE,
         fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@Relation("shopping_item", collectionRelation = "shopping_list")
 data class ShoppingItem(
         /**
          * Id of production.
@@ -23,6 +26,7 @@ data class ShoppingItem(
         /**
          * Unit totalPrice of each.
          * */
+        @field:JsonUnwrapped(suffix = "_unit_price")
         private val unitPrice: Price,
         /**
          * Subtotal totalPrice of this item.
@@ -30,6 +34,7 @@ data class ShoppingItem(
          * Note that it can differ from count * unitPrice,
          * because of sale promotion strategy.
          * */
+        @field:JsonUnwrapped(suffix = "_subtotal_price")
         private val subtotalPrice: Price
 ) : ValueObject<ShoppingItemEntity> {
     constructor() : this(0L, 0, Price(), Price())

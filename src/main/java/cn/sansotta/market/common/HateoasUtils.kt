@@ -10,6 +10,8 @@ import org.springframework.hateoas.Link
 import org.springframework.hateoas.PagedResources
 import org.springframework.hateoas.Resource
 import org.springframework.hateoas.mvc.ControllerLinkBuilder
+import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
+import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -17,16 +19,13 @@ import org.springframework.http.ResponseEntity
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 
+const val JSON_MIME_TYPE = "application/json"
 const val HAL_MIME_TYPE = "application/hal+json"
 
 fun <T> notFoundEntity() = ResponseEntity<T>(HttpStatus.NOT_FOUND)
 
 @JvmOverloads
 fun <T> T?.toResponse(status: HttpStatus = HttpStatus.OK) = ResponseEntity(this, status)
-
-inline fun <reified T> methodOn() = ControllerLinkBuilder.methodOn(T::class.java)
-
-inline fun <reified T> linkTo() = ControllerLinkBuilder.linkTo(T::class.java)
 
 inline fun <reified T> EntityLinks.linkToSingleResource(id: Any?) =
         linkToSingleResource(T::class.java, id)
@@ -45,3 +44,6 @@ fun <T, R : Resource<T>> pagedResourcesBatch(pageInfo: PageInfo<T>, converter: R
 
 fun ControllerLinkBuilder.query(name: String, vararg param: Any) =
         Link(this.toUriComponentsBuilder().queryParam(name, param).build().toUriString())
+
+inline fun <reified T> api(name: String, endpoint: T.() -> Any)
+        = linkTo(methodOn(T::class.java).endpoint()).withRel(name)

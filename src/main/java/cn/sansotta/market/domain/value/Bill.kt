@@ -26,12 +26,11 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
             field.actual = value.actual
         }
 
-    constructor(list: List<ShoppingItem>, totalPrice: Price) : this() {
-        this.shoppingList.addAll(list)
+    constructor(list: Iterable<ShoppingItem>, totalPrice: Price) : this(list) {
         this.totalPrice = totalPrice
     }
 
-    constructor(list: List<ShoppingItem>) : this() {
+    constructor(list: Iterable<ShoppingItem>) : this() {
         this.shoppingList.addAll(list)
     }
 

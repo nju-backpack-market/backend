@@ -26,5 +26,5 @@ class PingController(@Autowired val db: DataSource) {
             = response.sendRedirect("/api/v1/browser/index.html#/api")
 
     @GetMapping("/api", produces = arrayOf(HAL_MIME_TYPE))
-    fun api() = ApiInfoResource.getInstance()
+    fun api() = ApiInfoResource()
 }

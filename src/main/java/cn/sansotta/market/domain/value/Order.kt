@@ -8,7 +8,7 @@ import cn.sansotta.market.domain.entity.OrderEntity
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-data class Order(
+open class Order(
         /**
          * Order's id.
          * */

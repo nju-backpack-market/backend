@@ -1,7 +1,6 @@
 package cn.sansotta.market.configuration
 
 import org.springframework.context.annotation.Configuration
-import org.springframework.hateoas.config.EnableEntityLinks
 import org.springframework.hateoas.config.EnableHypermediaSupport
 
 /**

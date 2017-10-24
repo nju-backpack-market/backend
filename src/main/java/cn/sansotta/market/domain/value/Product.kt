@@ -2,13 +2,16 @@ package cn.sansotta.market.domain.value
 
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.ProductEntity
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonRootName
+import com.fasterxml.jackson.annotation.JsonSetter
 import org.springframework.hateoas.Identifiable
 import org.springframework.hateoas.core.Relation
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Relation("product", collectionRelation = "products")
+@Relation("product", collectionRelation = "contents")
 data class Product(
         var pid: Long,
         var name: String,
