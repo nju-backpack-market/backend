@@ -2,6 +2,7 @@ package cn.sansotta.market.domain.entity
 
 import cn.sansotta.market.domain.value.OrderState
 import org.apache.ibatis.type.BaseTypeHandler
+import java.time.LocalDateTime
 
 /**
  * Po for Order.
@@ -13,8 +14,9 @@ import org.apache.ibatis.type.BaseTypeHandler
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 data class OrderEntity(
-        var id: Long,
-        var bill: BillEntity,
-        var state: OrderState,
-        var deliveryInfo: DeliveryInfoEntity
+        val id: Long,
+        val state: OrderState,
+        val time: LocalDateTime,
+        val deliveryInfo: DeliveryInfoEntity,
+        val bill: BillEntity
 )

@@ -12,7 +12,6 @@ CREATE TABLE products (
 
 CREATE TABLE orders(
     oid bigint NOT NULL AUTO_INCREMENT,
-    total_price double NOT NULL,
     state varchar(40) NOT NULL,
     time datetime NOT NULL,
     c_name varchar(40) NOT NULL,
