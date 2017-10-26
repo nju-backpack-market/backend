@@ -38,8 +38,10 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
         this.shoppingList.addAll(items)
     }
 
-    constructor(po: BillEntity)
-            : this(po.shoppingList.map { ShoppingItem(it) }, Price(po.totalPrice))
+    constructor(po: BillEntity) : this(po.shoppingList.map { ShoppingItem(it) }) {
+        // calculate origin price from shopping list and total price from po
+        this.totalPrice = Price(originTotalPrice, po.totalPrice)
+    }
 
     val originTotalPrice
         @JsonIgnore get() = shoppingList.sumByDouble { it.originalSubtotalPrice }
@@ -56,5 +58,5 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
     override fun iterator() = shoppingList.iterator()
 
     override fun toEntity() =
-            BillEntity(shoppingList.map { it.toEntity() }, totalPrice.toEntity())
+            BillEntity(shoppingList.map { it.toEntity() }, totalPrice.actual)
 }

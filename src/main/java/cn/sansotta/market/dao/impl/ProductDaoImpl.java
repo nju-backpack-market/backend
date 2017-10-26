@@ -3,6 +3,7 @@ package cn.sansotta.market.dao.impl;
 import com.github.pagehelper.PageInfo;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.sansotta.market.common.MybatisUtils;
 import cn.sansotta.market.dao.ProductDao;
@@ -36,6 +37,7 @@ public class ProductDaoImpl implements ProductDao {
         return product0;
     }
 
+    @Transactional
     @Override
     public PageInfo<ProductEntity> selectAllProducts(int pageNum) {
         // example:

@@ -9,5 +9,5 @@ package cn.sansotta.market.domain.entity
  */
 data class BillEntity(
         val shoppingList: List<ShoppingItemEntity>,
-        val totalPrice: PriceEntity
+        val totalPrice: Double?
 )

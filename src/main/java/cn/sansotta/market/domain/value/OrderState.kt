@@ -5,5 +5,5 @@ package cn.sansotta.market.domain.value
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 enum class OrderState {
-    CREATED
+    CREATE
 }

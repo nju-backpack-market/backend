@@ -8,4 +8,4 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 @MapperScan("cn.sansotta.market.mapper")
-class MybatisConfiguration
+open class MybatisConfiguration

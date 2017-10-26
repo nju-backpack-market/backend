@@ -1,11 +1,8 @@
 package cn.sansotta.market.domain.entity;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Created by Hiki on 2017/10/26.
  */
-@Component
 public class UserEntity {
 
 	private String username;

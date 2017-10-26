@@ -1,21 +1,18 @@
 spring:
   profiles:
-    active: dev_local
+    active: dev_remote
   data:
     rest:
       base-path: /api/v1
   jackson:
     property-naming-strategy: SNAKE_CASE
 pagehelper: # configuration for PageHelper
-  helper-dialect: mysql
-  auto-dialect: "true"
-  auto-runtime-dialect: "false"
   page-size-zero: "false"
   offset-as-page-num: "true"
   row-bounds-with-count: "true"
   support-methods-arguments: "false"
-  close-conn: "false"
   reasonable: "true"
+  auto-dialect: "true"
 mybatis:
   type-aliases-package: cn.sansotta.market.domain.entity
 

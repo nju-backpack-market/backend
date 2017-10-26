@@ -2,6 +2,7 @@ package cn.sansotta.market.domain.value
 
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.OrderEntity
+import java.time.LocalDateTime
 
 /**
  * Order.
@@ -14,21 +15,26 @@ open class Order(
          * */
         var id: Long,
         /**
-         * Bill of order.
-         * */
-        var bill: Bill,
-        /**
          * Order's state.
          * */
         var state: OrderState,
         /**
+         * Create time of order.
+         * */
+        var time: LocalDateTime,
+        /**
          * Delivery information of order.
          * */
-        var deliveryInfo: DeliveryInfo
+        var deliveryInfo: DeliveryInfo,
+        /**
+         * Bill of order.
+         * */
+        var bill: Bill
 ) : ValueObject<OrderEntity> {
-    constructor() : this(-1, Bill(), OrderState.CREATED, DeliveryInfo())
+    constructor() : this(-1, OrderState.CREATE, LocalDateTime.now(), DeliveryInfo(), Bill())
 
-    constructor(po: OrderEntity) : this(po.id, Bill(po.bill), po.state, DeliveryInfo(po.deliveryInfo))
+    constructor(po: OrderEntity)
+            : this(po.id, po.state, po.time, DeliveryInfo(po.deliveryInfo), Bill(po.bill))
 
-    override fun toEntity() = OrderEntity(id, bill.toEntity(), state, deliveryInfo.toEntity())
+    override fun toEntity() = OrderEntity(id, state, time, deliveryInfo.toEntity(), bill.toEntity())
 }

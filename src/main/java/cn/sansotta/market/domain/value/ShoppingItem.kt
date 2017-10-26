@@ -43,7 +43,8 @@ data class ShoppingItem(
             : this(pid, count, Price(originUnitPrice), Price())
 
     constructor(po: ShoppingItemEntity)
-            : this(po.pid, po.count, Price(po.unitPrice), Price(po.subtotalPrice))
+            : this(po.pid, po.count, Price(po.unitPrice),
+            Price(po.count * po.unitPrice.origin, po.subtotalPrice)) // calculate origin price manually
 
     var originalUnitPrice
         get() = unitPrice.origin
@@ -66,5 +67,6 @@ data class ShoppingItem(
         }
 
     override fun toEntity() =
-            ShoppingItemEntity(pid, count, unitPrice.toEntity(), subtotalPrice.toEntity())
+            ShoppingItemEntity(pid, count, unitPrice.toEntity(),
+                    subtotalPrice.actual ?: unitPrice.origin * count)
 }

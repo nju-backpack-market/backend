@@ -1,9 +1,20 @@
 package cn.sansotta.market.mapper;
 
-import cn.sansotta.market.domain.entity.ProductEntity;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultMap;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+
+import cn.sansotta.market.domain.entity.ProductEntity;
 
 /**
  * Created by Hiki on 2017/10/21.
@@ -12,12 +23,12 @@ import java.util.List;
 public interface ProductMapper {
     @Results(id = "productMap")
     @ConstructorArgs({
-            @Arg(id = true, column = "pid"),
-            @Arg(column = "pname"),
-            @Arg(column = "price"),
-            @Arg(column = "description")})
+            @Arg(id = true, column = "pid", javaType = long.class),
+            @Arg(column = "pname", javaType = String.class),
+            @Arg(column = "price", javaType = double.class),
+            @Arg(column = "description", javaType = String.class)})
     @Select("SELECT * FROM products WHERE pid=#{id}")
-	ProductEntity selectProductById(@Param("id") long id);
+    ProductEntity selectProductById(@Param("id") long id);
 
     @ResultMap("productMap")
     @Select("SELECT * FROM products")

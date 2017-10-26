@@ -8,4 +8,4 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
  */
 @Configuration
 @EnableHypermediaSupport(type = arrayOf(EnableHypermediaSupport.HypermediaType.HAL))
-class WebConfiguration
+open class WebConfiguration
