@@ -2,12 +2,11 @@ package cn.sansotta.market.controller
 
 import cn.sansotta.market.common.HAL_MIME_TYPE
 import cn.sansotta.market.controller.resource.DocumentResource
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.Resource
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletResponse
-import javax.sql.DataSource
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -15,24 +14,21 @@ import javax.sql.DataSource
  * An endpoint just for test server's availability.
  */
 @RestController
-class PingController(@Autowired val db: DataSource) {
+open class PingController {
     @GetMapping("/ping")
     fun ping() = "Hello"
-
-    @GetMapping("/conn")
-    fun conn() = "${db.connection}"
 
     @GetMapping("/api")
     fun redirect(response: HttpServletResponse)
             = response.sendRedirect("/api/v1/browser/index.html#/api")
 
     @GetMapping("/api", produces = arrayOf(HAL_MIME_TYPE))
-    fun api() = DocumentResource()
+    fun api() = DocumentResource.INSTANCE
 
     @GetMapping("/apiInfo", produces = arrayOf(HAL_MIME_TYPE))
     fun apiInfo() = apiInfoResource
 
-    class ApiInfo(
+    open class ApiInfo(
             val version: String,
             val description: String,
             val convention: Array<String>)
@@ -43,7 +39,9 @@ class PingController(@Autowired val db: DataSource) {
                     arrayOf("endpoint形如/{res_type}, res_type均为复数形式",
                             "直接GET返回所有资源，/{res_type}/[id]返回单个资源",
                             "返回所有资源时默认分页，页大小20，用?page=[int]来指示页数，缺省则page=0",
-                            "GET方法没有文档，直接看例子。 POST请查看文档并复制其中的例子，用例子进行NON-GET请求并查看返回值",
-                            "POST成功默认状态值201，DELETE成功默认状态值204，未找到资源状态值404，无授权访问受限API状态值403").
+                            "GET和DELETE方法没有文档，直接看例子。" +
+                                    "POST和PUT请查看文档并复制其中的例子，用例子进行NON-GET请求并查看返回值",
+                            "POST成功默认状态值201，DELETE成功默认状态值204，未找到资源状态值404，无授权访问受限API状态值403, " +
+                                    "数据库错误507（此错误为暂时，应尝试重新请求），内部错误500").
                             mapIndexed { index, s -> "${index + 1}. $s" }.toTypedArray()))
 }

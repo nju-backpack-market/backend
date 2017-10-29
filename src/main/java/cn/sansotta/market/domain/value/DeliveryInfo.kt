@@ -31,4 +31,9 @@ data class DeliveryInfo(
     constructor(po: DeliveryInfoEntity) : this(po.name, po.phoneNumber, po.email, po.address)
 
     override fun toEntity() = DeliveryInfoEntity(name, phoneNumber, email, address)
+
+    companion object {
+        @JvmStatic
+        fun mockObject() = DeliveryInfo("qinliu", "1234567890123", "qinliu@software.com", "nju")
+    }
 }

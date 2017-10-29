@@ -42,7 +42,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+        <!-- jackson's plugin to support java.time -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
         <!-- use undertow instead of tomcat for fewer size and better performance -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,6 +94,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.44</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -180,32 +185,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
-            <plugin>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <version>${kotlin.version}</version>
-
-                <configuration>
-                    <compilerPlugins>
-                        <!-- Or "jpa" for the Java Persistence annotation support -->
-                        <plugin>no-arg</plugin>
-                    </compilerPlugins>
-
-                    <pluginOptions>
-                        <option>no-arg:annotation=com.your.Annotation</option>
-                    </pluginOptions>
-                </configuration>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-noarg</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
         </plugins>
     </build>
 

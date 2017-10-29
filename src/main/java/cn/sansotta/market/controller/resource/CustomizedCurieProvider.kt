@@ -16,7 +16,7 @@ object CustomizedCurieProvider
                 "post" to docTemplate,
                 "put" to docTemplate,
                 "delete" to docTemplate)) {
-    private val linkMethods = mutableMapOf<String, HttpMethod>().withDefault { HttpMethod.GET }
+    private val linkMethods = mutableMapOf<String, HttpMethod?>()
 
     fun registerMethod(rel: String, method: HttpMethod) {
         linkMethods[rel] = method
@@ -24,9 +24,9 @@ object CustomizedCurieProvider
 
     override fun getNamespacedRelFor(rel: String)
             = rel.takeIf { !IanaRels.isIanaRel(rel) && !rel.contains(":") }?.
-            let { "${prefixOf(rel)}:$rel" } ?: rel
+            let { prefixOf(it) }?.let { "$it:$rel" } ?: rel
 
-    private fun prefixOf(rel: String) = linkMethods.getValue(rel).name.toLowerCase()
+    private fun prefixOf(rel: String) = linkMethods.getOrDefault(rel, null)?.name?.toLowerCase()
 }
 
 private val docTemplate = UriTemplate("/doc/{rel}.html")

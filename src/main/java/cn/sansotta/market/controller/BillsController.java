@@ -1,12 +1,13 @@
 package cn.sansotta.market.controller;
 
-import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import cn.sansotta.market.service.BillService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
+import static cn.sansotta.market.common.HateoasUtils.notFoundEntity;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
 
 /**
@@ -29,17 +31,21 @@ import static cn.sansotta.market.common.HateoasUtils.toResponse;
 @ExposesResourceFor(Bill.class)
 @RequestMapping("/bills")
 public class BillsController {
-    private final EntityLinks link;
     private final BillService billService;
 
-    public BillsController(BillService billService, EntityLinks link) {
+    public BillsController(BillService billService) {
         this.billService = billService;
-        this.link = link;
     }
 
     @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity<BillResource> createBill(@RequestBody List<ShoppingItem> items) {
-        return toResponse(new BillResource(billService.queryPrice(items)));
+        return toResponse(new BillResource(billService.queryPrice(items), true));
+    }
+
+    @GetMapping(produces = HAL_MIME_TYPE)
+    public ResponseEntity<BillResource> billOfOrder(@RequestParam("oid") Long oid) {
+        Bill bill = billService.billOfOrder(oid);
+        return bill == null ? notFoundEntity() : toResponse(new BillResource(bill, true));
     }
 
     @RequestMapping(method = RequestMethod.HEAD)

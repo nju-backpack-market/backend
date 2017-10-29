@@ -12,6 +12,7 @@ import org.springframework.hateoas.Resource
 import org.springframework.hateoas.mvc.ControllerLinkBuilder
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -47,3 +48,4 @@ fun ControllerLinkBuilder.query(name: String, vararg param: Any) =
 
 inline fun <reified T> api(name: String, endpoint: T.() -> Any)
         = linkTo(methodOn(T::class.java).endpoint()).withRel(name)
+

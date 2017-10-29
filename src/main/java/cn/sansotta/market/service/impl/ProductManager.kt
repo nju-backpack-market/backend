@@ -13,6 +13,19 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProductManager(private val productDao: ProductDao) : ProductService {
+    override fun newProducts(product: List<Product>): List<Product>? {
+        product.mapIndexed { index, p -> p.pid = index.toLong();p }
+        return product
+    }
+
+    override fun modifiedProduct(product: Product): Boolean {
+        return true
+    }
+
+    override fun removeProducts(ids: List<Long>): Boolean {
+        return true
+    }
+
     private val mockProduct = ProductEntity(1, "MockProduct", 10000.0, "MOCK")
     private val mockProduct2 = ProductEntity(2, "MockProduct", 10005.0, "MOCK")
     override fun product(id: Long) = Product(mockProduct)

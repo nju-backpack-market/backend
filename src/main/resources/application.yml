@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev_remote
+    active: dev_local
   data:
     rest:
       base-path: /api/v1

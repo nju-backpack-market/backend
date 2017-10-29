@@ -14,20 +14,7 @@ import cn.sansotta.market.mapper.ShoppingItemMapper;
  */
 @SpringBootApplication
 public class Main {
-
     public static void main(String... args) {
         SpringApplication.run(Main.class);
-    }
-
-    private final MybatisUtils.MapperTemplate<OrderMapper> template;
-
-    public Main(MybatisUtils utils) {
-        this.template = utils.mapperTemplate(OrderMapper.class);
-    }
-
-    @Bean
-    CommandLineRunner sampleCommandLineRunner() {
-        return (args) -> System.out
-                .println(template.exec(mapper -> mapper.selectOrderById(1)).toString());
     }
 }

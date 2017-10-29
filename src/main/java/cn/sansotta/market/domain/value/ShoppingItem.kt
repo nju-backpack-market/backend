@@ -2,8 +2,8 @@ package cn.sansotta.market.domain.value
 
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.ShoppingItemEntity
-import com.fasterxml.jackson.annotation.JsonAutoDetect
-import com.fasterxml.jackson.annotation.JsonUnwrapped
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
 import org.springframework.hateoas.core.Relation
 
 /**
@@ -11,8 +11,6 @@ import org.springframework.hateoas.core.Relation
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE,
-        fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @Relation("shopping_item", collectionRelation = "shopping_list")
 data class ShoppingItem(
         /**
@@ -26,7 +24,6 @@ data class ShoppingItem(
         /**
          * Unit totalPrice of each.
          * */
-        @field:JsonUnwrapped(suffix = "_unit_price")
         private val unitPrice: Price,
         /**
          * Subtotal totalPrice of this item.
@@ -34,7 +31,6 @@ data class ShoppingItem(
          * Note that it can differ from count * unitPrice,
          * because of sale promotion strategy.
          * */
-        @field:JsonUnwrapped(suffix = "_subtotal_price")
         private val subtotalPrice: Price
 ) : ValueObject<ShoppingItemEntity> {
     constructor() : this(0L, 0, Price(), Price())
@@ -46,20 +42,24 @@ data class ShoppingItem(
             : this(po.pid, po.count, Price(po.unitPrice),
             Price(po.count * po.unitPrice.origin, po.subtotalPrice)) // calculate origin price manually
 
-    var originalUnitPrice
+    var originUnitPrice
         get() = unitPrice.origin
         set(value) {
             unitPrice.origin = value
-            subtotalPrice.origin = originalSubtotalPrice // a trigger to update subtotalPrice.origin
+            subtotalPrice.origin = originSubtotalPrice // a trigger to update subtotalPrice.origin
         }
-    val originalSubtotalPrice get() = originalUnitPrice * count
-    val defaultSubtotalPrice get() = actualUnitPrice?.times(count)
+    val originSubtotalPrice get() = originUnitPrice * count
+    @get:JsonIgnore
+    val defaultSubtotalPrice
+        get() = actualUnitPrice?.times(count)
 
+    @get:JsonInclude(JsonInclude.Include.NON_NULL)
     var actualUnitPrice
         get() = unitPrice.actual
         set(value) {
             unitPrice.actual = value
         }
+    @get:JsonInclude(JsonInclude.Include.NON_NULL)
     var actualSubtotalPrice
         get() = subtotalPrice.actual
         set(value) {
@@ -69,4 +69,9 @@ data class ShoppingItem(
     override fun toEntity() =
             ShoppingItemEntity(pid, count, unitPrice.toEntity(),
                     subtotalPrice.actual ?: unitPrice.origin * count)
+
+    companion object {
+        @JvmStatic
+        fun mockObject() = ShoppingItem(114514, 1919, 81.0)
+    }
 }

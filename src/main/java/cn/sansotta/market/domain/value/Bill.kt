@@ -2,19 +2,16 @@ package cn.sansotta.market.domain.value
 
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.BillEntity
-import com.fasterxml.jackson.annotation.JsonAutoDetect
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * Shopping list of an order.
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.ANY)
-class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
+class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity>, Cloneable {
     /* shopping list of shopping item in the bill */
     private val shoppingList = mutableListOf<ShoppingItem>()
-        @SuppressWarnings get() = field // only by this can Jackson scan this getter, weird
     /* total price */
     private var totalPrice = Price()
         get() {
@@ -26,11 +23,12 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
             field.actual = value.actual
         }
 
-    constructor(list: Iterable<ShoppingItem>, totalPrice: Price) : this(list) {
+    constructor(items: Iterable<ShoppingItem>, totalPrice: Price) : this(items) {
         this.totalPrice = totalPrice
     }
 
-    constructor(list: Iterable<ShoppingItem>) : this() {
+
+    constructor(@JsonProperty("shopping_list") list: Iterable<ShoppingItem>) : this() {
         this.shoppingList.addAll(list)
     }
 
@@ -43,10 +41,12 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
         this.totalPrice = Price(originTotalPrice, po.totalPrice)
     }
 
+    override fun toString() = "Bill(shoppingList=$shoppingList, totalPrice=$totalPrice)"
+
     val originTotalPrice
-        @JsonIgnore get() = shoppingList.sumByDouble { it.originalSubtotalPrice }
+        get() = shoppingList.sumByDouble { it.originSubtotalPrice }
     var actualTotalPrice
-        @JsonIgnore get() = totalPrice.actual
+        get() = totalPrice.actual
         set(value) {
             totalPrice.actual = value
         }
@@ -59,4 +59,27 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity> {
 
     override fun toEntity() =
             BillEntity(shoppingList.map { it.toEntity() }, totalPrice.actual)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Bill) return false
+
+        if (this.totalPrice != other.totalPrice) return false
+        if (this.shoppingList != other.shoppingList) return false
+        return true
+    }
+
+    override fun hashCode() = this.shoppingList.hashCode() * 37 + this.totalPrice.hashCode()
+
+    public override fun clone(): Bill {
+        val new = super.clone() as Bill
+        new.totalPrice = this.totalPrice.copy()
+        new.shoppingList.addAll(this.shoppingList.map { it.copy() })
+        return new
+    }
+
+    companion object {
+        @JvmStatic
+        fun mockObject() = Bill(ShoppingItem.mockObject(), ShoppingItem.mockObject().copy(pid = 2333))
+    }
 }

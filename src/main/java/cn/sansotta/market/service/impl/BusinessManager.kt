@@ -12,8 +12,8 @@ class BusinessManager : BusinessService {
     override fun getTotalPrice(bill: Bill): Bill {
         bill.forEachIndexed { idx, item ->
             item.apply {
-                originalUnitPrice = (idx + 1) * 2.0
-                actualUnitPrice = originalUnitPrice - 1
+                originUnitPrice = (idx + 1) * 2.0
+                actualUnitPrice = originUnitPrice - 1
                 actualSubtotalPrice = defaultSubtotalPrice
             }
         }
