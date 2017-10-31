@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import cn.sansotta.market.domain.entity.BillEntity;
 import cn.sansotta.market.domain.entity.DeliveryInfoEntity;
 import cn.sansotta.market.domain.entity.OrderEntity;
 import cn.sansotta.market.domain.value.OrderState;

@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
-import cn.sansotta.market.domain.entity.BillEntity;
 import cn.sansotta.market.domain.entity.DeliveryInfoEntity;
 import cn.sansotta.market.domain.entity.PriceEntity;
 
@@ -34,13 +33,4 @@ public interface DummyMapper {
             @Arg(column = "c_address", javaType = String.class)})
     @Select("")
     DeliveryInfoEntity deliveryInfoEntity();
-
-    @Results(id = "billMap")
-    @ConstructorArgs({
-            @Arg(column = "oid",
-                    select = "cn.sansotta.market.mapper.ShoppingItemMapper.selectShoppingItemsByOrderId",
-                    javaType = List.class),
-            @Arg(column = "total_price", javaType = Double.class)})
-    @Select("")
-    BillEntity bill();
 }

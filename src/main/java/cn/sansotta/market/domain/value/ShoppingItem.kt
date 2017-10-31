@@ -67,7 +67,7 @@ data class ShoppingItem(
         }
 
     override fun toEntity() =
-            ShoppingItemEntity(pid, count, unitPrice.toEntity(),
+            ShoppingItemEntity(pid, -1L, count, unitPrice.toEntity(),
                     subtotalPrice.actual ?: unitPrice.origin * count)
 
     companion object {
