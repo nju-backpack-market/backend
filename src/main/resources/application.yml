@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev_local
+    active: dev_hiki
   data:
     rest:
       base-path: /api/v1
