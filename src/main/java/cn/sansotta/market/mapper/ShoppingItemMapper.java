@@ -6,7 +6,6 @@ import java.util.List;
 
 import cn.sansotta.market.domain.entity.PriceEntity;
 import cn.sansotta.market.domain.entity.ShoppingItemEntity;
-import org.springframework.data.annotation.Id;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -14,31 +13,31 @@ import org.springframework.data.annotation.Id;
 @Mapper
 public interface ShoppingItemMapper {
 
-	@Results(id = "shoppingItemMap")
-	@ConstructorArgs({
+	// TODO TEST
+    @Results(id = "shoppingItemMap")
+    @ConstructorArgs({
 			@Arg(column = "oid", javaType = long.class),
-			@Arg(column = "pid", javaType = long.class),
-			@Arg(column = "count", javaType = int.class),
-			@Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.priceMap",
-					javaType = PriceEntity.class),
-			@Arg(column = "subtotal_price",javaType = Double.class)})
-	@Select("SELECT oid, pid, count, origin_price AS origin, actual_price AS actual, subtotal_price " +
-			"FROM shopping_items WHERE oid = #{oid}")
-	List<ShoppingItemEntity> selectShoppingItemsByOrderId(long oid);
+            @Arg(column = "pid", javaType = long.class),
+            @Arg(column = "count", javaType = int.class),
+            @Arg(column = "unit_price", javaType = double.class),
+            @Arg(column = "subtotal_price", javaType = double.class)})
+    @Select("SELECT oid, pid, count, unit_price, subtotal_price " +
+            "FROM shopping_items WHERE oid = #{oid}")
+    List<ShoppingItemEntity> selectShoppingItemsByOrderId(long oid);
 
-
+    // TODO TEST
 	@Insert({
 			"<script>",
-			"INSERT INTO shopping_items (oid, pid, count, origin_price, actual_price, subtotal_price) VALUES",
-			"<foreach collection='list' item='shoppingItem' separator=','>",
-			"(#{shoppingItem.oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice.origin}, #{shoppingItem.unitPrice.actual}, #{shoppingItem.subtotalPrice})",
+			"INSERT INTO shopping_items (oid, pid, count, unit_price, subtotal_price) VALUES",
+			"<foreach collection='shoppingItems' item='shoppingItem', separator=','>",
+			"(#{shoppingItem.oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice}, #{shoppingItem.subtotalPrice})",
 			"</foreach>",
 			"</script>"
 	})
-	void insertShoppingItems( List<ShoppingItemEntity> shoppingItems);
+	void insertShoppingItems(List<ShoppingItemEntity> shoppingItems);
 
-
+	// TODO TEST
 	@Delete("DELETE FROM shopping_items where oid=#{oid}")
-	void deleteShoppingItemsByOrderId(long oid);
+	void deleteShoppingItems(long oid);
 
 }

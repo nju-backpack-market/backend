@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
 import cn.sansotta.market.controller.resource.OrderAssembler;
+import cn.sansotta.market.controller.resource.OrderQuery;
+import cn.sansotta.market.controller.resource.OrderQueryResource;
 import cn.sansotta.market.controller.resource.OrderResource;
 import cn.sansotta.market.domain.value.Order;
 import cn.sansotta.market.domain.value.OrderState;
@@ -77,28 +78,6 @@ public class OrdersController {
         return order == null ? notFoundResponse() : toResponse(new OrderResource(order));
     }
 
-//    @GetMapping(produces = HAL_MIME_TYPE)
-//    public ResponseEntity<List<OrderResource>>
-//    ordersOfCustomer(@RequestParam("name") String name,
-//          @RequestParam("phone") String phone,
-//          @RequestParam(value = "full", required = false, defaultValue = "true") boolean full) {
-//
-//    }
-//
-//    @GetMapping(value = "/status/{status}", produces = HAL_MIME_TYPE)
-//    public ResponseEntity<List<OrderResource>>
-//    ordersOfStatus(@PathVariable("status") OrderState status,
-//                  @RequestParam(value = "full", required = false, defaultValue = "false") boolean full) {
-//
-//    }
-//
-//    @GetMapping(value = "/date/{date}", produces = HAL_MIME_TYPE)
-//    public ResponseEntity<List<OrderResource>>
-//    ordersOfDate(@PathVariable("date") LocalDate date,
-//                @RequestParam(value = "full", required = false, defaultValue = "false") boolean full) {
-//
-//    }
-
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<OrderResource>>
     orders(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
@@ -106,6 +85,23 @@ public class OrdersController {
         PageInfo<Order> pageInfo;
         if(full) pageInfo = orderService.allOrders(page);
         else pageInfo = orderService.allOrdersIndex(page);
+        return pageInfo == null ? notFoundResponse() :
+                toResponse(assembleResources(pageInfo));
+    }
+
+    @PostMapping(value = "/query", produces = HAL_MIME_TYPE)
+    public ResponseEntity<OrderQueryResource>
+    createQuery(@RequestBody OrderQuery query) {
+        query = orderService.createOrderQuery(query);
+        return query == null ? new ResponseEntity<>(HttpStatus.BAD_REQUEST) :
+                toResponse(new OrderQueryResource(query));
+    }
+
+    @GetMapping(value = "/query/{id}", produces = HAL_MIME_TYPE)
+    public ResponseEntity<PagedResources<OrderResource>>
+    query(@PathVariable("id") int queryId,
+          @RequestParam(value = "full", required = false, defaultValue = "true") boolean full) {
+        PageInfo<Order> pageInfo = orderService.queryOrders(queryId);
         return pageInfo == null ? notFoundResponse() :
                 toResponse(assembleResources(pageInfo));
     }
