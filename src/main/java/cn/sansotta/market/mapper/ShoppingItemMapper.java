@@ -29,7 +29,7 @@ public interface ShoppingItemMapper {
 	@Insert({
 			"<script>",
 			"INSERT INTO shopping_items (oid, pid, count, unit_price, subtotal_price) VALUES",
-			"<foreach collection='shoppingItems' item='shoppingItem', separator=','>",
+			"<foreach collection='shoppingItems' item='shoppingItem' separator=','>",
 			"(#{shoppingItem.oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice}, #{shoppingItem.subtotalPrice})",
 			"</foreach>",
 			"</script>"
