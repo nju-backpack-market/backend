@@ -12,7 +12,6 @@ import org.springframework.hateoas.Resource
 import org.springframework.hateoas.mvc.ControllerLinkBuilder
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
@@ -23,7 +22,13 @@ import org.springframework.http.ResponseEntity
 const val JSON_MIME_TYPE = "application/json"
 const val HAL_MIME_TYPE = "application/hal+json"
 
-fun <T> notFoundEntity() = ResponseEntity<T>(HttpStatus.NOT_FOUND)
+fun <T> notFoundResponse() = ResponseEntity<T>(HttpStatus.NOT_FOUND)
+
+fun <T> insufficientStorageResponse() = ResponseEntity<T>(HttpStatus.INSUFFICIENT_STORAGE)
+
+fun <T> noContentResponse() = ResponseEntity<T>(HttpStatus.NO_CONTENT)
+
+fun <T> conflictResponse() = ResponseEntity<T>(HttpStatus.CONFLICT)
 
 @JvmOverloads
 fun <T> T?.toResponse(status: HttpStatus = HttpStatus.OK) = ResponseEntity(this, status)

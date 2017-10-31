@@ -15,7 +15,7 @@ import java.time.LocalDateTime
  */
 data class OrderEntity(
         val id: Long,
-        val totalPrice: Double,
+        val totalPrice: Double?,
         val state: OrderState,
         val time: LocalDateTime,
         val deliveryInfo: DeliveryInfoEntity,

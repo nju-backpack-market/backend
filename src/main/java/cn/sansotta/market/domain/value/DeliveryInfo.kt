@@ -35,5 +35,10 @@ data class DeliveryInfo(
     companion object {
         @JvmStatic
         fun mockObject() = DeliveryInfo("qinliu", "1234567890123", "qinliu@software.com", "nju")
+
+        @JvmStatic
+        fun isValidEntity(info: DeliveryInfo): Boolean {
+            return info.name.isNotBlank() && info.phoneNumber.isNotBlank() && info.address.isNotBlank()
+        }
     }
 }

@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo
 interface ProductService {
     fun allProducts(page: Int): PageInfo<Product>?
     fun product(id: Long): Product?
-    fun newProducts(product: List<Product>): List<Product>?
-    fun modifiedProduct(product: Product): Boolean
-    fun removeProducts(ids: List<Long>): Boolean
+    fun newProducts(products: List<Product>): List<Product>?
+    fun modifyProducts(products: List<Product>): List<Product>?
+    fun removeProducts(ids: List<Long>): List<Long>?
 }

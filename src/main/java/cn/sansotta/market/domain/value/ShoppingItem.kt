@@ -33,7 +33,7 @@ data class ShoppingItem(
          * */
         private val subtotalPrice: Price
 ) : ValueObject<ShoppingItemEntity> {
-    constructor() : this(0L, 0, Price(), Price())
+    constructor() : this(-1L, -1, Price(), Price())
 
     constructor(pid: Long, count: Int, originUnitPrice: Double)
             : this(pid, count, Price(originUnitPrice), Price())
@@ -73,5 +73,10 @@ data class ShoppingItem(
     companion object {
         @JvmStatic
         fun mockObject() = ShoppingItem(114514, 1919, 81.0)
+
+        @JvmStatic
+        fun isValidEntity(item: ShoppingItem) = item.count > 0 &&
+                Price.isValidEntity(item.unitPrice) &&
+                Price.isValidEntity(item.subtotalPrice)
     }
 }

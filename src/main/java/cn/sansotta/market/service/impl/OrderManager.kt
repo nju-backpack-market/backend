@@ -7,12 +7,33 @@ import cn.sansotta.market.service.BillService
 import cn.sansotta.market.service.OrderService
 import com.github.pagehelper.PageInfo
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 @Service
 class OrderManager(private val billService: BillService) : OrderService {
+    override fun ordersOfCustomer(name: String, phoneNumber: String): List<Order>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun ordersOfStatus(state: OrderState): List<Order>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun ordersOfDate(date: LocalDate): List<Order>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun modifyOrderStatus(id: Long, state: OrderState): Order? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun modifyOrders(orders: List<Order>): List<Order>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun allOrdersIndex(page: Int): PageInfo<Order>? {
         return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
     }
@@ -21,7 +42,10 @@ class OrderManager(private val billService: BillService) : OrderService {
         return Order.mockObject().apply { this.id = id }
     }
 
-    override fun createOrder(order: Order): Order? {
+    override fun newOrder(order: Order): Order? {
+        println(order)
+        if(!Order.isValidEntity(order)) return null
+
         //TODO: add really implementation of creating order
         val actualBill = billService.queryPrice(order.bill)
         actualBill.actualTotalPrice = order.bill.actualTotalPrice // mock

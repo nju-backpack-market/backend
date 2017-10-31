@@ -26,5 +26,7 @@ data class Product(
     companion object {
         @JvmStatic
         fun mockObject() = Product(1, "MockProduct", 10000.0, "MOCK")
+
+        fun isValidEntity(product: Product) = product.name.isNotBlank() && product.price >= 0.0
     }
 }

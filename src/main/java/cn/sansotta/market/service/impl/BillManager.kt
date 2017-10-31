@@ -12,5 +12,6 @@ import org.springframework.stereotype.Component
 class BillManager : BillService {
     override fun billOfOrder(oid: Long) = Bill.mockObject()
 
-    override fun queryPrice(items: Iterable<ShoppingItem>) = Bill(items)
+    override fun queryPrice(items: Iterable<ShoppingItem>)
+            = Bill(items.map { it.originUnitPrice = 1919.0;it })
 }

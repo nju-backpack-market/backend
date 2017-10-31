@@ -1,18 +1,25 @@
 package cn.sansotta.market.domain.value
 
-import cn.sansotta.market.domain.ValueObject
-import cn.sansotta.market.domain.entity.BillEntity
+import cn.sansotta.market.domain.value.ShoppingItem.Companion.isValidEntity
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 
 /**
  * Shopping list of an order.
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity>, Cloneable {
+// can only detect through getter 'cause of trigger in [totalPrice]'s getter
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.ANY)
+class Bill() : Iterable<ShoppingItem>, Cloneable {
     /* shopping list of shopping item in the bill */
+    @get:JsonProperty
     private val shoppingList = mutableListOf<ShoppingItem>()
+        @SuppressWarnings get() = field // it's the only way can hint jackson detect this, wired
     /* total price */
+    @get:JsonUnwrapped(suffix = "_total_price")
     private var totalPrice = Price()
         get() {
             field.origin = originTotalPrice // lazy calculation of origin price
@@ -27,7 +34,6 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity>, Cloneable {
         this.totalPrice = totalPrice
     }
 
-
     constructor(@JsonProperty("shopping_list") list: Iterable<ShoppingItem>) : this() {
         this.shoppingList.addAll(list)
     }
@@ -36,15 +42,12 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity>, Cloneable {
         this.shoppingList.addAll(items)
     }
 
-    constructor(po: BillEntity) : this(po.shoppingList.map { ShoppingItem(it) }) {
-        // calculate origin price from shopping list and total price from po
-        this.totalPrice = Price(originTotalPrice, po.totalPrice)
-    }
-
     override fun toString() = "Bill(shoppingList=$shoppingList, totalPrice=$totalPrice)"
 
+    @get:JsonIgnore
     val originTotalPrice
         get() = shoppingList.sumByDouble { it.originSubtotalPrice }
+    @get:JsonIgnore
     var actualTotalPrice
         get() = totalPrice.actual
         set(value) {
@@ -56,9 +59,6 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity>, Cloneable {
     }
 
     override fun iterator() = shoppingList.iterator()
-
-    override fun toEntity() =
-            BillEntity(shoppingList.map { it.toEntity() }, totalPrice.actual)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -81,5 +81,9 @@ class Bill() : Iterable<ShoppingItem>, ValueObject<BillEntity>, Cloneable {
     companion object {
         @JvmStatic
         fun mockObject() = Bill(ShoppingItem.mockObject(), ShoppingItem.mockObject().copy(pid = 2333))
+
+        @JvmStatic
+        fun isValidEntity(bill: Bill) = Price.isValidEntity(bill.totalPrice) &&
+                bill.shoppingList.all(ShoppingItem.Companion::isValidEntity)
     }
 }

@@ -4,7 +4,6 @@ import cn.sansotta.market.common.HAL_MIME_TYPE
 import cn.sansotta.market.controller.resource.DocumentResource
 import org.springframework.hateoas.Resource
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletResponse
 
@@ -14,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
  * An endpoint just for test server's availability.
  */
 @RestController
-open class PingController {
+class PingController {
     @GetMapping("/ping")
     fun ping() = "Hello"
 
@@ -42,6 +41,7 @@ open class PingController {
                             "GET和DELETE方法没有文档，直接看例子。" +
                                     "POST和PUT请查看文档并复制其中的例子，用例子进行NON-GET请求并查看返回值",
                             "POST成功默认状态值201，DELETE成功默认状态值204，未找到资源状态值404，无授权访问受限API状态值403, " +
-                                    "数据库错误507（此错误为暂时，应尝试重新请求），内部错误500").
+                                    "数据库错误507（此错误为暂时，应尝试重新请求），内部错误500",
+                            "大部分批量修改性api会返回修改成功了的实体列表。如PUT返回修改后的实体，DELETE返回成功删除了的id").
                             mapIndexed { index, s -> "${index + 1}. $s" }.toTypedArray()))
 }

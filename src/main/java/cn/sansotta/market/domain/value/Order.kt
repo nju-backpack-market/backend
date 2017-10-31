@@ -25,10 +25,14 @@ data class Order(
         /**
          * Order's state.
          * */
+        @set:JsonIgnore
+        @get:JsonProperty
         var state: OrderState,
         /**
          * Create time of order.
          * */
+        @set:JsonIgnore
+        @get:JsonProperty
         var time: LocalDateTime,
         /**
          * Delivery information of order.
@@ -48,13 +52,22 @@ data class Order(
     constructor() : this(-1, OrderState.CREATE, LocalDateTime.now(), DeliveryInfo(), Bill())
 
     constructor(po: OrderEntity)
-            : this(po.id, po.state, po.time, DeliveryInfo(po.deliveryInfo), Bill(po.bill))
+            : this(po.id, po.state, po.time, DeliveryInfo(po.deliveryInfo),
+            Bill(po.shoppingItems.map { ShoppingItem(it) }).apply { actualTotalPrice = po.totalPrice })
 
-    override fun toEntity() = OrderEntity(id, state, time, deliveryInfo.toEntity(), bill.toEntity())
+    override fun toEntity() =
+            OrderEntity(id, bill.actualTotalPrice, state, time,
+                    deliveryInfo.toEntity(),
+                    bill.map { it.toEntity() })
 
     companion object {
         @JvmStatic
         fun mockObject() = Order(1, OrderState.CREATE, LocalDateTime.now(), DeliveryInfo.mockObject(),
                 Bill.mockObject())
+
+        @JvmStatic
+        fun isValidEntity(order: Order) = DeliveryInfo.isValidEntity(order.deliveryInfo) &&
+                Bill.isValidEntity(order.bill) &&
+                order.time.isBefore(LocalDateTime.now())
     }
 }

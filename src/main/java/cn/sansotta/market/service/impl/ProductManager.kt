@@ -13,17 +13,20 @@ import org.springframework.stereotype.Component
  */
 @Component
 class ProductManager(private val productDao: ProductDao) : ProductService {
-    override fun newProducts(product: List<Product>): List<Product>? {
-        product.mapIndexed { index, p -> p.pid = index.toLong();p }
-        return product
+    override fun newProducts(products: List<Product>): List<Product>? {
+        // TODO: parameter should be valid entity
+        return products.filter { Product.isValidEntity(it) }
+                .mapIndexed { index, p -> p.pid = index.toLong();p }
     }
 
-    override fun modifiedProduct(product: Product): Boolean {
-        return true
+    override fun modifyProducts(products: List<Product>): List<Product>? {
+        // TODO: pid should be valid
+        return products.filter { it.pid > 0L }
     }
 
-    override fun removeProducts(ids: List<Long>): Boolean {
-        return true
+    override fun removeProducts(ids: List<Long>): List<Long>? {
+        // TODO: id should be valid
+        return ids.filter { it > 0L }
     }
 
     private val mockProduct = ProductEntity(1, "MockProduct", 10000.0, "MOCK")

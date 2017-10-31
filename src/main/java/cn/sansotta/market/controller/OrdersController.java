@@ -11,22 +11,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import cn.sansotta.market.controller.resource.OrderAssembler;
 import cn.sansotta.market.controller.resource.OrderResource;
 import cn.sansotta.market.domain.value.Order;
+import cn.sansotta.market.domain.value.OrderState;
 import cn.sansotta.market.service.OrderService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.notFoundEntity;
+import static cn.sansotta.market.common.HateoasUtils.conflictResponse;
+import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse;
+import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
 import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -49,12 +56,13 @@ public class OrdersController {
     }
 
     @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
-    public ResponseEntity<OrderResource> createOrder(@RequestBody Order order) {
-        Order responseOrder = orderService.createOrder(order);
+    public ResponseEntity<OrderResource>
+    createOrder(@RequestBody Order order) {
+        Order responseOrder = orderService.newOrder(order);
         if(responseOrder == null)
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return conflictResponse();
         else if(responseOrder.getId() == -1)
-            return new ResponseEntity<>(HttpStatus.INSUFFICIENT_STORAGE);
+            return insufficientStorageResponse();
         else {
             HttpHeaders header = new HttpHeaders();
             header.add("Location", "/orders/" + responseOrder.getId());
@@ -63,10 +71,33 @@ public class OrdersController {
     }
 
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
-    public ResponseEntity<OrderResource> order(@PathVariable("id") long id) {
+    public ResponseEntity<OrderResource>
+    order(@PathVariable("id") long id) {
         Order order = orderService.order(id);
-        return order == null ? notFoundEntity() : toResponse(new OrderResource(order));
+        return order == null ? notFoundResponse() : toResponse(new OrderResource(order));
     }
+
+//    @GetMapping(produces = HAL_MIME_TYPE)
+//    public ResponseEntity<List<OrderResource>>
+//    ordersOfCustomer(@RequestParam("name") String name,
+//          @RequestParam("phone") String phone,
+//          @RequestParam(value = "full", required = false, defaultValue = "true") boolean full) {
+//
+//    }
+//
+//    @GetMapping(value = "/status/{status}", produces = HAL_MIME_TYPE)
+//    public ResponseEntity<List<OrderResource>>
+//    ordersOfStatus(@PathVariable("status") OrderState status,
+//                  @RequestParam(value = "full", required = false, defaultValue = "false") boolean full) {
+//
+//    }
+//
+//    @GetMapping(value = "/date/{date}", produces = HAL_MIME_TYPE)
+//    public ResponseEntity<List<OrderResource>>
+//    ordersOfDate(@PathVariable("date") LocalDate date,
+//                @RequestParam(value = "full", required = false, defaultValue = "false") boolean full) {
+//
+//    }
 
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<OrderResource>>
@@ -75,7 +106,24 @@ public class OrdersController {
         PageInfo<Order> pageInfo;
         if(full) pageInfo = orderService.allOrders(page);
         else pageInfo = orderService.allOrdersIndex(page);
-        return pageInfo == null ? notFoundEntity() : toResponse(assembleResources(pageInfo));
+        return pageInfo == null ? notFoundResponse() :
+                toResponse(assembleResources(pageInfo));
+    }
+
+    @PutMapping(value = "/{id}", consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
+    public ResponseEntity
+    modifyOrder(@RequestBody List<Order> orders) {
+        List<Order> updated = orderService.modifyOrders(orders);
+        return updated == null ? insufficientStorageResponse() :
+                toResponse(assembleResources(updated));
+    }
+
+    @PutMapping(value = "/{id}/status", produces = HAL_MIME_TYPE)
+    public ResponseEntity
+    modifyOrderStatus(@PathVariable("id") Long id, @RequestParam("modified") OrderState state) {
+        Order updated = orderService.modifyOrderStatus(id, state);
+        return updated == null ? insufficientStorageResponse() :
+                toResponse(assembleResource(updated));
     }
 
     @RequestMapping(method = RequestMethod.HEAD)
@@ -85,9 +133,12 @@ public class OrdersController {
 
     private OrderResource assembleResource(Order order) {
         OrderResource resource = assembler.toResource(order);
-        resource.add(link.linkToSingleResource(order));
         resource.add(link.linkToCollectionResource(Order.class).withRel("collection"));
         return resource;
+    }
+
+    private List<OrderResource> assembleResources(List<Order> orders) {
+        return assembler.toResources(orders);
     }
 
     private PagedResources<OrderResource> assembleResources(PageInfo<Order> info) {

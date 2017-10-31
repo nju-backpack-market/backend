@@ -21,7 +21,7 @@ import cn.sansotta.market.service.BillService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.notFoundEntity;
+import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
 
 /**
@@ -45,7 +45,7 @@ public class BillsController {
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<BillResource> billOfOrder(@RequestParam("oid") Long oid) {
         Bill bill = billService.billOfOrder(oid);
-        return bill == null ? notFoundEntity() : toResponse(new BillResource(bill, true));
+        return bill == null ? notFoundResponse() : toResponse(new BillResource(bill, true));
     }
 
     @RequestMapping(method = RequestMethod.HEAD)

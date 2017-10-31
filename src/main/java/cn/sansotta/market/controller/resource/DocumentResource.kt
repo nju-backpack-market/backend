@@ -30,7 +30,7 @@ open class DocumentResource private constructor() : Resource<String>("Document")
                 newProducts(Collections.singletonList(Product.mockObject()))
             }
             api("update_products", HttpMethod.PUT) {
-                modifiedProducts(Collections.singletonList(Product.mockObject()))
+                modifyProducts(Collections.singletonList(Product.mockObject()))
             }
             api("delete_products", HttpMethod.DELETE) { removeProducts(Collections.singletonList(1)) }
         }

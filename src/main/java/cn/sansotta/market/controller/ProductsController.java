@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import cn.sansotta.market.controller.resource.ProductAssembler;
 import cn.sansotta.market.controller.resource.ProductResource;
@@ -27,7 +26,8 @@ import cn.sansotta.market.service.ProductService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.notFoundEntity;
+import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse;
+import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
 import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -50,36 +50,40 @@ public class ProductsController {
     }
 
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
-    public ResponseEntity<ProductResource> product(@PathVariable("id") long id) {
+    public ResponseEntity<ProductResource>
+    product(@PathVariable("id") long id) {
         Product product = productService.product(id);
-        return product == null ? notFoundEntity() : toResponse(assembleResource(product));
+        return product == null ? notFoundResponse() : toResponse(assembleResource(product));
     }
 
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<ProductResource>>
     allProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         PageInfo<Product> pageInfo = productService.allProducts(page);
-        return pageInfo == null ? notFoundEntity() : toResponse(assembleResources(pageInfo));
+        return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
     }
 
     @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
-    public ResponseEntity<List<ProductResource>> newProducts(@RequestBody List<Product> products) {
+    public ResponseEntity<List<ProductResource>>
+    newProducts(@RequestBody List<Product> products) {
         List<Product> created = productService.newProducts(products);
-        return created == null ? new ResponseEntity<>(HttpStatus.INSUFFICIENT_STORAGE) :
+        return created == null ? insufficientStorageResponse() :
                 toResponse(assembleResources(created), HttpStatus.CREATED);
     }
 
     @PutMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
-    public ResponseEntity<List<ProductResource>> modifiedProducts(@RequestBody List<Product> products) {
-        List<Product> updated = products.stream().filter(productService::modifiedProduct)
-                .collect(Collectors.toList());
-        return toResponse(assembleResources(updated));
+    public ResponseEntity<List<ProductResource>>
+    modifyProducts(@RequestBody List<Product> products) {
+        List<Product> updated = productService.modifyProducts(products);
+        return updated == null ? insufficientStorageResponse() :
+                toResponse(assembleResources(updated));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity removeProducts(@PathVariable("id") List<Long> ids) {
-        return productService.removeProducts(ids) ? new ResponseEntity(HttpStatus.NO_CONTENT) :
-                new ResponseEntity(HttpStatus.INSUFFICIENT_STORAGE);
+    public ResponseEntity<List<Long>>
+    removeProducts(@PathVariable("id") List<Long> ids) {
+        List<Long> deleted = productService.removeProducts(ids);
+        return deleted == null ? insufficientStorageResponse() : toResponse(deleted);
     }
 
     private ProductResource assembleResource(Product product) {

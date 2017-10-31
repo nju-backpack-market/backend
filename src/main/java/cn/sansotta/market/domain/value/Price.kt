@@ -39,4 +39,10 @@ data class Price(
     constructor(po: PriceEntity) : this(po.origin, po.actual)
 
     override fun toEntity() = PriceEntity(origin, actual)
+
+    companion object {
+        @JvmStatic
+        fun isValidEntity(price: Price) =
+                price.origin >= 0.0 && price.actual?.let { it > 0.0 } ?: true
+    }
 }
