@@ -21,29 +21,34 @@ import cn.sansotta.market.domain.entity.ProductEntity;
  */
 @Mapper
 public interface ProductMapper {
-    @Results(id = "productMap")
+
+	@Results(id = "productMap")
     @ConstructorArgs({
             @Arg(id = true, column = "pid", javaType = long.class),
             @Arg(column = "pname", javaType = String.class),
             @Arg(column = "price", javaType = double.class),
             @Arg(column = "description", javaType = String.class)})
     @Select("SELECT * FROM products WHERE pid=#{id}")
-    ProductEntity selectProductById(@Param("id") long id);
+    ProductEntity selectProductById(long id);
 
+	// TODO: TEST
     @ResultMap("productMap")
     @Select("SELECT * FROM products")
     List<ProductEntity> selectAllProduct();
 
+	// TODO: TEST
     @Insert("INSERT INTO products(pname, price, description)" +
             "VALUES (#{name}, #{price}, #{description})")
     @Options(useGeneratedKeys = true, keyProperty = "pid")
     void insertProduct(ProductEntity product);
 
+	// TODO: TEST
     @Update("UPDATE products SET " +
-            "pname=#{name}, price = #{price}, description = #{description} " +
-            "WHERE pid = #{id}")
+            "pname=#{name}, price=#{price}, description=#{description} " +
+            "WHERE pid=#{id}")
     void updateProduct(ProductEntity product);
 
-    @Delete("DELETE FROM products WHERE pid = #{id}")
-    void deleteProduct(@Param("id") long id);
+	// TODO: TEST
+    @Delete("DELETE FROM products WHERE pid=#{id}")
+    void deleteProduct(long id);
 }

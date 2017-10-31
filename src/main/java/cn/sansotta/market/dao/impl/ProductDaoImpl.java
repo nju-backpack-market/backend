@@ -43,4 +43,19 @@ public class ProductDaoImpl implements ProductDao {
         // example:
         return template.paged(pageNum, 30, ProductMapper::selectAllProduct);
     }
+
+    @Override
+    public void insertProduct(ProductEntity product) {
+
+    }
+
+    @Override
+    public void updateProduct(ProductEntity product) {
+
+    }
+
+    @Override
+    public void deleteProduct(long id) {
+
+    }
 }

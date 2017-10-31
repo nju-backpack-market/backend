@@ -1,9 +1,6 @@
 package cn.sansotta.market.mapper;
 
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,29 +16,42 @@ import cn.sansotta.market.domain.value.OrderState;
 @Mapper
 public interface OrderMapper {
 
-    @ConstructorArgs({
+	// TODO TEST
+	@Results(id = "orderMap")
+	@ConstructorArgs({
             @Arg(id = true, column = "oid", javaType = long.class),
+			@Arg(column = "total_price", javaType = double.class),
             @Arg(column = "state", javaType = OrderState.class),
             @Arg(column = "time", javaType = LocalDateTime.class),
             @Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.deliveryInfoMap",
                     javaType = DeliveryInfoEntity.class),
-            @Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.billMap",
-                    javaType = BillEntity.class)})
+            @Arg(column = "oid",
+					select = "cn.sansotta.market.mapper.ShoppingItemMapper.selectShoppingItemsByOrderId",
+					javaType = List.class)})
     @Select("SELECT * FROM orders WHERE oid=#{id}")
     OrderEntity selectOrderById(long id);
 
+	@ResultMap("orderMap")
     @Select("SELECT * FROM orders")
     List<OrderEntity> selectAllOrder();
 
-    @Select("SELECT * FROM orders WHERE state=#{state}")
+	@ResultMap("orderMap")
+	@Select("SELECT * FROM orders WHERE state=#{state}")
     List<OrderEntity> selectOrderByState(OrderState state);
 
-    //	@Insert("INSERT INTO orders(oid, state, time, c_name, c_phone_number, c_address) ")
-    void insertOrder(OrderEntity order);
+	// TODO TEST
+	@Insert("INSERT INTO orders(total_price, state, time, c_name, c_phone_number, c_email, c_address) " +
+            "VALUES (#{totalPrice}, #{state}, #{time}, #{name}, #{phoneNumber}, #{email}, #{address})")
+	@Options(useGeneratedKeys = true, keyProperty = "oid")
+	void insertOrder(OrderEntity order);
 
+    // TODO TEST
+	@Update("UPDATE orders SET " +
+			"total_price=#{totalPrice}, state=#{state}, time=#{time}, c_name=#{name}, c_phone_number=#{phoneNumber}, c_email=#{email}, c_address=#{address}" +
+			"WHERE oid=#{oid}")
     void updateOrder(OrderEntity order);
 
-
+	@Delete("DELETE FROM orders WHERE oid=#{id}")
     void deleteOrder(long id);
 
 }
