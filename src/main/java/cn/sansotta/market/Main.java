@@ -21,29 +21,12 @@ import java.util.List;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+/**
+ * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
+ */
 @SpringBootApplication
-public class Main implements CommandLineRunner  {
-    public static void main(String... args) {
-        SpringApplication.run(Main.class);
-    }
-
-    final private OrderMapper mapper;
-
-    public Main(OrderMapper mapper) {
-        this.mapper = mapper;
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        OrderEntity order = new OrderEntity(2, Double.valueOf(1111), OrderState.CREATE, LocalDateTime.now(), new DeliveryInfoEntity("hiki", "110", "email", "nj"), new ArrayList<>());
-        this.mapper.updateOrder(order);
-
-//        System.out.println(this.mapper.selectShoppingItemsByOrderId(1));
-//        List<ShoppingItemEntity> list = new ArrayList<>();
-//        list.add(new ShoppingItemEntity(1, 222, 1, new PriceEntity(1, Double.valueOf(1)), Double.valueOf(1) ));
-//        this.mapper.insertShoppingItems(list);
-//        this.mapper.deleteShoppingItems(1);
-
-    }
-
+public class Main {
+	public static void main(String... args) {
+		SpringApplication.run(Main.class);
+	}
 }
