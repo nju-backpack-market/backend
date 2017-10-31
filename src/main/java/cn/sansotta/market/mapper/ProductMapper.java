@@ -31,24 +31,24 @@ public interface ProductMapper {
     @Select("SELECT * FROM products WHERE pid=#{id}")
     ProductEntity selectProductById(long id);
 
-	// TODO: TEST
+
     @ResultMap("productMap")
     @Select("SELECT * FROM products")
-    List<ProductEntity> selectAllProduct();
+    List<ProductEntity> selectAllProducts();
 
-	// TODO: TEST
+
     @Insert("INSERT INTO products(pname, price, description)" +
             "VALUES (#{name}, #{price}, #{description})")
     @Options(useGeneratedKeys = true, keyProperty = "pid")
     void insertProduct(ProductEntity product);
 
-	// TODO: TEST
+
     @Update("UPDATE products SET " +
             "pname=#{name}, price=#{price}, description=#{description} " +
             "WHERE pid=#{id}")
     void updateProduct(ProductEntity product);
 
-	// TODO: TEST
+
     @Delete("DELETE FROM products WHERE pid=#{id}")
     void deleteProduct(long id);
 }

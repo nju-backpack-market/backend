@@ -18,12 +18,14 @@ import cn.sansotta.market.domain.entity.PriceEntity;
  */
 @Mapper
 public interface DummyMapper {
+
     @Results(id = "priceMap")
     @ConstructorArgs({
             @Arg(column = "origin", javaType = double.class),
             @Arg(column = "actual", javaType = Double.class)})
     @Select("")
     PriceEntity price();
+
 
     @Results(id = "deliveryInfoMap")
     @ConstructorArgs({

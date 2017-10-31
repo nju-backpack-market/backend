@@ -11,14 +11,12 @@ public interface OrderDao {
 
 	OrderEntity selectOrderById(long id);
 
-	PageInfo<OrderEntity> selectAllOrder();
+	PageInfo<OrderEntity> selectAllOrders(int pageNum);
 
-	PageInfo<OrderEntity> selectOrderByState(OrderState state);
+	PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderState state);
 
 	void insertOrder(OrderEntity order);
 
 	void updateOrder(OrderEntity order);
-
-	void deleteOrder(long id);
 
 }

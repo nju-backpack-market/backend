@@ -15,47 +15,36 @@ import cn.sansotta.market.mapper.ProductMapper;
  */
 @Component
 public class ProductDaoImpl implements ProductDao {
-    // e.g. use
-    private final MybatisUtils util;
-    // or use
-    private final MybatisUtils.MapperTemplate<ProductMapper> template;
+
+    private final MybatisUtils.MapperTemplate<ProductMapper> productTpl;
 
     public ProductDaoImpl(MybatisUtils util) {
-        this.util = util;
-        // or
-        this.template = util.mapperTemplate(ProductMapper.class);
+        this.productTpl = util.mapperTemplate(ProductMapper.class);
     }
 
     @Override
     public ProductEntity selectProductById(long id) {
-        // example:
-        ProductEntity product0 =
-                util.withMapper(ProductMapper.class, mapper -> mapper.selectProductById(id));
-        // if you think it not so cool, try
-        ProductEntity product1 = template.exec(mapper -> mapper.selectProductById(id));
-        ProductEntity product2 = template.exec(id, ProductMapper::selectProductById);
-        return product0;
+        return productTpl.exec(productMapper -> productMapper.selectProductById(id));
     }
 
     @Transactional
     @Override
     public PageInfo<ProductEntity> selectAllProducts(int pageNum) {
-        // example:
-        return template.paged(pageNum, 30, ProductMapper::selectAllProduct);
+        return productTpl.paged(pageNum, 30, ProductMapper::selectAllProducts);
     }
 
     @Override
     public void insertProduct(ProductEntity product) {
-
+//        productTpl.exec(productMapper -> productMapper.insertProduct(product));
     }
 
     @Override
     public void updateProduct(ProductEntity product) {
-
+//        productTpl.exec(productMapper -> productMapper.updateProduct(product));
     }
 
     @Override
     public void deleteProduct(long id) {
-
+//        productTpl.exec(productMapper -> productMapper.deleteProduct(id));
     }
 }
