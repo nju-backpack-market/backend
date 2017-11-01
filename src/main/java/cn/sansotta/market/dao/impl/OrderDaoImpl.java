@@ -45,14 +45,24 @@ public class OrderDaoImpl implements OrderDao{
 
 	@Transactional
 	@Override
-	public void insertOrder(OrderEntity order) {
-//		orderTpl.exec(orderMapper -> orderMapper.insertOrder(order));
-//		shoppingItemTpl.exec(shoppingItemMapper -> shoppingItemMapper.insertShoppingItems(order.getShoppingItems()));
+	public OrderEntity insertOrder(OrderEntity order) throws RuntimeException{
+		try {
+			orderTpl.exec(orderMapper -> orderMapper.insertOrder(order));
+			shoppingItemTpl.exec(shoppingItemMapper -> shoppingItemMapper.insertShoppingItems(order.getShoppingItems()));
+			return order;
+		} catch (RuntimeException e){
+			throw e;
+		}
 	}
 
 	@Override
-	public void updateOrder(OrderEntity order) {
-//		orderTpl.exec(orderMapper -> orderMapper.updateOrder(order));
+	public boolean updateOrder(OrderEntity order) throws RuntimeException{
+		try {
+			int affectedRow = orderTpl.exec(orderMapper -> orderMapper.updateOrder(order));
+			return affectedRow > 0;
+		} catch (RuntimeException e){
+			throw e;
+		}
 	}
 
 }

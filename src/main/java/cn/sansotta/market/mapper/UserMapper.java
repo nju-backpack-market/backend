@@ -22,14 +22,14 @@ public interface UserMapper {
 
 
 	@Insert("INSERT INTO users(username, password) VALUES (#{username}, #{password})")
-	void insertUser(UserEntity user);
+	int insertUser(UserEntity user);
 
 
 	@Update("UPDATE users SET password=#{password} WHERE username=#{username}")
-	void updateUser(UserEntity user);
+	int updateUser(UserEntity user);
 
 
 	@Delete("DELETE FROM users WHERE username=#{username}")
-	void deleteUser(String username);
+	int deleteUser(String username);
 
 }

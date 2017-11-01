@@ -12,10 +12,10 @@ public interface ProductDao {
 
     PageInfo<ProductEntity> selectAllProducts(int pageNum);
 
-    void insertProduct(ProductEntity product);
+    ProductEntity insertProduct(ProductEntity product) throws RuntimeException;
 
-    void updateProduct(ProductEntity product);
+    boolean updateProduct(ProductEntity product) throws RuntimeException;
 
-    void deleteProduct(long id);
+    boolean deleteProduct(long id) throws RuntimeException;
 
 }

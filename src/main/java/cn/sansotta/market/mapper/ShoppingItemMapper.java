@@ -13,7 +13,6 @@ import cn.sansotta.market.domain.entity.ShoppingItemEntity;
 @Mapper
 public interface ShoppingItemMapper {
 
-	// TODO TEST
     @Results(id = "shoppingItemMap")
     @ConstructorArgs({
 			@Arg(column = "oid", javaType = long.class),
@@ -25,7 +24,7 @@ public interface ShoppingItemMapper {
             "FROM shopping_items WHERE oid = #{oid}")
     List<ShoppingItemEntity> selectShoppingItemsByOrderId(long oid);
 
-    // TODO TEST
+
 	@Insert({
 			"<script>",
 			"INSERT INTO shopping_items (oid, pid, count, unit_price, subtotal_price) VALUES",
@@ -34,10 +33,10 @@ public interface ShoppingItemMapper {
 			"</foreach>",
 			"</script>"
 	})
-	void insertShoppingItems(List<ShoppingItemEntity> shoppingItems);
+	int insertShoppingItems(List<ShoppingItemEntity> shoppingItems);
 
-	// TODO TEST
+
 	@Delete("DELETE FROM shopping_items where oid=#{oid}")
-	void deleteShoppingItems(long oid);
+	int  deleteShoppingItems(long oid);
 
 }

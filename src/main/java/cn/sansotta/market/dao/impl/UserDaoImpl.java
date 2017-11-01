@@ -6,6 +6,7 @@ import cn.sansotta.market.domain.entity.UserEntity;
 import cn.sansotta.market.mapper.ProductMapper;
 import cn.sansotta.market.mapper.UserMapper;
 import com.github.pagehelper.PageInfo;
+import com.sun.org.apache.regexp.internal.RE;
 
 /**
  * Created by Hiki on 2017/11/1.
@@ -29,17 +30,32 @@ public class UserDaoImpl implements UserDao{
 	}
 
 	@Override
-	public void insertUser(UserEntity user) {
-//		userTpl.exec(userMapper -> userMapper.insertUser(user));
+	public UserEntity insertUser(UserEntity user) throws RuntimeException{
+		try {
+			userTpl.exec(userMapper -> userMapper.insertUser(user));
+			return user;
+		} catch (RuntimeException e){
+			throw e;
+		}
 	}
 
 	@Override
-	public void updateUser(UserEntity user) {
-//		userTpl.exec(userMapper -> userMapper.updateUser(user));
+	public boolean updateUser(UserEntity user) throws RuntimeException{
+		try {
+			int affectedRow = userTpl.exec(userMapper -> userMapper.updateUser(user));
+			return affectedRow > 0;
+		} catch (RuntimeException e){
+			throw e;
+		}
 	}
 
 	@Override
-	public void deleteUser(String username) {
-//		userTpl.exec(userMapper -> userMapper.deleteUser(username));
+	public boolean deleteUser(String username) throws RuntimeException{
+		try {
+			int affectedRow = userTpl.exec(userMapper -> userMapper.deleteUser(username));
+			return affectedRow > 0;
+		} catch (RuntimeException e){
+			throw e;
+		}
 	}
 }

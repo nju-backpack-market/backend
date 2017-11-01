@@ -1,16 +1,6 @@
 package cn.sansotta.market.mapper;
 
-import org.apache.ibatis.annotations.Arg;
-import org.apache.ibatis.annotations.ConstructorArgs;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.ResultMap;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -37,18 +27,19 @@ public interface ProductMapper {
     List<ProductEntity> selectAllProducts();
 
 
-    @Insert("INSERT INTO products(pname, price, description)" +
+	@Options(useGeneratedKeys = true, keyColumn = "pid")
+	@Insert("INSERT INTO products(pname, price, description)" +
             "VALUES (#{name}, #{price}, #{description})")
-    @Options(useGeneratedKeys = true, keyProperty = "pid")
-    void insertProduct(ProductEntity product);
+	@SelectKey(statement="SELECT LAST_INSERT_ID();", resultType = long.class, before = false, keyProperty = "id")
+	int insertProduct(ProductEntity product);
 
 
     @Update("UPDATE products SET " +
             "pname=#{name}, price=#{price}, description=#{description} " +
             "WHERE pid=#{id}")
-    void updateProduct(ProductEntity product);
+    int updateProduct(ProductEntity product);
 
 
     @Delete("DELETE FROM products WHERE pid=#{id}")
-    void deleteProduct(long id);
+	int deleteProduct(long id);
 }

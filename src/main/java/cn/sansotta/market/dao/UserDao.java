@@ -12,10 +12,10 @@ public interface UserDao {
 
 	PageInfo<UserEntity> selectAllUsers(int pageNum);
 
-	void insertUser(UserEntity user);
+	UserEntity insertUser(UserEntity user) throws RuntimeException;
 
-	void updateUser(UserEntity user);
+	boolean updateUser(UserEntity user) throws RuntimeException;
 
-	void deleteUser(String username);
+	boolean deleteUser(String username) throws RuntimeException;
 
 }

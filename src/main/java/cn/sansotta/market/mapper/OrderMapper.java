@@ -43,16 +43,16 @@ public interface OrderMapper {
 	@Insert("INSERT INTO orders(total_price, state, time, c_name, c_phone_number, c_email, c_address) " +
             "VALUES (#{totalPrice}, #{state}, #{time}, #{deliveryInfo.name}, #{deliveryInfo.phoneNumber}, #{deliveryInfo.email}, #{deliveryInfo.address})")
 	@Options(useGeneratedKeys = true, keyProperty = "oid")
-	void insertOrder(OrderEntity order);
+	int insertOrder(OrderEntity order);
 
 
 	@Update("UPDATE orders SET " +
 			"total_price=#{totalPrice}, state=#{state}, time=#{time}, c_name=#{deliveryInfo.name}, c_phone_number=#{deliveryInfo.phoneNumber}, c_email=#{deliveryInfo.email}, c_address=#{deliveryInfo.address}" +
 			"WHERE oid=#{id}")
-    void updateOrder(OrderEntity order);
+    int updateOrder(OrderEntity order);
 
 
 	@Delete("DELETE FROM orders WHERE oid=#{id}")
-    void deleteOrder(long id);
+    int deleteOrder(long id);
 
 }

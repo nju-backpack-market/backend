@@ -15,8 +15,8 @@ public interface OrderDao {
 
 	PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderState state);
 
-	void insertOrder(OrderEntity order);
+	OrderEntity insertOrder(OrderEntity order) throws RuntimeException;
 
-	void updateOrder(OrderEntity order);
+	boolean updateOrder(OrderEntity order) throws RuntimeException;
 
 }

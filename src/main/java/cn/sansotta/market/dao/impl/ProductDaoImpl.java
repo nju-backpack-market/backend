@@ -34,17 +34,28 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void insertProduct(ProductEntity product) {
-//        productTpl.exec(productMapper -> productMapper.insertProduct(product));
+    public ProductEntity insertProduct(ProductEntity product) {
+        productTpl.exec(productMapper -> productMapper.insertProduct(product));
+        return product;
     }
 
     @Override
-    public void updateProduct(ProductEntity product) {
-//        productTpl.exec(productMapper -> productMapper.updateProduct(product));
+    public boolean updateProduct(ProductEntity product) throws RuntimeException{
+    	try {
+			int affectedRow = productTpl.exec(productMapper -> productMapper.updateProduct(product));
+        	return affectedRow > 0;
+		} catch (RuntimeException e){
+			throw e;
+		}
     }
 
     @Override
-    public void deleteProduct(long id) {
-//        productTpl.exec(productMapper -> productMapper.deleteProduct(id));
+    public boolean deleteProduct(long id) throws RuntimeException{
+		try {
+			int affectedRow = productTpl.exec(productMapper -> productMapper.deleteProduct(id));
+			return affectedRow > 0;
+		} catch (RuntimeException e){
+			throw e;
+		}
     }
 }
