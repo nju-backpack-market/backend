@@ -4,6 +4,7 @@ package cn.sansotta.market.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pagehelper.PageInfo
+import org.slf4j.Logger
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -35,4 +36,12 @@ fun <T, R> copyPageInfo(pageInfo: PageInfo<T>, listConverter: (T) -> R) =
             isHasPreviousPage = pageInfo.isHasPreviousPage
             setHasNextPage(pageInfo.isHasNextPage)
             list = pageInfo.list.map { listConverter(it) }
+        }
+
+inline fun <T> hazard(logger: Logger, method: String, defaultVal: T, func: () -> T) =
+        try {
+            func()
+        } catch (ex: RuntimeException) {
+            logger.error("Exception when $method caused by $ex")
+            defaultVal
         }

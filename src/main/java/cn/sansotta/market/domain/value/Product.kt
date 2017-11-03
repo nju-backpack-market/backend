@@ -28,5 +28,15 @@ data class Product(
         fun mockObject() = Product(1, "MockProduct", 10000.0, "MOCK")
 
         fun isValidEntity(product: Product) = product.name.isNotBlank() && product.price >= 0.0
+
+        fun mergeAsUpdate(origin: ProductEntity, modified: Product): Product {
+            assert(origin.id == modified.id)
+
+            if (modified.name.isBlank())
+                modified.name = origin.name
+            if (modified.price < 0.0)
+                modified.price = origin.price
+            return modified
+        }
     }
 }

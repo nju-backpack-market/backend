@@ -22,40 +22,44 @@ public class ProductDaoImpl implements ProductDao {
         this.productTpl = util.mapperTemplate(ProductMapper.class);
     }
 
+    @Transactional
     @Override
     public ProductEntity selectProductById(long id) {
-        return productTpl.exec(productMapper -> productMapper.selectProductById(id));
+        try {
+            return productTpl.exec(productMapper -> productMapper.selectProductById(id));
+        } catch (RuntimeException ex) {
+            return null;
+        }
     }
 
     @Transactional
     @Override
     public PageInfo<ProductEntity> selectAllProducts(int pageNum) {
-        return productTpl.paged(pageNum, 30, ProductMapper::selectAllProducts);
+        try {
+            return productTpl.paged(pageNum, 30, ProductMapper::selectAllProducts);
+        } catch (RuntimeException ex) {
+            return null;
+        }
     }
 
+    @Transactional
     @Override
     public ProductEntity insertProduct(ProductEntity product) {
         productTpl.exec(productMapper -> productMapper.insertProduct(product));
         return product;
     }
 
+    @Transactional
     @Override
-    public boolean updateProduct(ProductEntity product) throws RuntimeException{
-    	try {
-			int affectedRow = productTpl.exec(productMapper -> productMapper.updateProduct(product));
-        	return affectedRow > 0;
-		} catch (RuntimeException e){
-			throw e;
-		}
+    public boolean updateProduct(ProductEntity product) {
+        int affectedRow = productTpl.exec(productMapper -> productMapper.updateProduct(product));
+        return affectedRow > 0;
     }
 
+    @Transactional
     @Override
-    public boolean deleteProduct(long id) throws RuntimeException{
-		try {
-			int affectedRow = productTpl.exec(productMapper -> productMapper.deleteProduct(id));
-			return affectedRow > 0;
-		} catch (RuntimeException e){
-			throw e;
-		}
+    public boolean deleteProduct(long id) {
+        int affectedRow = productTpl.exec(productMapper -> productMapper.deleteProduct(id));
+        return affectedRow > 0;
     }
 }
