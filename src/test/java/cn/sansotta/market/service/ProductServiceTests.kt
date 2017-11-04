@@ -1,7 +1,7 @@
 package cn.sansotta.market.service
 
 import cn.sansotta.market.domain.value.Product
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,15 +43,15 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
                 Product(5, "蓝包", 23.33, "Mock5"),
                 Product(6, "橙包", 46.66, "MOCK6"),
                 Product(-1, "错了!", -1.0, "ERROR")) // this should not be inserted
-        assertEquals(service.newProducts(products)?.size, 2)
-        assertEquals(countRowsInTable("products"), 6)
+        assertEquals(2, service.newProducts(products).size)
+        assertEquals(6, countRowsInTable("products"))
         println(service.allProducts(0))
     }
 
     @Test
     fun deleteProducts() {
-        assertEquals(service.removeProducts(listOf(1, 2, 5))?.size, 2)
-        assertEquals(countRowsInTable("products"), 2)
+        assertEquals(2, service.removeProducts(listOf(1, 2, 5)).size)
+        assertEquals(2, countRowsInTable("products"))
     }
 
     @Test
@@ -60,7 +60,7 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
                 Product(3, "", 0.01, ""),
                 Product(1, "哇哇哇", -1.0, "大减价！"),
                 Product(5, "NO", 10.0, "TEST"))
-        assertEquals(service.modifyProducts(products)?.size, 2)
+        assertEquals(service.modifyProducts(products).size, 2)
         assertEquals(service.product(3)?.name, "绿包")
         assertEquals(service.product(1)?.description, "大减价！")
         assertEquals(service.product(1)?.price, 11.4)

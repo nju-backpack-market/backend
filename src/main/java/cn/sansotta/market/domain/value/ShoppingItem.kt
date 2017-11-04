@@ -75,7 +75,8 @@ data class ShoppingItem(
         fun mockObject() = ShoppingItem(114514, 1919, 81.0)
 
         @JvmStatic
-        fun isValidEntity(item: ShoppingItem) = item.count > 0 &&
+        fun isValidEntity(item: ShoppingItem)
+                = item.count > 0 &&
                 Price.isValidEntity(item.unitPrice) &&
                 Price.isValidEntity(item.subtotalPrice)
     }

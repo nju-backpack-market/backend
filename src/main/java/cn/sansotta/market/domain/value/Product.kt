@@ -29,8 +29,8 @@ data class Product(
 
         fun isValidEntity(product: Product) = product.name.isNotBlank() && product.price >= 0.0
 
-        fun mergeAsUpdate(origin: ProductEntity, modified: Product): Product {
-            assert(origin.id == modified.id)
+        fun mergeAsUpdate(origin: ProductEntity, modified: Product): Product? {
+            if (origin.id != modified.id) return null
 
             if (modified.name.isBlank())
                 modified.name = origin.name

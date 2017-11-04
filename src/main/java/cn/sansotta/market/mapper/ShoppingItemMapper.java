@@ -1,6 +1,13 @@
 package cn.sansotta.market.mapper;
 
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Arg;
+import org.apache.ibatis.annotations.ConstructorArgs;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -15,28 +22,30 @@ public interface ShoppingItemMapper {
 
     @Results(id = "shoppingItemMap")
     @ConstructorArgs({
-			@Arg(column = "oid", javaType = long.class),
+            @Arg(column = "oid", javaType = long.class),
             @Arg(column = "pid", javaType = long.class),
             @Arg(column = "count", javaType = int.class),
-            @Arg(column = "unit_price", javaType = double.class),
-            @Arg(column = "subtotal_price", javaType = double.class)})
-    @Select("SELECT oid, pid, count, unit_price, subtotal_price " +
+            @Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.priceMap",
+                    javaType = PriceEntity.class),
+            @Arg(column = "subtotal_price", javaType = Double.class)})
+    @Select("SELECT oid, pid, `count`, origin_price AS origin, actual_price AS actual, subtotal_price " +
             "FROM shopping_items WHERE oid = #{oid}")
     List<ShoppingItemEntity> selectShoppingItemsByOrderId(long oid);
 
 
-	@Insert({
-			"<script>",
-			"INSERT INTO shopping_items (oid, pid, count, unit_price, subtotal_price) VALUES",
-			"<foreach collection='shoppingItems' item='shoppingItem' separator=','>",
-			"(#{shoppingItem.oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice}, #{shoppingItem.subtotalPrice})",
-			"</foreach>",
-			"</script>"
-	})
-	int insertShoppingItems(List<ShoppingItemEntity> shoppingItems);
+    @Insert({
+            "<script>",
+            "INSERT INTO shopping_items (oid, pid, `count`, origin_price, actual_price, subtotal_price) VALUES",
+            "<foreach collection='list' item='shoppingItem' separator=','>",
+            "(#{shoppingItem.oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice.origin}," +
+                    " #{shoppingItem.unitPrice.actual}, #{shoppingItem.subtotalPrice})",
+            "</foreach>",
+            "</script>"
+    })
+    int insertShoppingItems(@Param("list") List<ShoppingItemEntity> list);
 
 
-	@Delete("DELETE FROM shopping_items where oid=#{oid}")
-	int  deleteShoppingItems(long oid);
+    @Delete("DELETE FROM shopping_items WHERE oid=#{oid}")
+    int deleteShoppingItems(long oid);
 
 }

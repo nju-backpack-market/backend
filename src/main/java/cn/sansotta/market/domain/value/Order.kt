@@ -27,7 +27,7 @@ data class Order(
          * */
         @set:JsonIgnore
         @get:JsonProperty
-        var state: OrderState,
+        var status: OrderStatus,
         /**
          * Create time of order.
          * */
@@ -49,25 +49,39 @@ data class Order(
         return id
     }
 
-    constructor() : this(-1, OrderState.CREATE, LocalDateTime.now(), DeliveryInfo(), Bill())
+    constructor() : this(-1, OrderStatus.INVALID, LocalDateTime.now(), DeliveryInfo(), Bill())
 
     constructor(po: OrderEntity)
-            : this(po.id, po.state, po.time, DeliveryInfo(po.deliveryInfo),
+            : this(po.id, po.status, po.time, DeliveryInfo(po.deliveryInfo),
             Bill(po.shoppingItems.map { ShoppingItem(it) }).apply { actualTotalPrice = po.totalPrice })
 
     override fun toEntity() =
-            OrderEntity(id, bill.actualTotalPrice, state, time,
+            OrderEntity(id, bill.actualTotalPrice, status, time,
                     deliveryInfo.toEntity(),
                     bill.map { it.toEntity() })
 
     companion object {
         @JvmStatic
-        fun mockObject() = Order(1, OrderState.CREATE, LocalDateTime.now(), DeliveryInfo.mockObject(),
+        fun mockObject() = Order(1, OrderStatus.CREATE, LocalDateTime.now(), DeliveryInfo.mockObject(),
                 Bill.mockObject())
 
         @JvmStatic
-        fun isValidEntity(order: Order) = DeliveryInfo.isValidEntity(order.deliveryInfo) &&
+        fun isValidEntity(order: Order)
+                = DeliveryInfo.isValidEntity(order.deliveryInfo) &&
                 Bill.isValidEntity(order.bill) &&
                 order.time.isBefore(LocalDateTime.now())
+
+        @JvmStatic
+        fun mergeAsUpdate(origin: OrderEntity, modified: Order): Order? {
+            // only allowed modified origin delivery info and status
+            if (origin.id != modified.id) return null
+
+            if (modified.status == OrderStatus.INVALID)
+                modified.status = origin.status
+            modified.time = origin.time
+            modified.deliveryInfo =
+                    DeliveryInfo.mergeAsUpdate(origin.deliveryInfo, modified.deliveryInfo)
+            return modified
+        }
     }
 }

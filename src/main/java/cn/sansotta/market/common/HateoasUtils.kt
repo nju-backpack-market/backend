@@ -30,6 +30,8 @@ fun <T> noContentResponse() = ResponseEntity<T>(HttpStatus.NO_CONTENT)
 
 fun <T> conflictResponse() = ResponseEntity<T>(HttpStatus.CONFLICT)
 
+fun <T> badRequestResponse() = ResponseEntity<T>(HttpStatus.BAD_REQUEST)
+
 @JvmOverloads
 fun <T> T?.toResponse(status: HttpStatus = HttpStatus.OK) = ResponseEntity(this, status)
 

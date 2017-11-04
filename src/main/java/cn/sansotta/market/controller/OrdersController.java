@@ -27,11 +27,12 @@ import cn.sansotta.market.controller.resource.OrderQuery;
 import cn.sansotta.market.controller.resource.OrderQueryResource;
 import cn.sansotta.market.controller.resource.OrderResource;
 import cn.sansotta.market.domain.value.Order;
-import cn.sansotta.market.domain.value.OrderState;
+import cn.sansotta.market.domain.value.OrderStatus;
 import cn.sansotta.market.service.OrderService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
+import static cn.sansotta.market.common.HateoasUtils.badRequestResponse;
 import static cn.sansotta.market.common.HateoasUtils.conflictResponse;
 import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse;
 import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
@@ -56,26 +57,11 @@ public class OrdersController {
         this.link = link;
     }
 
-    @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
-    public ResponseEntity<OrderResource>
-    createOrder(@RequestBody Order order) {
-        Order responseOrder = orderService.newOrder(order);
-        if(responseOrder == null)
-            return conflictResponse();
-        else if(responseOrder.getId() == -1)
-            return insufficientStorageResponse();
-        else {
-            HttpHeaders header = new HttpHeaders();
-            header.add("Location", "/orders/" + responseOrder.getId());
-            return new ResponseEntity<>(assembleResource(responseOrder), header, HttpStatus.CREATED);
-        }
-    }
-
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<OrderResource>
     order(@PathVariable("id") long id) {
         Order order = orderService.order(id);
-        return order == null ? notFoundResponse() : toResponse(new OrderResource(order));
+        return order == null ? notFoundResponse() : toResponse(assembleResource(order));
     }
 
     @GetMapping(produces = HAL_MIME_TYPE)
@@ -85,8 +71,25 @@ public class OrdersController {
         PageInfo<Order> pageInfo;
         if(full) pageInfo = orderService.allOrders(page);
         else pageInfo = orderService.allOrdersIndex(page);
-        return pageInfo == null ? notFoundResponse() :
-                toResponse(assembleResources(pageInfo));
+        return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
+    }
+
+
+    @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
+    public ResponseEntity<OrderResource>
+    createOrder(@RequestBody Order order) {
+        Order responseOrder = orderService.newOrder(order);
+        if(responseOrder == null)
+            return badRequestResponse();
+        else if(responseOrder.getId() == -1)
+            return insufficientStorageResponse();
+        else if(responseOrder.getId() == -2)
+            return conflictResponse();
+        else {
+            HttpHeaders header = new HttpHeaders();
+            header.add("Location", "/orders/" + responseOrder.getId());
+            return new ResponseEntity<>(assembleResource(responseOrder), header, HttpStatus.CREATED);
+        }
     }
 
     @PostMapping(value = "/query", produces = HAL_MIME_TYPE)
@@ -106,20 +109,19 @@ public class OrdersController {
                 toResponse(assembleResources(pageInfo));
     }
 
+    @PutMapping(value = "/{id}/status", produces = HAL_MIME_TYPE)
+    public ResponseEntity
+    modifyOrderStatus(@PathVariable("id") Long id, @RequestParam("modified") OrderStatus status) {
+        Order updated = orderService.modifyOrderStatus(id, status);
+        if(updated == null) return badRequestResponse();
+        else if(updated.getId() == -1) return insufficientStorageResponse();
+        else return toResponse(assembleResource(updated));
+    }
+
     @PutMapping(value = "/{id}", consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity
     modifyOrder(@RequestBody List<Order> orders) {
-        List<Order> updated = orderService.modifyOrders(orders);
-        return updated == null ? insufficientStorageResponse() :
-                toResponse(assembleResources(updated));
-    }
-
-    @PutMapping(value = "/{id}/status", produces = HAL_MIME_TYPE)
-    public ResponseEntity
-    modifyOrderStatus(@PathVariable("id") Long id, @RequestParam("modified") OrderState state) {
-        Order updated = orderService.modifyOrderStatus(id, state);
-        return updated == null ? insufficientStorageResponse() :
-                toResponse(assembleResource(updated));
+        return toResponse(assembleResources(orderService.modifyOrders(orders)));
     }
 
     @RequestMapping(method = RequestMethod.HEAD)

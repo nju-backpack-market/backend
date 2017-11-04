@@ -1,7 +1,7 @@
 package cn.sansotta.market.dao;
 
 import cn.sansotta.market.domain.entity.OrderEntity;
-import cn.sansotta.market.domain.value.OrderState;
+import cn.sansotta.market.domain.value.OrderStatus;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -13,10 +13,11 @@ public interface OrderDao {
 
 	PageInfo<OrderEntity> selectAllOrders(int pageNum);
 
-	PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderState state);
+	PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderStatus state);
 
 	OrderEntity insertOrder(OrderEntity order) throws RuntimeException;
 
 	boolean updateOrder(OrderEntity order) throws RuntimeException;
 
+	boolean updateOrderStatus(long id, OrderStatus status) throws RuntimeException;
 }

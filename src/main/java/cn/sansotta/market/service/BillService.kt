@@ -7,6 +7,7 @@ import cn.sansotta.market.domain.value.ShoppingItem
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 interface BillService {
-    fun queryPrice(items: Iterable<ShoppingItem>): Bill
+    fun queryPrice(items: Iterable<ShoppingItem>): Bill?
+    fun checkPrice(bill: Bill): Boolean
     fun billOfOrder(oid: Long): Bill?
 }

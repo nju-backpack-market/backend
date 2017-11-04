@@ -1,6 +1,6 @@
 package cn.sansotta.market.controller.resource
 
-import cn.sansotta.market.domain.value.OrderState
+import cn.sansotta.market.domain.value.OrderStatus
 import java.time.LocalDate
 
 /**
@@ -8,7 +8,7 @@ import java.time.LocalDate
  */
 data class OrderQuery(
         var id: Long?,
-        var state: OrderState?,
+        var status: OrderStatus?,
         var fromDate: LocalDate?,
         var toDate: LocalDate?,
         var onDate: LocalDate?,
@@ -23,7 +23,7 @@ data class OrderQuery(
 
     fun getRationalQuery(): OrderQuery? {
         if (id != null) { // id has highest priority
-            state = null
+            status = null
             fromDate = null
             toDate = null
             onDate = null

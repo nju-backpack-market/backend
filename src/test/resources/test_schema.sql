@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS shopping_items
   count          INT    NOT NULL,
   origin_price   DOUBLE NOT NULL,
   actual_price   DOUBLE NULL,
-  subtotal_price DOUBLE NOT NULL,
+  subtotal_price DOUBLE NULL,
   PRIMARY KEY (oid, pid)
 );
 

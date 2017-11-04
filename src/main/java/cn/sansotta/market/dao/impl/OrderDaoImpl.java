@@ -2,13 +2,15 @@ package cn.sansotta.market.dao.impl;
 
 import com.github.pagehelper.PageInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.sansotta.market.common.MybatisUtils;
 import cn.sansotta.market.dao.OrderDao;
 import cn.sansotta.market.domain.entity.OrderEntity;
-import cn.sansotta.market.domain.value.OrderState;
+import cn.sansotta.market.domain.value.OrderStatus;
 import cn.sansotta.market.mapper.OrderMapper;
 import cn.sansotta.market.mapper.ShoppingItemMapper;
 
@@ -17,6 +19,7 @@ import cn.sansotta.market.mapper.ShoppingItemMapper;
  */
 @Component
 public class OrderDaoImpl implements OrderDao {
+    private final static Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
 
     private final MybatisUtils.MapperTemplate<OrderMapper> orderTpl;
 
@@ -30,18 +33,26 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public OrderEntity selectOrderById(long id) {
-        return orderTpl.exec(orderMapper -> orderMapper.selectOrderById(id));
+        try {
+            return orderTpl.exec(orderMapper -> orderMapper.selectOrderById(id));
+        } catch (RuntimeException ex) {
+            logger.error("error when select order because of " + ex);
+            return null;
+        }
     }
 
-    @Transactional
     @Override
     public PageInfo<OrderEntity> selectAllOrders(int pageNum) {
-        return orderTpl.paged(pageNum, 30, OrderMapper::selectAllOrders);
+        try {
+            return orderTpl.paged(pageNum, 30, OrderMapper::selectAllOrders);
+        } catch (RuntimeException ex) {
+            logger.error("error when select order because of " + ex);
+            return null;
+        }
     }
 
-    @Transactional
     @Override
-    public PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderState state) {
+    public PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderStatus state) {
         return orderTpl.paged(pageNum, 30, state, OrderMapper::selectOrdersByState);
     }
 
@@ -60,4 +71,9 @@ public class OrderDaoImpl implements OrderDao {
         return affectedRow > 0;
     }
 
+    @Override
+    public boolean updateOrderStatus(long id, OrderStatus status) throws RuntimeException {
+        int affectedRow = orderTpl.exec(orderMapper -> orderMapper.updateOrderStatus(id, status));
+        return affectedRow > 0;
+    }
 }

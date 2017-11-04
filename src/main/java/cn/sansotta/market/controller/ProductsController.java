@@ -26,7 +26,6 @@ import cn.sansotta.market.service.ProductService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse;
 import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
 import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
@@ -66,24 +65,19 @@ public class ProductsController {
     @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity<List<ProductResource>>
     newProducts(@RequestBody List<Product> products) {
-        List<Product> created = productService.newProducts(products);
-        return created == null ? insufficientStorageResponse() :
-                toResponse(assembleResources(created), HttpStatus.CREATED);
+        return toResponse(assembleResources(productService.newProducts(products)), HttpStatus.CREATED);
     }
 
     @PutMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity<List<ProductResource>>
     modifyProducts(@RequestBody List<Product> products) {
-        List<Product> updated = productService.modifyProducts(products);
-        return updated == null ? insufficientStorageResponse() :
-                toResponse(assembleResources(updated));
+        return toResponse(assembleResources(productService.modifyProducts(products)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<List<Long>>
     removeProducts(@PathVariable("id") List<Long> ids) {
-        List<Long> deleted = productService.removeProducts(ids);
-        return deleted == null ? insufficientStorageResponse() : toResponse(deleted);
+        return toResponse(productService.removeProducts(ids));
     }
 
     private ProductResource assembleResource(Product product) {

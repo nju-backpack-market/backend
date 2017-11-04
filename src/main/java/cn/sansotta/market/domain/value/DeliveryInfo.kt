@@ -40,5 +40,18 @@ data class DeliveryInfo(
         fun isValidEntity(info: DeliveryInfo): Boolean {
             return info.name.isNotBlank() && info.phoneNumber.isNotBlank() && info.address.isNotBlank()
         }
+
+        @JvmStatic
+        fun mergeAsUpdate(origin: DeliveryInfoEntity, modified: DeliveryInfo): DeliveryInfo {
+            if (modified.name.isBlank())
+                modified.name = origin.name
+            if (modified.phoneNumber.isBlank())
+                modified.phoneNumber = origin.name
+            if (modified.email.isBlank())
+                modified.email = origin.name
+            if (modified.address.isBlank())
+                modified.address = origin.name
+            return modified
+        }
     }
 }

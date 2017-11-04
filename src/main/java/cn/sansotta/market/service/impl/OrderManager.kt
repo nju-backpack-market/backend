@@ -2,21 +2,40 @@ package cn.sansotta.market.service.impl
 
 import cn.sansotta.market.common.copyPageInfo
 import cn.sansotta.market.controller.resource.OrderQuery
+import cn.sansotta.market.dao.OrderDao
 import cn.sansotta.market.domain.value.Order
-import cn.sansotta.market.domain.value.OrderState
+import cn.sansotta.market.domain.value.OrderStatus
 import cn.sansotta.market.service.BillService
 import cn.sansotta.market.service.OrderService
 import com.github.pagehelper.PageInfo
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 @Service
-class OrderManager(private val billService: BillService) : OrderService {
-    //    @Cacheable("queryCache", key = "#{queryId}")
-    override fun queryOrders(queryId: Int): PageInfo<Order>? {
-        return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
+class OrderManager(private val billService: BillService, private val orderDao: OrderDao) : OrderService {
+    private val logger = LoggerFactory.getLogger(OrderManager::class.java)
+
+    override fun order(id: Long)
+            = id.takeIf { it > 0L }
+            ?.let(orderDao::selectOrderById)
+            ?.let(::Order)
+
+    override fun allOrders(page: Int)
+            = page.takeIf { it >= 0 }
+            ?.let(orderDao::selectAllOrders)
+            ?.let { copyPageInfo(it, ::Order) }
+
+    override fun newOrder(order: Order): Order? {
+        if (!Order.isValidEntity(order)) return null
+        if (!billService.checkPrice(order.bill)) return order.apply { id = -2 } // recheck price
+
+        order.status = OrderStatus.CREATE
+        return hazard("create order") { orderDao.insertOrder(order.toEntity()) }
+                ?.let { entity -> order.id = entity.id;order } ?: order.apply { id = -1 }
     }
 
     //    @CachePut("queryCache", key = "#{orderQuery.getQueryId()}", condition = "#{orderQuery!=null}")
@@ -24,39 +43,50 @@ class OrderManager(private val billService: BillService) : OrderService {
         return query.apply { id = 1 }
     }
 
-    override fun modifyOrderStatus(id: Long, state: OrderState): Order? {
-        return Order.mockObject().apply { this.state = state }
+    //    @Cacheable("queryCache", key = "#{queryId}")
+    override fun queryOrders(queryId: Int): PageInfo<Order>? {
+        return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
     }
 
-    override fun modifyOrders(orders: List<Order>): List<Order>? {
-        return orders.filter { it.id > 0L }
+    @Transactional
+    override fun modifyOrderStatus(id: Long, status: OrderStatus): Order? {
+        if (id <= 0L) return null
+
+        val origin = orderDao.selectOrderById(id)?.let(::Order) ?: return null
+        if (!origin.status.isValidTransfer(status)) return null
+
+        if (hazard("update order", false) { orderDao.updateOrderStatus(id, status) })
+            return origin.apply { this.status = status }
+        return origin.apply { this.id = -1 }
+    }
+
+    @Transactional
+    override fun modifyOrders(orders: List<Order>): List<Order> {
+        val valid = orders.filter { it.getId() > 0L }
+        return valid.map { orderDao.selectOrderById(it.getId()) }
+                .zip(valid)
+                .filter { (origin, _) -> origin != null }
+                .mapNotNull { (origin, modified) -> Order.mergeAsUpdate(origin, modified) }
+                .filter { hazard("update order", false) { orderDao.updateOrder(it.toEntity()) } }
     }
 
     override fun allOrdersIndex(page: Int): PageInfo<Order>? {
         return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
     }
 
-    override fun order(id: Long): Order? {
-        return Order.mockObject().apply { this.id = id }
-    }
+    private inline fun <T> hazard(method: String, defaultVal: T, func: () -> T) =
+            try {
+                func()
+            } catch (ex: RuntimeException) {
+                logger.error("Exception when $method caused by $ex")
+                defaultVal
+            }
 
-    override fun newOrder(order: Order): Order? {
-        println(order)
-        if (!Order.isValidEntity(order)) return null
-
-        //TODO: add really implementation of creating order
-        val actualBill = billService.queryPrice(order.bill)
-        actualBill.actualTotalPrice = order.bill.actualTotalPrice // mock
-        if (actualBill != order.bill)
-            return null
-        // TODO: add database save logic here
-        // mock implementation
-        order.id = 1
-        order.state = OrderState.CREATE
-        return order
-    }
-
-    override fun allOrders(page: Int)
-            = copyPageInfo(PageInfo(listOf(Order.mockObject().toEntity(),
-            Order.mockObject().copy(id = 8888).toEntity()))) { Order(it) }
+    private inline fun <T> hazard(method: String, func: () -> T) =
+            try {
+                func()
+            } catch (ex: RuntimeException) {
+                logger.error("Exception when $method caused by $ex")
+                null
+            }
 }

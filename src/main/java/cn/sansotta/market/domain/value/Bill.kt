@@ -83,7 +83,9 @@ class Bill() : Iterable<ShoppingItem>, Cloneable {
         fun mockObject() = Bill(ShoppingItem.mockObject(), ShoppingItem.mockObject().copy(pid = 2333))
 
         @JvmStatic
-        fun isValidEntity(bill: Bill) = Price.isValidEntity(bill.totalPrice) &&
-                bill.shoppingList.all(ShoppingItem.Companion::isValidEntity)
+        fun isValidEntity(bill: Bill)
+                = Price.isValidEntity(bill.totalPrice) &&
+                bill.shoppingList.all(ShoppingItem.Companion::isValidEntity) &&
+                bill.shoppingList.distinctBy { it.pid }.size == bill.shoppingList.size
     }
 }
