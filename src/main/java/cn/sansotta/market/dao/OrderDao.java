@@ -17,7 +17,7 @@ public interface OrderDao {
 
 	PageInfo<OrderEntity> selectOrdersByQuery(int pageNum, OrderQuery query);
 
-	PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderStatus state);
+	PageInfo<OrderEntity> selectOrdersByStatus(int pageNum, OrderStatus status);
 
 	OrderEntity insertOrder(OrderEntity order) throws RuntimeException;
 
