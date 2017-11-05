@@ -58,7 +58,7 @@ data class Order(
     override fun toEntity() =
             OrderEntity(id, bill.actualTotalPrice, status, time,
                     deliveryInfo.toEntity(),
-                    bill.map { it.toEntity() })
+                    bill.map(ShoppingItem::toEntity))
 
     companion object {
         @JvmStatic

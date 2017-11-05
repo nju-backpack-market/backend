@@ -14,5 +14,4 @@ data class ShoppingItemEntity(
         val pid: Long,
         val count: Int,
         val unitPrice: PriceEntity,
-        val subtotalPrice: Double?
-)
+        val subtotalPrice: Double)

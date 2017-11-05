@@ -32,13 +32,15 @@ data class Price(
         @get:JsonInclude(JsonInclude.Include.NON_NULL)
         var actual: Double?
 ) : ValueObject<PriceEntity> {
-    constructor() : this(0.0, null)
+    constructor() : this(-1.0, null)
 
     constructor(origin: Double) : this(origin, null)
 
     constructor(po: PriceEntity) : this(po.origin, po.actual)
 
-    override fun toEntity() = PriceEntity(origin, actual)
+    override fun toEntity() = PriceEntity(origin, actual ?: origin)
+
+    fun getActual() = actual ?: origin
 
     companion object {
         @JvmStatic

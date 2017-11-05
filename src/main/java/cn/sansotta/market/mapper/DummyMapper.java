@@ -22,7 +22,7 @@ public interface DummyMapper {
     @Results(id = "priceMap")
     @ConstructorArgs({
             @Arg(column = "origin", javaType = double.class),
-            @Arg(column = "actual", javaType = Double.class)})
+            @Arg(column = "actual", javaType = double.class)})
     @Select("")
     PriceEntity price();
 

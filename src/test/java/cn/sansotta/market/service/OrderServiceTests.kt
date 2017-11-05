@@ -1,5 +1,6 @@
 package cn.sansotta.market.service
 
+import cn.sansotta.market.controller.resource.OrderQuery
 import cn.sansotta.market.domain.value.DeliveryInfo
 import cn.sansotta.market.domain.value.Order
 import cn.sansotta.market.domain.value.OrderStatus
@@ -16,6 +17,7 @@ import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
@@ -39,7 +41,7 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         assertNotNull(order)
         order as Order
         assertEquals(110.0, order.bill.originTotalPrice, 0.01)
-        assertNull(order.bill.actualTotalPrice)
+        assertEquals(109.0, order.bill.actualTotalPrice, 0.01)
         assertEquals("foo1", order.deliveryInfo.name)
         assertEquals(2, order.bill.toList().size)
     }
@@ -57,6 +59,7 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     @Test
     fun newOrders() {
         val order = Order()
+        Thread.sleep(100) // to make sure LocalDateTime.now() has changed
         assertNull(service.newOrder(order))
 
         order.deliveryInfo = DeliveryInfo("TEST", "233333", "a@b.com", "NJU")
@@ -109,5 +112,50 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         assertEquals("zhangsan", updated[0].deliveryInfo.name)
         assertNotEquals(LocalDateTime.MAX, updated[0].time)
         assertEquals("777777", service.order(1)?.deliveryInfo?.phoneNumber)
+    }
+
+    @Test
+    fun createQuery() {
+        val query = OrderQuery()
+        query.id = 1
+        var res = service.createOrderQuery(query)
+        assertNotNull(res)
+        res as OrderQuery
+        assertEquals(query.hashCode(), res.queryId)
+        res = service.getOrderQuery(res.queryId)
+        assertNotNull(res)
+        res as OrderQuery
+        assertEquals(query.hashCode(), res.queryId)
+
+        query.id = null
+        query.fromDate = LocalDate.MAX
+        query.toDate = LocalDate.MIN
+        assertNull(service.createOrderQuery(query))
+
+        query.fromDate = null
+        query.toDate = LocalDate.now()
+        query.onDate = LocalDate.now().minusDays(1)
+        assertNull(service.createOrderQuery(query))
+
+        query.toDate = null
+        query.onDate = null
+        query.fromPrice = 10.1
+        query.toPrice = 10.0
+        assertNull(service.createOrderQuery(query))
+    }
+
+    @Test
+    fun queryOrder() {
+        val query = OrderQuery()
+        query.id = 1
+        assertEquals(1, service.queryOrders(0, query)?.size)
+
+        query.id = null
+        query.fromPrice = 10.0
+        query.toPrice = 100.0
+        assertEquals(4, service.queryOrders(0, query)?.size)
+
+        query.productIds = listOf(1, 2)
+        assertEquals(2, service.queryOrders(0, query)?.size)
     }
 }

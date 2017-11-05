@@ -2,8 +2,6 @@ package cn.sansotta.market.domain.value
 
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.ShoppingItemEntity
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonInclude
 import org.springframework.hateoas.core.Relation
 
 /**
@@ -49,26 +47,20 @@ data class ShoppingItem(
             subtotalPrice.origin = originSubtotalPrice // a trigger to update subtotalPrice.origin
         }
     val originSubtotalPrice get() = originUnitPrice * count
-    @get:JsonIgnore
-    val defaultSubtotalPrice
-        get() = actualUnitPrice?.times(count)
 
-    @get:JsonInclude(JsonInclude.Include.NON_NULL)
     var actualUnitPrice
-        get() = unitPrice.actual
+        get() = unitPrice.actual ?: originUnitPrice
         set(value) {
             unitPrice.actual = value
         }
-    @get:JsonInclude(JsonInclude.Include.NON_NULL)
     var actualSubtotalPrice
-        get() = subtotalPrice.actual
+        get() = subtotalPrice.actual ?: originSubtotalPrice
         set(value) {
             subtotalPrice.actual = value
         }
 
     override fun toEntity() =
-            ShoppingItemEntity(pid, -1L, count, unitPrice.toEntity(),
-                    subtotalPrice.actual ?: unitPrice.origin * count)
+            ShoppingItemEntity(pid, -1L, count, unitPrice.toEntity(), actualSubtotalPrice)
 
     companion object {
         @JvmStatic
@@ -76,8 +68,7 @@ data class ShoppingItem(
 
         @JvmStatic
         fun isValidEntity(item: ShoppingItem)
-                = item.count > 0 &&
-                Price.isValidEntity(item.unitPrice) &&
-                Price.isValidEntity(item.subtotalPrice)
+                = item.count > 0 && item.originUnitPrice >= 0.0 &&
+                item.actualUnitPrice >= 0.0 && item.actualSubtotalPrice >= 0.0
     }
 }

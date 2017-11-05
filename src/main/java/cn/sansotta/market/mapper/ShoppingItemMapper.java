@@ -27,7 +27,7 @@ public interface ShoppingItemMapper {
             @Arg(column = "count", javaType = int.class),
             @Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.priceMap",
                     javaType = PriceEntity.class),
-            @Arg(column = "subtotal_price", javaType = Double.class)})
+            @Arg(column = "subtotal_price", javaType = double.class)})
     @Select("SELECT oid, pid, `count`, origin_price AS origin, actual_price AS actual, subtotal_price " +
             "FROM shopping_items WHERE oid = #{oid}")
     List<ShoppingItemEntity> selectShoppingItemsByOrderId(long oid);

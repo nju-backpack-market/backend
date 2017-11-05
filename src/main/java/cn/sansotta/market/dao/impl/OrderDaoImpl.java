@@ -1,6 +1,5 @@
 package cn.sansotta.market.dao.impl;
 
-import cn.sansotta.market.controller.resource.OrderQuery;
 import com.github.pagehelper.PageInfo;
 
 import org.slf4j.Logger;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.sansotta.market.common.MybatisUtils;
+import cn.sansotta.market.controller.resource.OrderQuery;
 import cn.sansotta.market.dao.OrderDao;
 import cn.sansotta.market.domain.entity.OrderEntity;
 import cn.sansotta.market.domain.value.OrderStatus;
@@ -35,7 +35,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public OrderEntity selectOrderById(long id) {
         try {
-            return orderTpl.exec(orderMapper -> orderMapper.selectOrderById(id));
+            return orderTpl.exec(id, OrderMapper::selectOrderById);
         } catch (RuntimeException ex) {
             logger.error("error when select order because of " + ex);
             return null;
@@ -69,22 +69,23 @@ public class OrderDaoImpl implements OrderDao {
 
     @Transactional
     @Override
-    public OrderEntity insertOrder(OrderEntity order) throws RuntimeException {
-        orderTpl.exec(orderMapper -> orderMapper.insertOrder(order));
-        shoppingItemTpl.exec(shoppingItemMapper -> shoppingItemMapper
-                .insertShoppingItems(order.getShoppingItems()));
+    public OrderEntity insertOrder(OrderEntity order) {
+        orderTpl.exec(order, OrderMapper::insertOrder);
+        shoppingItemTpl.exec(order.getShoppingItems(), ShoppingItemMapper::insertShoppingItems);
         return order;
     }
 
+    @Transactional
     @Override
-    public boolean updateOrder(OrderEntity order) throws RuntimeException {
-        int affectedRow = orderTpl.exec(orderMapper -> orderMapper.updateOrder(order));
+    public boolean updateOrder(OrderEntity order) {
+        int affectedRow = orderTpl.exec(order, OrderMapper::updateOrder);
         return affectedRow > 0;
     }
 
+    @Transactional
     @Override
-    public boolean updateOrderStatus(long id, OrderStatus status) throws RuntimeException {
-        int affectedRow = orderTpl.exec(orderMapper -> orderMapper.updateOrderStatus(id, status));
+    public boolean updateOrderStatus(long id, OrderStatus status) {
+        int affectedRow = orderTpl.exec(id, status, OrderMapper::updateOrderStatus);
         return affectedRow > 0;
     }
 }

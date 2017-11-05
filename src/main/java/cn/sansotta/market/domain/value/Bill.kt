@@ -48,7 +48,7 @@ class Bill() : Iterable<ShoppingItem>, Cloneable {
         get() = shoppingList.sumByDouble { it.originSubtotalPrice }
     @get:JsonIgnore
     var actualTotalPrice
-        get() = totalPrice.actual
+        get() = totalPrice.actual ?: originTotalPrice
         set(value) {
             totalPrice.actual = value
         }
@@ -83,7 +83,7 @@ class Bill() : Iterable<ShoppingItem>, Cloneable {
 
         @JvmStatic
         fun isValidEntity(bill: Bill)
-                = Price.isValidEntity(bill.totalPrice) &&
+                = bill.actualTotalPrice >= 0.0 &&
                 bill.shoppingList.all(ShoppingItem.Companion::isValidEntity) &&
                 bill.shoppingList.distinctBy { it.pid }.size == bill.shoppingList.size
     }

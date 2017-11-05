@@ -1,9 +1,10 @@
 package cn.sansotta.market.dao;
 
-import cn.sansotta.market.domain.entity.ProductEntity;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+
+import cn.sansotta.market.domain.entity.ProductEntity;
 
 /**
  * Created by Hiki on 2017/10/20.
@@ -14,9 +15,9 @@ public interface ProductDao {
 
     PageInfo<ProductEntity> selectAllProducts(int pageNum);
 
-    ProductEntity insertProduct(ProductEntity product) throws RuntimeException;
+    ProductEntity insertProduct(ProductEntity product);
 
-    List<ProductEntity> insertProducts(List<ProductEntity> products) throws RuntimeException;
+    List<ProductEntity> insertProducts(List<ProductEntity> products);
 
     boolean updateProduct(ProductEntity product) throws RuntimeException;
 

@@ -31,7 +31,8 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     fun singleProduct() {
         Assert.isNull(service.product(-1), "")
         Assert.state(service.allProducts(0)?.size == 4, "")
-        Assert.state(service.product(1)?.equals(Product(1, "红包", 11.4, "Mock1")) ?: false, "")
+        Assert.state(service.product(1)?.equals(Product(1, "红包", 11.4, "Mock1", emptyList())) ?: false,
+                "")
     }
 
     @Test
@@ -42,9 +43,9 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     @Test
     fun createProducts() {
         val products = listOf(
-                Product(5, "蓝包", 23.33, "Mock5"),
-                Product(6, "橙包", 46.66, "MOCK6"),
-                Product(-1, "错了!", -1.0, "ERROR")) // this should not be inserted
+                Product(5, "蓝包", 23.33, "Mock5", emptyList()),
+                Product(6, "橙包", 46.66, "MOCK6", emptyList()),
+                Product(-1, "错了!", -1.0, "ERROR", emptyList())) // this should not be inserted
         assertEquals(2, service.newProducts(products).size)
         assertEquals(6, countRowsInTable("products"))
         println(service.allProducts(0))
@@ -59,9 +60,9 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     @Test
     fun updateProducts() {
         val products = listOf(
-                Product(3, "", 0.01, ""),
-                Product(1, "哇哇哇", -1.0, "大减价！"),
-                Product(5, "NO", 10.0, "TEST"))
+                Product(3, "", 0.01, "", emptyList()),
+                Product(1, "哇哇哇", -1.0, "大减价！", emptyList()),
+                Product(5, "NO", 10.0, "TEST", emptyList()))
         assertEquals(2, service.modifyProducts(products).size)
         assertEquals("绿包", service.product(3)?.name)
         assertEquals("大减价！", service.product(1)?.description)

@@ -42,7 +42,7 @@ class OrderManager(private val billService: BillService, private val orderDao: O
                 ?.let { entity -> order.id = entity.id;order } ?: order.apply { id = -1 }
     }
 
-    @CachePut(key = "#result.hashCode()")
+    @CachePut(key = "#result.hashCode()", condition = "#result != null")
     override fun createOrderQuery(query: OrderQuery): OrderQuery? {
         query.queryId = query.hashCode()
         getOrderQuery(query.queryId)
@@ -52,9 +52,10 @@ class OrderManager(private val billService: BillService, private val orderDao: O
     @Cacheable(key = "#p0")
     override fun getOrderQuery(queryId: Int) = null
 
-    override fun queryOrders(query: OrderQuery): PageInfo<Order>? {
-        return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
-    }
+    override fun queryOrders(page: Int, query: OrderQuery)
+            = page.takeIf { it >= 0 }
+            ?.let { orderDao.selectOrdersByQuery(it, query) }
+            ?.let { copyPageInfo(it, ::Order) }
 
     @Transactional
     override fun modifyOrderStatus(id: Long, status: OrderStatus): Order? {

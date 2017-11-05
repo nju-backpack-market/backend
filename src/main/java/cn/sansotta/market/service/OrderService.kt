@@ -18,5 +18,5 @@ interface OrderService {
 
     fun createOrderQuery(query: OrderQuery): OrderQuery?
     fun getOrderQuery(queryId: Int): OrderQuery?
-    fun queryOrders(query: OrderQuery): PageInfo<Order>?
+    fun queryOrders(page: Int, query: OrderQuery): PageInfo<Order>?
 }

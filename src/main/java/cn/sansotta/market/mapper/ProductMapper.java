@@ -30,7 +30,6 @@ public interface ProductMapper {
 	@Options(useGeneratedKeys = true, keyColumn = "pid")
 	@Insert("INSERT INTO products(pname, price, description)" +
             "VALUES (#{name}, #{price}, #{description})")
-	@SelectKey(statement="SELECT LAST_INSERT_ID();", resultType = long.class, before = false, keyProperty = "id")
 	int insertProduct(ProductEntity product);
 
 	@Options(useGeneratedKeys = true, keyColumn = "pid")

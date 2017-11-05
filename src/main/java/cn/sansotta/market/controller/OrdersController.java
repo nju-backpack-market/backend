@@ -96,18 +96,21 @@ public class OrdersController {
     public ResponseEntity<OrderQueryResource>
     createQuery(@RequestBody OrderQuery query) {
         query = orderService.createOrderQuery(query);
-        return query == null ? badRequestResponse() : toResponse(new OrderQueryResource(query));
+        return query == null ? badRequestResponse() :
+                toResponse(new OrderQueryResource(query), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/query/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<OrderResource>>
     query(@PathVariable("id") int queryId,
+          @RequestParam(value = "page", required = false, defaultValue = "0") int page,
           @RequestParam(value = "full", required = false, defaultValue = "true") boolean full) {
         OrderQuery query = orderService.getOrderQuery(queryId);
         if(query == null) return badRequestResponse();
 
-        PageInfo<Order> pageInfo = orderService.queryOrders(query);
-        return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
+        PageInfo<Order> pageInfo = orderService.queryOrders(page, query);
+        return pageInfo == null ? insufficientStorageResponse() :
+                toResponse(assembleResources(pageInfo));
     }
 
     @PutMapping(value = "/{id}/status", produces = HAL_MIME_TYPE)
