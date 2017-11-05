@@ -91,6 +91,6 @@ public interface OrderMapper {
             "</where>)",
             "</script>"
     })
-    List<OrderEntity> queryOrder(OrderQuery query);
+    List<OrderEntity> selectOrdersByQuery(OrderQuery query);
 
 }

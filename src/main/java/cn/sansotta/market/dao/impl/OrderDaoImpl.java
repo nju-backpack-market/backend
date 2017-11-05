@@ -1,5 +1,6 @@
 package cn.sansotta.market.dao.impl;
 
+import cn.sansotta.market.controller.resource.OrderQuery;
 import com.github.pagehelper.PageInfo;
 
 import org.slf4j.Logger;
@@ -45,6 +46,16 @@ public class OrderDaoImpl implements OrderDao {
     public PageInfo<OrderEntity> selectAllOrders(int pageNum) {
         try {
             return orderTpl.paged(pageNum, 30, OrderMapper::selectAllOrders);
+        } catch (RuntimeException ex) {
+            logger.error("error when select order because of " + ex);
+            return null;
+        }
+    }
+
+    @Override
+    public PageInfo<OrderEntity> selectOrdersByQuery(int pageNum, OrderQuery query) {
+        try {
+            return orderTpl.paged(pageNum, 30, query, OrderMapper::selectOrdersByQuery);
         } catch (RuntimeException ex) {
             logger.error("error when select order because of " + ex);
             return null;
