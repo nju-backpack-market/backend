@@ -7,10 +7,9 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-class OrderAssembler : ResourceAssemblerSupport<Order, OrderResource>(OrdersController::class.java,
-        OrderResource::class.java) {
+class OrderAssembler : ResourceAssemblerSupport<Order, OrderResource>
+                       (OrdersController::class.java, OrderResource::class.java) {
     override fun toResource(entity: Order) = createResourceWithId(entity.getId(), entity)
 
     override fun instantiateResource(entity: Order) = OrderResource(entity)
-
 }

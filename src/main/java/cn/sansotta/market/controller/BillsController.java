@@ -38,13 +38,15 @@ public class BillsController {
     }
 
     @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
-    public ResponseEntity<BillResource> createBill(@RequestBody List<ShoppingItem> items) {
+    public ResponseEntity<BillResource>
+    createBill(@RequestBody List<ShoppingItem> items) {
         Bill bill = billService.queryPrice(items);
         return bill == null ? notFoundResponse() : toResponse(new BillResource(bill, true));
     }
 
     @GetMapping(produces = HAL_MIME_TYPE)
-    public ResponseEntity<BillResource> billOfOrder(@RequestParam("oid") Long oid) {
+    public ResponseEntity<BillResource>
+    billOfOrder(@RequestParam("oid") Long oid) {
         Bill bill = billService.billOfOrder(oid);
         return bill == null ? notFoundResponse() : toResponse(new BillResource(bill, true));
     }

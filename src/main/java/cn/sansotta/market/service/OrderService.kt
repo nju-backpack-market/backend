@@ -12,10 +12,11 @@ interface OrderService {
     fun order(id: Long): Order?
     fun allOrders(page: Int): PageInfo<Order>?
     fun allOrdersIndex(page: Int): PageInfo<Order>?
-    fun queryOrders(queryId: Int): PageInfo<Order>?
     fun newOrder(order: Order): Order?
     fun modifyOrders(orders: List<Order>): List<Order>
     fun modifyOrderStatus(id: Long, status: OrderStatus): Order?
 
     fun createOrderQuery(query: OrderQuery): OrderQuery?
+    fun getOrderQuery(queryId: Int): OrderQuery?
+    fun queryOrders(query: OrderQuery): PageInfo<Order>?
 }

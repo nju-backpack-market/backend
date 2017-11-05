@@ -1,6 +1,7 @@
 package cn.sansotta.market.controller.resource
 
 import cn.sansotta.market.domain.value.OrderStatus
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 
 /**
@@ -21,6 +22,7 @@ data class OrderQuery(
 
     constructor() : this(null, null, null, null, null, null, null, null, null, null)
 
+    @JsonIgnore
     fun getRationalQuery(): OrderQuery? {
         if (id != null) { // id has highest priority
             status = null

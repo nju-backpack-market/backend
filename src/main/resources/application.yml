@@ -1,11 +1,16 @@
 spring:
   profiles:
-    active: dev_hiki
+    active: dev_local
   data:
     rest:
       base-path: /api/v1
   jackson:
     property-naming-strategy: SNAKE_CASE
+  http:
+    multipart:
+      resolve-lazily: true
+      max-request-size: 10MB
+      max-file-size: 50MB
 pagehelper: # configuration for PageHelper
   page-size-zero: "false"
   offset-as-page-num: "true"
