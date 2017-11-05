@@ -1,5 +1,6 @@
 package cn.sansotta.market.mapper;
 
+import cn.sansotta.market.controller.resource.OrderQuery;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Delete;
@@ -70,5 +71,26 @@ public interface OrderMapper {
 
     @Delete("DELETE FROM orders WHERE oid=#{id}")
     int deleteOrder(long id);
+
+    @ResultMap("orderMap")
+    @Select({
+            "<script>",
+            "SELECT * FROM orders ",
+            "WHERE oid IN (SELECT DISTINCT O.oid FROM orders O, shopping_items S ",
+            "<where>",
+            "<if test= \"id != null\"> O.oid = #{id} </if>",
+            "<if test= \"status != null\">AND O.state = #{status} </if>",
+            "<if test= \"fromDate != null\">AND <![CDATA[date(O.time) >= #{fromDate}]]> </if>",
+            "<if test= \"toDate != null\"> <![CDATA[AND date(O.time) <= #{toDate}]]> </if>",
+            "<if test= \"onDate != null\"> AND date(O.time) = #{onDate} </if>",
+            "<if test= \"customerName != null\"> AND O.c_name = #{customerName} </if>",
+            "<if test= \"phoneNumber != null\"> AND O.c_phone = #{phoneNumber} </if>",
+            "<if test= \"productIds != null\"> AND S.pid IN <foreach collection='productIds' item='pid' open='(' close=')' separator=','>#{pid}</foreach> </if>",
+            "<if test= \"fromPrice != null\"> <![CDATA[AND O.total_price >= #{fromPrice}]]> </if>",
+            "<if test = \"toPrice != null\"> <![CDATA[AND O.total_price <= #{toPrice}]]> </if>",
+            "</where>)",
+            "</script>"
+    })
+    List<OrderEntity> selectOrdersByQuery(OrderQuery query);
 
 }
