@@ -63,8 +63,8 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public PageInfo<OrderEntity> selectOrdersByState(int pageNum, OrderStatus state) {
-        return orderTpl.paged(pageNum, 30, state, OrderMapper::selectOrdersByState);
+    public PageInfo<OrderEntity> selectOrdersByStatus(int pageNum, OrderStatus status) {
+        return orderTpl.paged(pageNum, 30, status, OrderMapper::selectOrdersByStatus);
     }
 
     @Transactional

@@ -48,7 +48,7 @@ public interface OrderMapper {
 
     @ResultMap("orderMap")
     @Select("SELECT * FROM orders WHERE state=#{state}")
-    List<OrderEntity> selectOrdersByState(OrderStatus state);
+    List<OrderEntity> selectOrdersByStatus(OrderStatus status);
 
 
     @Insert("INSERT INTO orders(total_price, state, `time`, c_name, c_phone_number, c_email, c_address) " +
