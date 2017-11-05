@@ -14,6 +14,7 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.util.CollectionUtils
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -31,6 +32,9 @@ fun <T> noContentResponse() = ResponseEntity<T>(HttpStatus.NO_CONTENT)
 fun <T> conflictResponse() = ResponseEntity<T>(HttpStatus.CONFLICT)
 
 fun <T> badRequestResponse() = ResponseEntity<T>(HttpStatus.BAD_REQUEST)
+
+fun <K, V> singletonHeader(key: K, value: V)
+        = CollectionUtils.toMultiValueMap(mapOf(key to listOf(value)))
 
 @JvmOverloads
 fun <T> T?.toResponse(status: HttpStatus = HttpStatus.OK) = ResponseEntity(this, status)

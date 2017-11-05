@@ -2,6 +2,8 @@ package cn.sansotta.market.controller
 
 import cn.sansotta.market.common.HAL_MIME_TYPE
 import cn.sansotta.market.controller.resource.DocumentResource
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.CacheManager
 import org.springframework.hateoas.Resource
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -14,6 +16,9 @@ import javax.servlet.http.HttpServletResponse
  */
 @RestController
 class PingController {
+    @Autowired
+    lateinit var m:CacheManager
+
     @GetMapping("/ping")
     fun ping() = "Hello"
 

@@ -2,6 +2,7 @@ package cn.sansotta.market.controller.resource
 
 import cn.sansotta.market.controller.*
 import cn.sansotta.market.domain.value.Order
+import cn.sansotta.market.domain.value.OrderStatus
 import cn.sansotta.market.domain.value.Product
 import org.springframework.hateoas.Link
 import org.springframework.hateoas.Resource
@@ -43,10 +44,10 @@ open class DocumentResource private constructor() : Resource<String>("Document")
             api("get_order", HttpMethod.GET) { order(1) }
             api("get_all_orders", HttpMethod.GET) { orders(0, true) }
             api("get_all_orders_index", HttpMethod.GET) { orders(0, false) }
+            api("update_order_status", HttpMethod.PUT) { modifyOrderStatus(1L, OrderStatus.CREATE) }
+            api("update_order_info", HttpMethod.PUT) { modifyOrder(listOf(Order())) }
         }
-        apis<PaymentsController> {
-            api("start_payment", HttpMethod.GET, "/payments/1")
-        }
+        apis<PaymentsController> { api("start_payment", HttpMethod.GET, "/payments/1") }
     }
 
     private inline fun <reified T> apis(apiInfo: Class<T>.() -> Unit) = T::class.java.apiInfo()

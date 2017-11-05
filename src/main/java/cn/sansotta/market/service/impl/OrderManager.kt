@@ -9,6 +9,9 @@ import cn.sansotta.market.service.BillService
 import cn.sansotta.market.service.OrderService
 import com.github.pagehelper.PageInfo
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 @Service
+@CacheConfig(cacheNames = arrayOf("queryCache"))
 class OrderManager(private val billService: BillService, private val orderDao: OrderDao) : OrderService {
     private val logger = LoggerFactory.getLogger(OrderManager::class.java)
 
@@ -38,13 +42,17 @@ class OrderManager(private val billService: BillService, private val orderDao: O
                 ?.let { entity -> order.id = entity.id;order } ?: order.apply { id = -1 }
     }
 
-    //    @CachePut("queryCache", key = "#{orderQuery.getQueryId()}", condition = "#{orderQuery!=null}")
+    @CachePut(key = "#result.hashCode()")
     override fun createOrderQuery(query: OrderQuery): OrderQuery? {
-        return query.apply { id = 1 }
+        query.queryId = query.hashCode()
+        getOrderQuery(query.queryId)
+        return query.getRationalQuery()
     }
 
-    //    @Cacheable("queryCache", key = "#{queryId}")
-    override fun queryOrders(queryId: Int): PageInfo<Order>? {
+    @Cacheable(key = "#p0")
+    override fun getOrderQuery(queryId: Int) = null
+
+    override fun queryOrders(query: OrderQuery): PageInfo<Order>? {
         return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
     }
 

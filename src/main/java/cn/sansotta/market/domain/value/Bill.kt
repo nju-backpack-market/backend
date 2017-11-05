@@ -15,9 +15,8 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.ANY)
 class Bill() : Iterable<ShoppingItem>, Cloneable {
     /* shopping list of shopping item in the bill */
-    @get:JsonProperty
     private val shoppingList = mutableListOf<ShoppingItem>()
-        @SuppressWarnings get() = field // it's the only way can hint jackson detect this, wired
+    //        @SuppressWarnings get() = field // it's the only way can hint jackson detect this, wired
     /* total price */
     @get:JsonUnwrapped(suffix = "_total_price")
     private var totalPrice = Price()
