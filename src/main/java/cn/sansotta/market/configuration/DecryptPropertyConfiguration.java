@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 
 import javax.crypto.SecretKey;
-import javax.sql.DataSource;
 
 import static cn.sansotta.market.common.IOUtils.readFromClasspath;
 import static cn.sansotta.market.common.IOUtils.readFromFile;
@@ -26,18 +25,21 @@ import static cn.sansotta.market.common.IOUtils.readFromFile;
 public class DecryptPropertyConfiguration {
     @Primary
     @Bean
-    @Profile("dev_remote")
-    public static DataSourceProperties dataSourceProperties()
-            throws IOException, ClassNotFoundException {
-        return new DecryptedDatasourceProperties(readKey(readFromClasspath("des_key")));
+    @Profile({"dev_remote", "dev_deploy"})
+    public static DataSourceProperties dataSourceProperties(SecretKey secretKey) {
+        return new DecryptedDatasourceProperties(secretKey);
     }
 
-    @Primary
+    @Bean("custom_key")
+    @Profile({"dev_remote", "dev_local", "dev_hiki"})
+    public static SecretKey secretKeyDevRemote() throws IOException, ClassNotFoundException {
+        return readKey(readFromClasspath("des_key"));
+    }
+
     @Bean
     @Profile("dev_deploy")
-    public static DataSourceProperties devRemote()
-            throws IOException, ClassNotFoundException {
-        return new DecryptedDatasourceProperties(readKey(readFromFile("/root/des_key")));
+    public static SecretKey secretKeyDevDeploy() throws IOException, ClassNotFoundException {
+        return readKey(readFromFile("des_key"));
     }
 
     private static SecretKey readKey(InputStream stream) throws ClassNotFoundException, IOException {

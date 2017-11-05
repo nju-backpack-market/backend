@@ -1,5 +1,6 @@
 package cn.sansotta.market.configuration
 
+import cn.sansotta.market.common.string2ByteArray
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
@@ -24,8 +25,6 @@ class DecryptedDatasourceProperties(key: SecretKey) : DataSourceProperties() {
                     let { string2ByteArray(it) }?.
                     let { cipher.doFinal(it) }?.
                     let { String(it) } ?: source
-
-    private fun string2ByteArray(str: String) = str.split(" ").map { it.toByte() }.toByteArray()
 }
 
 private val encryptedPrefix = "{{enc:"

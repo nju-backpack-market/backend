@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
@@ -24,6 +25,7 @@ import java.time.LocalDateTime
 @SpringBootTest
 @ActiveProfiles("dev_local")
 @Transactional
+@SqlConfig(encoding = "UTF8")
 @Sql("classpath:test_schema.sql", "classpath:products_data.sql", "classpath:orders_data.sql")
 class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     @Autowired

@@ -14,13 +14,12 @@ import java.util.*
  */
 @Component
 class FileManager(@Value("${'$'}{upload.image.location}") imageLocation: String) : FileService {
-
     private val imageDir = Files.createDirectories(Paths.get(imageLocation)).toFile()
     private val nextId get() = UUID.randomUUID().toString()
 
     override fun handleImage(image: MultipartFile) =
             try {
-                File(imageDir, nextId)
+                File(imageDir, nextId + image.name.substring(image.name.lastIndexOf('.')))
                         .also { image.transferTo(it) }
                         .also { it.setExecutable(false) }
                         .name

@@ -1,12 +1,11 @@
 package cn.sansotta.market.dao.impl;
 
+import com.github.pagehelper.PageInfo;
+
 import cn.sansotta.market.common.MybatisUtils;
 import cn.sansotta.market.dao.UserDao;
 import cn.sansotta.market.domain.entity.UserEntity;
-import cn.sansotta.market.mapper.ProductMapper;
 import cn.sansotta.market.mapper.UserMapper;
-import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.regexp.internal.RE;
 
 /**
  * Created by Hiki on 2017/11/1.

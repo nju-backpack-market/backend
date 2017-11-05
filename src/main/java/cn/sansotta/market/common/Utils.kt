@@ -34,7 +34,7 @@ fun <T, R> copyPageInfo(pageInfo: PageInfo<T>, listConverter: (T) -> R) =
             isIsFirstPage = pageInfo.isIsFirstPage
             isIsLastPage = pageInfo.isIsLastPage
             isHasPreviousPage = pageInfo.isHasPreviousPage
-            setHasNextPage(pageInfo.isHasNextPage)
+            isHasNextPage = pageInfo.isHasNextPage
             list = pageInfo.list.map { listConverter(it) }
         }
 
@@ -45,3 +45,5 @@ inline fun <T> hazard(logger: Logger, method: String, defaultVal: T, func: () ->
             logger.error("Exception when $method caused by $ex")
             defaultVal
         }
+
+fun string2ByteArray(str: String) = str.split(" ").map { it.toByte() }.toByteArray()

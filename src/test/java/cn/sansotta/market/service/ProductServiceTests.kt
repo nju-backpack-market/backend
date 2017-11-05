@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
+import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +21,7 @@ import org.springframework.util.Assert
 @SpringBootTest
 @ActiveProfiles("dev_local")
 @Transactional
+@SqlConfig(encoding = "UTF8")
 @Sql("classpath:test_schema.sql", "classpath:products_data.sql")
 class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     @Autowired
@@ -60,9 +62,9 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
                 Product(3, "", 0.01, ""),
                 Product(1, "哇哇哇", -1.0, "大减价！"),
                 Product(5, "NO", 10.0, "TEST"))
-        assertEquals(service.modifyProducts(products).size, 2)
-        assertEquals(service.product(3)?.name, "绿包")
-        assertEquals(service.product(1)?.description, "大减价！")
-        assertEquals(service.product(1)?.price, 11.4)
+        assertEquals(2, service.modifyProducts(products).size)
+        assertEquals("绿包", service.product(3)?.name)
+        assertEquals("大减价！", service.product(1)?.description)
+        assertEquals(11.4, service.product(1)?.price)
     }
 }
