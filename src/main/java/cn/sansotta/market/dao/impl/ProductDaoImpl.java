@@ -12,13 +12,15 @@ import cn.sansotta.market.dao.ProductDao;
 import cn.sansotta.market.domain.entity.ProductEntity;
 import cn.sansotta.market.mapper.ProductMapper;
 
+import java.util.List;
+
 /**
  * Created by Hiki on 2017/10/21.
  */
 @Component
 public class ProductDaoImpl implements ProductDao {
-    private static final Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductDaoImpl.class);
 
     private final MybatisUtils.MapperTemplate<ProductMapper> productTpl;
 
@@ -54,11 +56,19 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Transactional
+	@Override
+	public List<ProductEntity> insertProducts(List<ProductEntity> products) throws RuntimeException{
+    	productTpl.exec(productMapper -> productMapper.insertProducts(products));
+    	return products;
+	}
+
+	@Transactional
     @Override
     public boolean updateProduct(ProductEntity product) {
         int affectedRow = productTpl.exec(productMapper -> productMapper.updateProduct(product));
         return affectedRow > 0;
     }
+
 
     @Transactional
     @Override

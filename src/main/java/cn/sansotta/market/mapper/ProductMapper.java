@@ -33,6 +33,17 @@ public interface ProductMapper {
 	@SelectKey(statement="SELECT LAST_INSERT_ID();", resultType = long.class, before = false, keyProperty = "id")
 	int insertProduct(ProductEntity product);
 
+	@Options(useGeneratedKeys = true, keyColumn = "pid")
+	@Insert({
+			"<script>",
+			"INSERT INTO products(pname, price, description) VALUES",
+			"<foreach collection='list' item='product' separator=','>",
+			"(#{product.name}, #{product.price}, #{product.description})",
+			"</foreach>",
+			"</script>"
+	})
+	@SelectKey(statement="SELECT LAST_INSERT_ID();", resultType = long.class, before = false, keyProperty = "id")
+	int insertProducts(List<ProductEntity> products);
 
     @Update("UPDATE products SET " +
             "pname=#{name}, price=#{price}, description=#{description} " +
