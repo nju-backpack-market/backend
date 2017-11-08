@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.sansotta.market.common.MybatisUtils;
@@ -18,7 +19,7 @@ import cn.sansotta.market.mapper.ShoppingItemMapper;
 /**
  * Created by Hiki on 2017/10/31.
  */
-@Component
+@Repository
 public class OrderDaoImpl implements OrderDao {
     private final static Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
 

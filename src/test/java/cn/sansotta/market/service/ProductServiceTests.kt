@@ -2,6 +2,7 @@ package cn.sansotta.market.service
 
 import cn.sansotta.market.domain.value.Product
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +13,6 @@ import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.Assert
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -29,22 +29,21 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
 
     @Test
     fun singleProduct() {
-        Assert.isNull(service.product(-1), "")
-        Assert.state(service.allProducts(0)?.size == 4, "")
-        Assert.state(service.product(1)?.equals(Product(1, "红包", 11.4, "Mock1", emptyList())) ?: false,
-                "")
+        assertNull(service.product(-1))
+        assertEquals(4, service.allProducts(0)?.size)
+        assertEquals(Product(1, "红包", 11.4, "Mock1", emptyList()), service.product(1))
     }
 
     @Test
     fun multiProducts() {
-        Assert.state(service.allProducts(0)?.size == 4, "")
+        assertEquals(4, service.allProducts(0)?.size)
     }
 
     @Test
     fun createProducts() {
         val products = listOf(
-                Product(5, "蓝包", 23.33, "Mock5", emptyList()),
-                Product(6, "橙包", 46.66, "MOCK6", emptyList()),
+                Product(5, "蓝包", 23.33, "Mock5", listOf("1", "2")),
+                Product(6, "橙包", 46.66, "MOCK6", listOf("3", "4")),
                 Product(-1, "错了!", -1.0, "ERROR", emptyList())) // this should not be inserted
         assertEquals(2, service.newProducts(products).size)
         assertEquals(6, countRowsInTable("products"))

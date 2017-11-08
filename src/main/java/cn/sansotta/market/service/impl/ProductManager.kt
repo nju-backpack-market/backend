@@ -6,12 +6,13 @@ import cn.sansotta.market.domain.value.Product
 import cn.sansotta.market.service.ProductService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Component
+@Service
 class ProductManager(private val productDao: ProductDao) : ProductService {
     private val logger = LoggerFactory.getLogger(ProductManager::class.java)
 

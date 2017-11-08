@@ -43,10 +43,9 @@ class OrderManager(private val billService: BillService, private val orderDao: O
     }
 
     @CachePut(key = "#result.hashCode()", condition = "#result != null")
-    override fun createOrderQuery(query: OrderQuery): OrderQuery? {
+    override fun createOrderQuery(query: OrderQuery, authorized: Boolean): OrderQuery? {
         query.queryId = query.hashCode()
-        getOrderQuery(query.queryId)
-        return query.getRationalQuery()
+        return query.getRationalQuery(authorized)
     }
 
     @Cacheable(key = "#p0")

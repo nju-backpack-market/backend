@@ -27,5 +27,10 @@ server:
     key-store-password: "67 58 88 68 -95 25 80 73 -102 9 37 -69 93 82 63 93"
     key-store-type: PKCS12
     key-alias: https
-  port: 8443
+  port: 8080
+jwt:
+  audience: frontend
+  issuer: backend
+  secret: "-30 108 -106 88 76 17 -1 -35 -124 -14 -55 120 -40 63 58 77 121 80 3 -22 -81 4 61 106"
+  expire-secs: 172800
 

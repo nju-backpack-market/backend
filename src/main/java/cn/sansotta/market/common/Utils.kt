@@ -47,3 +47,9 @@ inline fun <T> hazard(logger: Logger, method: String, defaultVal: T, func: () ->
         }
 
 fun string2ByteArray(str: String) = str.split(" ").map { it.toByte() }.toByteArray()
+
+fun Boolean.ifTrue(func: () -> Any): Boolean {
+    if (!this) return false
+    func()
+    return true
+}

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ import cn.sansotta.market.controller.resource.OrderQueryResource;
 import cn.sansotta.market.controller.resource.OrderResource;
 import cn.sansotta.market.domain.value.Order;
 import cn.sansotta.market.domain.value.OrderStatus;
+import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.OrderService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
@@ -38,6 +40,7 @@ import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse
 import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
 import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
 import static cn.sansotta.market.common.HateoasUtils.toResponse;
+import static cn.sansotta.market.common.HateoasUtils.unauthorizedResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -64,6 +67,7 @@ public class OrdersController {
         return order == null ? notFoundResponse() : toResponse(assembleResource(order));
     }
 
+    @Authorized
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<OrderResource>>
     orders(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
@@ -92,14 +96,23 @@ public class OrdersController {
         }
     }
 
+    @Authorized(intercept = false)
     @PostMapping(value = "/query", produces = HAL_MIME_TYPE)
     public ResponseEntity<OrderQueryResource>
-    createQuery(@RequestBody OrderQuery query) {
-        query = orderService.createOrderQuery(query);
+    createQuery(@RequestBody OrderQuery query,
+                @RequestAttribute("authorized") boolean authorized) {
+        query = orderService.createOrderQuery(query, authorized);
         return query == null ? badRequestResponse() :
-                toResponse(new OrderQueryResource(query), HttpStatus.CREATED);
+                query.getQueryId() == -1 ? unauthorizedResponse() :
+                        toResponse(new OrderQueryResource(query), HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/query", method = RequestMethod.HEAD)
+    public void createQueryHead(HttpServletResponse response) {
+        response.setHeader("Content-Type", HAL_MIME_TYPE);
+    }
+
+    @Authorized(intercept = false)
     @GetMapping(value = "/query/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<OrderResource>>
     query(@PathVariable("id") int queryId,
@@ -110,9 +123,11 @@ public class OrdersController {
 
         PageInfo<Order> pageInfo = orderService.queryOrders(page, query);
         return pageInfo == null ? insufficientStorageResponse() :
-                toResponse(assembleResources(pageInfo));
+                pageInfo.getSize() == 0 ? notFoundResponse() :
+                        toResponse(assembleResources(pageInfo));
     }
 
+    @Authorized(intercept = false)
     @PutMapping(value = "/{id}/status", produces = HAL_MIME_TYPE)
     public ResponseEntity
     modifyOrderStatus(@PathVariable("id") Long id, @RequestParam("modified") OrderStatus status) {
@@ -122,14 +137,20 @@ public class OrdersController {
         else return toResponse(assembleResource(updated));
     }
 
-    @PutMapping(value = "/{id}", consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
+    @RequestMapping(value = "/{id}/status", method = RequestMethod.HEAD)
+    public void modifyOrderStatusHead(HttpServletResponse response) {
+        response.setHeader("Content-Type", HAL_MIME_TYPE);
+    }
+
+    @Authorized
+    @PutMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity
     modifyOrder(@RequestBody List<Order> orders) {
         return toResponse(assembleResources(orderService.modifyOrders(orders)));
     }
 
     @RequestMapping(method = RequestMethod.HEAD)
-    public void head(HttpServletResponse response) {
+    public void modifyOrderHead(HttpServletResponse response) {
         response.setHeader("Content-Type", HAL_MIME_TYPE);
     }
 

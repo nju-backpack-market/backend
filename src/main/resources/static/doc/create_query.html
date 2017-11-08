@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <title>create_query.md</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
+          rel='stylesheet' type='text/css'/>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
+</head>
+<body class='typora-export'>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>POST /orders/query
+</h1>
+    <h2><a name='header-n2' class='md-header-anchor '></a>Create a query for future use.</h2>
+    <p>说明一下条件查询的流程：调这个接口创建一个查询，返回query id，之后拿这个id去GET query_order接口即可。</p>
+    <p>已创建的query会在一段时间后失效。开发阶段为了方便调试，失效时间设的长一点，生产环境中为了防止恶意的攻击，失效时间会只有3s。所以拿到id之后应该立刻GET。</p>
+    <h3><a name='header-n7' class='md-header-anchor '></a>Format</h3>
+    <pre class="md-fences md-end-block" lang="json"> <div class="CodeMirror cm-s-inner CodeMirror-wrap"><div
+            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 4px;"></div><div
+            class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div
+            class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
+                                                                              tabindex="-1"><div
+            class="CodeMirror-sizer"
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 277px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
+            role="presentation" style="position: relative; outline: none;"><div
+            class="CodeMirror-measure"></div><div class="CodeMirror-measure"></div><div
+            style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"
+                                                               role="presentation"><div
+            class="CodeMirror-activeline" style="position: relative;"><div
+            class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div
+            class="CodeMirror-gutter-background CodeMirror-activeline-gutter"
+            style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;">{</span></pre></div><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"><span
+            class="cm-tab" role="presentation" cm-text="	">    </span><span
+            class="cm-string cm-property">"id"</span>: [<span
+            class="cm-variable">id</span>],</span></pre><pre class=" CodeMirror-line "
+                                                             role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"status"</span>: [<span
+            class="cm-variable">status</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                 role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"from_date"</span>: [<span class="cm-variable">from_date</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"><span
+            class="cm-tab" role="presentation" cm-text="	">    </span><span
+            class="cm-string cm-property">"to_date"</span>: [<span
+            class="cm-variable">to_date</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                  role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"on_date"</span>: [<span
+            class="cm-variable">on_date</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                  role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"customer_name"</span>: [<span class="cm-variable">customer_name</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"><span
+            class="cm-tab" role="presentation" cm-text="	">    </span><span
+            class="cm-string cm-property">"phone_number"</span>: [<span
+            class="cm-variable">phone_number</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                       role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"product_ids"</span>: [<span
+            class="cm-variable">product_ids</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                      role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"from_price"</span>: [<span
+            class="cm-variable">from_price</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                     role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"to_price"</span>: [<span class="cm-variable">to_price</span>]</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 277px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 307px;"></div></div></div></pre>
+    <p>​ </p>
+    <h3><a name='header-n11' class='md-header-anchor '></a>Example</h3>
+    <p>Example:</p>
+    <pre class="md-fences md-end-block" lang="json"> <div class="CodeMirror cm-s-inner CodeMirror-wrap"><div
+            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 4px;"></div><div
+            class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div
+            class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
+                                                                              tabindex="-1"><div
+            class="CodeMirror-sizer"
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 68px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
+            role="presentation" style="position: relative; outline: none;"><div
+            class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div
+            class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div
+            class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline"
+                                                             style="position: relative;"><div
+            class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div
+            class="CodeMirror-gutter-background CodeMirror-activeline-gutter"
+            style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;">{</span></pre></div><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"><span
+            class="cm-tab" role="presentation" cm-text="	">    </span><span
+            class="cm-string cm-property">"id"</span>: <span class="cm-number">1</span></span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 68px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 98px;"></div></div></div></pre>
+    <pre class="md-fences md-end-block" lang="json"> <div class="CodeMirror cm-s-inner CodeMirror-wrap"><div
+            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 4px;"></div><div
+            class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div
+            class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
+                                                                              tabindex="-1"><div
+            class="CodeMirror-sizer"
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 114px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
+            role="presentation" style="position: relative; outline: none;"><div
+            class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div
+            class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div
+            class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline"
+                                                             style="position: relative;"><div
+            class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div
+            class="CodeMirror-gutter-background CodeMirror-activeline-gutter"
+            style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;">{</span></pre></div><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"><span
+            class="cm-tab" role="presentation" cm-text="	">    </span><span
+            class="cm-string cm-property">"status"</span>: <span
+            class="cm-variable">CREATE</span>,</span></pre><pre class=" CodeMirror-line "
+                                                                role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"><span class="cm-tab" role="presentation"
+                                                                    cm-text="	">    </span><span
+            class="cm-string cm-property">"on_date"</span>: <span class="cm-string">"2017-11-11"</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"><span
+            class="cm-tab" role="presentation" cm-text="	">    </span><span
+            class="cm-string cm-property">"customer_name"</span>: <span class="cm-string">"QinLiu"</span></span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 114px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 144px;"></div></div></div></pre>
+    <pre class="md-fences md-end-block" lang="json"> <div class="CodeMirror cm-s-inner CodeMirror-wrap"><div
+            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 4px;"></div><div
+            class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div
+            class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
+                                                                              tabindex="-1"><div
+            class="CodeMirror-sizer"
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 91px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
+            role="presentation" style="position: relative; outline: none;"><div
+            class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div
+            class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div
+            class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline"
+                                                             style="position: relative;"><div
+            class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div
+            class="CodeMirror-gutter-background CodeMirror-activeline-gutter"
+            style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;">{</span></pre></div><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">  <span
+            class="cm-tab" role="presentation" cm-text="	">  </span><span
+            class="cm-string cm-property">"phone_number"</span>: <span class="cm-string">"10086"</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">  <span
+            class="cm-tab" role="presentation" cm-text="	">  </span><span
+            class="cm-string cm-property">"customer_name"</span>: <span class="cm-string">"68001"</span></span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 91px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 121px;"></div></div></div></pre>
+    <p></p>
+    <h3><a name='header-n19' class='md-header-anchor '></a>NOTE</h3>
+    <ul>
+        <li>如果有<code>id</code> 字段则所有其他条件将会忽略。</li>
+        <li>
+            无<code>id</code>时，查询需要合理化，比如<code>on_date</code>不能与<code>from_date</code>和<code>to_date</code>共存，<code>from_price</code>需要小于<code>to_price</code>等。不合理的查询会返回400。
+        </li>
+        <li>这个接口可能需要权限。无权限时，<code>phoneNumber</code>和<code>customer_name</code>
+            必须同时存在，即消费者发起的查询。有权限时则无限制。越权查询返回401。
+        </li>
+    </ul>
+</div>
+</body>
+</html>

@@ -19,13 +19,13 @@ public interface ProductImageMapper {
 
 	@Insert({
 			"<script>",
-			"INSERT INTO product_images (image_name, pid) VALUES",
-			"<foreach collection='images' item='image' separator=','>",
+			"INSERT INTO product_images (image_name, pid) VALUES ",
+			"<foreach collection='list' item='image' separator=','>",
 			"(#{image}, #{pid})",
 			"</foreach>",
 			"</script>"
 	})
-	int insertProductImages(@Param("images") List<String> images, @Param("pid") long pid);
+	int insertProductImages(@Param("list") List<String> images, @Param("pid") long pid);
 
 	@Delete("DELETE FROM product_images WHERE image_name=#{image}")
 	int deleteProductImage(@Param("image") String image);

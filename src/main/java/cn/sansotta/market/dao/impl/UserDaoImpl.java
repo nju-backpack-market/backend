@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.sansotta.market.common.MybatisUtils;
@@ -14,6 +15,7 @@ import cn.sansotta.market.mapper.UserMapper;
 /**
  * Created by Hiki on 2017/11/1.
  */
+@Repository
 public class UserDaoImpl implements UserDao {
     private static Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 

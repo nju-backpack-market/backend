@@ -23,7 +23,11 @@ data class OrderQuery(
     constructor() : this(null, null, null, null, null, null, null, null, null, null)
 
     @JsonIgnore
-    fun getRationalQuery(): OrderQuery? {
+    fun getRationalQuery(authorized: Boolean): OrderQuery? {
+        if (!authorized && (customerName.isNullOrBlank() || phoneNumber.isNullOrBlank())) {
+            queryId = -1
+            return this
+        }
         if (id != null) { // id has highest priority
             status = null
             fromDate = null
@@ -41,7 +45,7 @@ data class OrderQuery(
 
         val tmpFromPrice = fromPrice
         val tmpToPrice = toPrice
-        if (tmpFromPrice != null && tmpToPrice != null && tmpFromPrice > tmpToPrice)
+        if (tmpFromPrice != null && tmpToPrice != null && tmpFromPrice > 0.0 && tmpFromPrice > tmpToPrice)
             return null
 
         val tmpFromDate = fromDate

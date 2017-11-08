@@ -60,7 +60,7 @@ data class ShoppingItem(
         }
 
     override fun toEntity() =
-            ShoppingItemEntity(-1L, count, unitPrice.toEntity(), actualSubtotalPrice)
+            ShoppingItemEntity(pid, count, unitPrice.toEntity(), actualSubtotalPrice)
 
     companion object {
         @JvmStatic

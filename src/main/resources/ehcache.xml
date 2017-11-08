@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ehcache>
     <cache name="queryCache" timeToLiveSeconds="600" maxEntriesLocalHeap="200"/>
+
+    <cache name="tokenCache" timeToIdleSeconds="12000" maxEntriesLocalHeap="20"/>
 </ehcache>

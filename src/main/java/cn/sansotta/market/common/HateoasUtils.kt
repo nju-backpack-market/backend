@@ -23,15 +23,21 @@ import org.springframework.util.CollectionUtils
 const val JSON_MIME_TYPE = "application/json"
 const val HAL_MIME_TYPE = "application/hal+json"
 
+fun <T> okResponse() = ResponseEntity<T>(HttpStatus.OK)
+
 fun <T> notFoundResponse() = ResponseEntity<T>(HttpStatus.NOT_FOUND)
 
 fun <T> insufficientStorageResponse() = ResponseEntity<T>(HttpStatus.INSUFFICIENT_STORAGE)
 
 fun <T> noContentResponse() = ResponseEntity<T>(HttpStatus.NO_CONTENT)
 
+fun <T> createdResponse() = ResponseEntity<T>(HttpStatus.CREATED)
+
 fun <T> conflictResponse() = ResponseEntity<T>(HttpStatus.CONFLICT)
 
 fun <T> badRequestResponse() = ResponseEntity<T>(HttpStatus.BAD_REQUEST)
+
+fun <T> unauthorizedResponse() = ResponseEntity<T>(HttpStatus.UNAUTHORIZED)
 
 fun <K, V> singletonHeader(key: K, value: V)
         = CollectionUtils.toMultiValueMap(mapOf(key to listOf(value)))

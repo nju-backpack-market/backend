@@ -33,7 +33,7 @@ open class DocumentResource private constructor() : Resource<String>("Document")
             api("update_products", HttpMethod.PUT) {
                 modifyProducts(Collections.singletonList(Product.mockObject()))
             }
-            api("delete_products", HttpMethod.DELETE) { removeProducts(Collections.singletonList(1)) }
+            api("delete_products", HttpMethod.DELETE) { removeProducts(listOf(1)) }
         }
         apis<BillsController> {
             api("query_price", HttpMethod.POST) { createBill(listOf()) }
@@ -46,8 +46,20 @@ open class DocumentResource private constructor() : Resource<String>("Document")
             api("get_all_orders_index", HttpMethod.GET) { orders(0, false) }
             api("update_order_status", HttpMethod.PUT) { modifyOrderStatus(1L, OrderStatus.CREATE) }
             api("update_order_info", HttpMethod.PUT) { modifyOrder(listOf(Order())) }
+            api("create_query", HttpMethod.POST) { createQuery(OrderQuery().apply { id = 1 }, true) }
+            api("query_order", HttpMethod.GET) { query(OrderQuery().apply { id = 1 }.queryId, 0, false) }
+        }
+        apis<FilesController> {
+            api("upload_image", HttpMethod.POST, "/files/image")
+            api("upload_video", HttpMethod.POST, "/files/image")
         }
         apis<PaymentsController> { api("start_payment", HttpMethod.GET, "/payments/1") }
+        apis<TokensController> { api("create_token", HttpMethod.POST, "/tokens") }
+        apis<UsersController> {
+            api("create_user", HttpMethod.POST, "/users")
+            api("delete_user", HttpMethod.DELETE, "/users")
+            api("modify_password", HttpMethod.PUT, "/users")
+        }
     }
 
     private inline fun <reified T> apis(apiInfo: Class<T>.() -> Unit) = T::class.java.apiInfo()

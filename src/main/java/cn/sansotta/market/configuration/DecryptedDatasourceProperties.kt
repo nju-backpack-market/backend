@@ -3,20 +3,17 @@ package cn.sansotta.market.configuration
 import cn.sansotta.market.common.string2ByteArray
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import javax.crypto.Cipher
-import javax.crypto.SecretKey
 
 /**
  * Customized PlaceholderConfigurer to decrypt encoded password properties.
  *
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-class DecryptedDatasourceProperties(key: SecretKey) : DataSourceProperties() {
+class DecryptedDatasourceProperties(private val cipher: Cipher) : DataSourceProperties() {
 
     override fun setPassword(password: String) {
         super.setPassword(decryptIfNecessary(password))
     }
-
-    private val cipher = Cipher.getInstance("DES").apply { init(Cipher.DECRYPT_MODE, key) }
 
     private fun decryptIfNecessary(source: String) =
             source.

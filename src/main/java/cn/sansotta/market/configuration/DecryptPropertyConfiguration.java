@@ -12,7 +12,11 @@ import org.springframework.core.ConfigurableObjectInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 import static cn.sansotta.market.common.IOUtils.readFromClasspath;
@@ -26,20 +30,31 @@ public class DecryptPropertyConfiguration {
     @Primary
     @Bean
     @Profile({"dev_remote", "dev_deploy"})
-    public static DataSourceProperties dataSourceProperties(SecretKey secretKey) {
-        return new DecryptedDatasourceProperties(secretKey);
+    public static DataSourceProperties dataSourceProperties(Cipher cipher) {
+        return new DecryptedDatasourceProperties(cipher);
     }
 
     @Bean("custom_key")
     @Profile({"dev_remote", "dev_local", "dev_hiki"})
-    public static SecretKey secretKeyDevRemote() throws IOException, ClassNotFoundException {
-        return readKey(readFromClasspath("des_key"));
+    public static Cipher secretKeyDevRemote()
+            throws IOException, ClassNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException {
+        return createCipher(readKey(readFromClasspath("des_key")));
     }
 
     @Bean
     @Profile("dev_deploy")
-    public static SecretKey secretKeyDevDeploy() throws IOException, ClassNotFoundException {
-        return readKey(readFromFile("des_key"));
+    public static Cipher secretKeyDevDeploy()
+            throws IOException, ClassNotFoundException, NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeyException {
+        return createCipher(readKey(readFromFile("des_key")));
+    }
+
+    private static Cipher createCipher(SecretKey secretKey)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        return cipher;
     }
 
     private static SecretKey readKey(InputStream stream) throws ClassNotFoundException, IOException {

@@ -5,12 +5,8 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.embedded.Ssl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-
-import java.util.Arrays;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 
 import static cn.sansotta.market.common.Utils.string2ByteArray;
 
@@ -21,19 +17,16 @@ import static cn.sansotta.market.common.Utils.string2ByteArray;
 public class ServletContainerConfiguration {
     @Bean
     public static EmbeddedServletContainerCustomizer
-    embeddedServletContainerCustomizer(SecretKey secretKey) {
+    embeddedServletContainerCustomizer(Cipher cipher) {
         return container -> {
             decryptKeystorePassword(
-                    ((AbstractConfigurableEmbeddedServletContainer) container), secretKey);
+                    ((AbstractConfigurableEmbeddedServletContainer) container), cipher);
         };
     }
 
     private static void decryptKeystorePassword(AbstractConfigurableEmbeddedServletContainer container,
-                                                SecretKey secretKey) {
+                                                Cipher cipher) {
         try {
-            Cipher cipher = Cipher.getInstance("DES");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
-
             Ssl ssl = container.getSsl();
             String actualPassword =
                     new String(cipher.doFinal(string2ByteArray(ssl.getKeyStorePassword())));

@@ -118,7 +118,7 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     fun createQuery() {
         val query = OrderQuery()
         query.id = 1
-        var res = service.createOrderQuery(query)
+        var res = service.createOrderQuery(query, true)
         assertNotNull(res)
         res as OrderQuery
         assertEquals(query.hashCode(), res.queryId)
@@ -130,18 +130,18 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         query.id = null
         query.fromDate = LocalDate.MAX
         query.toDate = LocalDate.MIN
-        assertNull(service.createOrderQuery(query))
+        assertNull(service.createOrderQuery(query, true))
 
         query.fromDate = null
         query.toDate = LocalDate.now()
         query.onDate = LocalDate.now().minusDays(1)
-        assertNull(service.createOrderQuery(query))
+        assertNull(service.createOrderQuery(query, true))
 
         query.toDate = null
         query.onDate = null
         query.fromPrice = 10.1
         query.toPrice = 10.0
-        assertNull(service.createOrderQuery(query))
+        assertNull(service.createOrderQuery(query, true))
     }
 
     @Test

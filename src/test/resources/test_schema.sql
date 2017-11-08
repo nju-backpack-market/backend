@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS orders
 (
-  oid            BIGINT AUTO_INCREMENT
-    PRIMARY KEY,
+  oid            BIGINT AUTO_INCREMENT PRIMARY KEY,
   state          VARCHAR(40)  NOT NULL,
   time           DATETIME     NOT NULL,
   total_price    DOUBLE       NULL,
@@ -13,8 +12,7 @@ CREATE TABLE IF NOT EXISTS orders
 
 CREATE TABLE IF NOT EXISTS products
 (
-  pid         BIGINT AUTO_INCREMENT
-    PRIMARY KEY,
+  pid         BIGINT AUTO_INCREMENT PRIMARY KEY,
   pname       VARCHAR(255) NOT NULL,
   price       DOUBLE       NOT NULL,
   description TEXT         NOT NULL
@@ -33,8 +31,13 @@ CREATE TABLE IF NOT EXISTS shopping_items
 
 CREATE TABLE IF NOT EXISTS users
 (
-  username VARCHAR(40) NOT NULL
-    PRIMARY KEY,
+  username VARCHAR(40) NOT NULL PRIMARY KEY,
   password VARCHAR(40) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS product_images (
+  image_name CHAR(37) NOT NULL,
+  pid  BIGINT   NOT NULL,
+  PRIMARY KEY (pid, image_name)
+)
 

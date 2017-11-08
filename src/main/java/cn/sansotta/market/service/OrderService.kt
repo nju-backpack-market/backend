@@ -16,7 +16,7 @@ interface OrderService {
     fun modifyOrders(orders: List<Order>): List<Order>
     fun modifyOrderStatus(id: Long, status: OrderStatus): Order?
 
-    fun createOrderQuery(query: OrderQuery): OrderQuery?
+    fun createOrderQuery(query: OrderQuery, authorized: Boolean): OrderQuery?
     fun getOrderQuery(queryId: Int): OrderQuery?
     fun queryOrders(page: Int, query: OrderQuery): PageInfo<Order>?
 }

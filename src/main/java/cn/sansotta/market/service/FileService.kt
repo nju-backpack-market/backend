@@ -7,4 +7,5 @@ import org.springframework.web.multipart.MultipartFile
  */
 interface FileService {
     fun handleImage(image: MultipartFile): String?
+    fun handleVideo(video: MultipartFile): String?
 }

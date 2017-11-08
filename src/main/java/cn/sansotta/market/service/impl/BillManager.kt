@@ -4,12 +4,12 @@ import cn.sansotta.market.dao.ProductDao
 import cn.sansotta.market.domain.value.Bill
 import cn.sansotta.market.domain.value.ShoppingItem
 import cn.sansotta.market.service.BillService
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Component
+@Service
 class BillManager(private val productDao: ProductDao) : BillService {
     override fun billOfOrder(oid: Long) = Bill.mockObject()
 

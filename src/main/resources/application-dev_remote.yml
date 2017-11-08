@@ -10,6 +10,8 @@ spring:
 upload:
   image:
     location: D:/image
+  video:
+    location: D:/image
 server:
   ssl:
     key-store:

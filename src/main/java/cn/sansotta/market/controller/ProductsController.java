@@ -2,6 +2,7 @@ package cn.sansotta.market.controller;
 
 import com.github.pagehelper.PageInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
@@ -22,6 +23,7 @@ import java.util.List;
 import cn.sansotta.market.controller.resource.ProductAssembler;
 import cn.sansotta.market.controller.resource.ProductResource;
 import cn.sansotta.market.domain.value.Product;
+import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.ProductService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
@@ -62,18 +64,21 @@ public class ProductsController {
         return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
     }
 
+    @Authorized
     @PostMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity<List<ProductResource>>
     newProducts(@RequestBody List<Product> products) {
         return toResponse(assembleResources(productService.newProducts(products)), HttpStatus.CREATED);
     }
 
+    @Authorized
     @PutMapping(consumes = JSON_MIME_TYPE, produces = HAL_MIME_TYPE)
     public ResponseEntity<List<ProductResource>>
     modifyProducts(@RequestBody List<Product> products) {
         return toResponse(assembleResources(productService.modifyProducts(products)));
     }
 
+    @Authorized
     @DeleteMapping("/{id}")
     public ResponseEntity<List<Long>>
     removeProducts(@PathVariable("id") List<Long> ids) {
