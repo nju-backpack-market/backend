@@ -22,7 +22,6 @@ public interface ShoppingItemMapper {
 
     @Results(id = "shoppingItemMap")
     @ConstructorArgs({
-            @Arg(column = "oid", javaType = long.class),
             @Arg(column = "pid", javaType = long.class),
             @Arg(column = "count", javaType = int.class),
             @Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.priceMap",
@@ -32,17 +31,15 @@ public interface ShoppingItemMapper {
             "FROM shopping_items WHERE oid = #{oid}")
     List<ShoppingItemEntity> selectShoppingItemsByOrderId(long oid);
 
-
     @Insert({
             "<script>",
             "INSERT INTO shopping_items (oid, pid, `count`, origin_price, actual_price, subtotal_price) VALUES",
-            "<foreach collection='list' item='shoppingItem' separator=','>",
-            "(#{shoppingItem.oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice.origin}," +
-                    " #{shoppingItem.unitPrice.actual}, #{shoppingItem.subtotalPrice})",
+            "<foreach collection='shoppingItems' item='shoppingItem' separator=','>",
+            "(#{oid}, #{shoppingItem.pid}, #{shoppingItem.count}, #{shoppingItem.unitPrice.origin}, #{shoppingItem.unitPrice.actual}, #{shoppingItem.subtotalPrice})",
             "</foreach>",
             "</script>"
     })
-    int insertShoppingItems(@Param("list") List<ShoppingItemEntity> list);
+    int insertShoppingItems(@Param("shoppingItems") List<ShoppingItemEntity> shoppingItems, @Param("oid") long oid);
 
 
     @Delete("DELETE FROM shopping_items WHERE oid=#{oid}")

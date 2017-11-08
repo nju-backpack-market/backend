@@ -1,5 +1,6 @@
 package cn.sansotta.market.dao.impl;
 
+import cn.sansotta.market.mapper.ProductImageMapper;
 import com.github.pagehelper.PageInfo;
 
 import org.slf4j.Logger;
@@ -24,8 +25,11 @@ public class ProductDaoImpl implements ProductDao {
 
     private final MybatisUtils.MapperTemplate<ProductMapper> productTpl;
 
+    private final MybatisUtils.MapperTemplate<ProductImageMapper> productImageTpl;
+
     public ProductDaoImpl(MybatisUtils util) {
         this.productTpl = util.mapperTemplate(ProductMapper.class);
+        this.productImageTpl = util.mapperTemplate(ProductImageMapper.class);
     }
 
     @Override
@@ -52,6 +56,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public ProductEntity insertProduct(ProductEntity product) {
         productTpl.exec(productMapper -> productMapper.insertProduct(product));
+        productImageTpl.exec(productImageTpl -> productImageTpl.insertProductImages(product.getImages(), product.getId()));
         return product;
     }
 
@@ -59,7 +64,10 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public List<ProductEntity> insertProducts(List<ProductEntity> products) throws RuntimeException{
     	productTpl.exec(productMapper -> productMapper.insertProducts(products));
-    	return products;
+        for (ProductEntity product : products) {
+            productImageTpl.exec(productImageMapper -> productImageMapper.insertProductImages(product.getImages(), product.getId()));
+        }
+        return products;
 	}
 
 	@Transactional
@@ -74,6 +82,14 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean deleteProduct(long id) {
         int affectedRow = productTpl.exec(productMapper -> productMapper.deleteProduct(id));
+        productImageTpl.exec(productImageMapper -> productImageMapper.deleteProductImageByProductId(id));
         return affectedRow > 0;
     }
+
+    @Override
+    public boolean deleteProductImage(String imageName) {
+        int affectedRow = productImageTpl.exec(productImageMapper -> productImageMapper.deleteProductImage(imageName));
+        return affectedRow > 0;
+    }
+
 }

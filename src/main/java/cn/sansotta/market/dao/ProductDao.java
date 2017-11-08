@@ -23,4 +23,5 @@ public interface ProductDao {
 
     boolean deleteProduct(long id) throws RuntimeException;
 
+    boolean deleteProductImage(String imageName);
 }

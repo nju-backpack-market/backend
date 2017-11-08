@@ -71,7 +71,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public OrderEntity insertOrder(OrderEntity order) {
         orderTpl.exec(order, OrderMapper::insertOrder);
-        shoppingItemTpl.exec(order.getShoppingItems(), ShoppingItemMapper::insertShoppingItems);
+        shoppingItemTpl.exec(order.getShoppingItems(), order.getId(), ShoppingItemMapper::insertShoppingItems);
         return order;
     }
 

@@ -17,7 +17,10 @@ public interface ProductMapper {
             @Arg(id = true, column = "pid", javaType = long.class),
             @Arg(column = "pname", javaType = String.class),
             @Arg(column = "price", javaType = double.class),
-            @Arg(column = "description", javaType = String.class)})
+            @Arg(column = "description", javaType = String.class),
+			@Arg(column = "pid", select = "cn.sansotta.market.mapper.ProductMapper.selectProductImageByProductId",
+				javaType = List.class)
+			})
     @Select("SELECT * FROM products WHERE pid=#{id}")
     ProductEntity selectProductById(long id);
 
@@ -52,4 +55,8 @@ public interface ProductMapper {
 
     @Delete("DELETE FROM products WHERE pid=#{id}")
 	int deleteProduct(long id);
+
+
+
+
 }
