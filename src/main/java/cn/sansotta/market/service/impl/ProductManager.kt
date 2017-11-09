@@ -5,7 +5,6 @@ import cn.sansotta.market.dao.ProductDao
 import cn.sansotta.market.domain.value.Product
 import cn.sansotta.market.service.ProductService
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,9 +17,9 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
 
     //    private val mockProduct = ProductEntity(1, "MockProduct", 10000.0, "MOCK")
     //    private val mockProduct2 = ProductEntity(2, "MockProduct", 10005.0, "MOCK")
-    override fun product(id: Long)
+    override fun product(id: Long, withPicture: Boolean)
             = id.takeIf { it > 0L }
-            ?.let(productDao::selectProductById)
+            ?.let { productDao.selectProductById(id, withPicture) }
             ?.let(::Product)
 
     override fun allProducts(page: Int)
@@ -39,7 +38,7 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
     @Transactional // to make sure the select and update is consistent
     override fun modifyProducts(products: List<Product>): List<Product> {
         val valid = products.filter { it.id > 0L }
-        return valid.map { productDao.selectProductById(it.id) }
+        return valid.map { productDao.selectProductById(it.id, false) }
                 .zip(valid)
                 .filter { (origin, _) -> origin != null }
                 .mapNotNull { (origin, modified) -> Product.mergeAsUpdate(origin, modified) }

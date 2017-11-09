@@ -17,7 +17,7 @@ class BillManager(private val productDao: ProductDao) : BillService {
         if (!items.all { it.pid > 0L }) return null
 
         for (item in items)
-            productDao.selectProductById(item.pid)
+            productDao.selectProductById(item.pid, false)
                     ?.let { item.originUnitPrice = it.price } ?: return null
         return Bill(items)
     }
@@ -25,6 +25,6 @@ class BillManager(private val productDao: ProductDao) : BillService {
     override fun checkPrice(bill: Bill)
             = bill.all {
         it.originUnitPrice >= 0.0 && // do mostly check before query db
-                it.originUnitPrice == productDao.selectProductById(it.pid)?.price
+                it.originUnitPrice == productDao.selectProductById(it.pid, false)?.price
     }
 }

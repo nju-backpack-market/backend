@@ -2,7 +2,6 @@ package cn.sansotta.market.controller;
 
 import com.github.pagehelper.PageInfo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
@@ -53,7 +52,7 @@ public class ProductsController {
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<ProductResource>
     product(@PathVariable("id") long id) {
-        Product product = productService.product(id);
+        Product product = productService.product(id, true);
         return product == null ? notFoundResponse() : toResponse(assembleResource(product));
     }
 

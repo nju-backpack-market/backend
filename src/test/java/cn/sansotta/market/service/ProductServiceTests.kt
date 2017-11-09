@@ -29,9 +29,9 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
 
     @Test
     fun singleProduct() {
-        assertNull(service.product(-1))
+        assertNull(service.product(-1, false))
         assertEquals(4, service.allProducts(0)?.size)
-        assertEquals(Product(1, "红包", 11.4, "Mock1", emptyList()), service.product(1))
+        assertEquals(Product(1, "红包", 11.4, "Mock1", emptyList()), service.product(1, false))
     }
 
     @Test
@@ -63,8 +63,8 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
                 Product(1, "哇哇哇", -1.0, "大减价！", emptyList()),
                 Product(5, "NO", 10.0, "TEST", emptyList()))
         assertEquals(2, service.modifyProducts(products).size)
-        assertEquals("绿包", service.product(3)?.name)
-        assertEquals("大减价！", service.product(1)?.description)
-        assertEquals(11.4, service.product(1)?.price)
+        assertEquals("绿包", service.product(3, false)?.name)
+        assertEquals("大减价！", service.product(1, false)?.description)
+        assertEquals(11.4, service.product(1, false)?.price)
     }
 }

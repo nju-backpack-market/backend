@@ -23,7 +23,7 @@ class UserManager(private val userDao: UserDao, private val tokenService: TokenS
     }
 
     override fun newUser(user: User)
-            = user.takeIf(User.Companion::isValidEntity)
+            = user.takeIf(User.Companion::isValidEntity)?.takeIf { user(user.username) == null }
             ?.let { hazard("create user") { userDao.insertUser(it.toEntity()) } } != null
 
     override fun removeUser(username: String)

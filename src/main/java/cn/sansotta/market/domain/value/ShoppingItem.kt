@@ -64,7 +64,7 @@ data class ShoppingItem(
 
     companion object {
         @JvmStatic
-        fun mockObject() = ShoppingItem(114514, 1919, 81.0)
+        fun mockObject() = ShoppingItem(114514, 1, 81.0)
 
         @JvmStatic
         fun isValidEntity(item: ShoppingItem)

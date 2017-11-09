@@ -62,7 +62,8 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         Thread.sleep(100) // to make sure LocalDateTime.now() has changed
         assertNull(service.newOrder(order))
 
-        order.deliveryInfo = DeliveryInfo("TEST", "233333", "a@b.com", "NJU")
+        order.deliveryInfo = DeliveryInfo("TEST", "233333", "a@b.com", "China", "JiangSu",
+                "Nanjing", "NJU", "EDU", "222222")
         order.bill.addShoppingItem(ShoppingItem(1L, 1, 11.4))
         order.bill.addShoppingItem(ShoppingItem(2L, 2, 51.4))
         val result = service.newOrder(order)
@@ -102,7 +103,7 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
                 name = "zhangsan"
                 phoneNumber = "777777"
                 email = "foo@bar.com"
-                address = "PKU"
+                addressLine2 = "PKU"
             }
         }
         val updateInfo1 = Order().apply { id = -1L }

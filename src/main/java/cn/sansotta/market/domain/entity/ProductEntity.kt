@@ -7,8 +7,11 @@ package cn.sansotta.market.domain.entity
  *
  * @author Hiki
  */
-data class ProductEntity(var id: Long,
-                         var name: String,
-                         var price: Double,
-                         var description: String,
-                         var images: List<String>)
+data class ProductEntity(val id: Long,
+                         val name: String,
+                         val price: Double,
+                         val description: String,
+                         val images: List<String>) {
+    constructor(id: Long, name: String, price: Double, description: String)
+            : this(id, name, price, description, emptyList())
+}

@@ -24,13 +24,16 @@ server:
   ssl:
     key-store: classpath:keystore.p12
     enabled: true
-    key-store-password: "67 58 88 68 -95 25 80 73 -102 9 37 -69 93 82 63 93"
+    key-store-password: "QzpYRKEZUEmaCSW7XVI/XQ=="
     key-store-type: PKCS12
     key-alias: https
   port: 8080
 jwt:
   audience: frontend
   issuer: backend
-  secret: "-30 108 -106 88 76 17 -1 -35 -124 -14 -55 120 -40 63 58 77 121 80 3 -22 -81 4 61 106"
+  secret: "4myWWEwR/92E8sl42D86TXlQA+qvBD1q"
   expire-secs: 172800
-
+paypal:
+  mode: sandbox
+  client-id: "EE9THfjz2SEX+jFW57qiy906yroUTtIlK28tdxf5A8RN6J3iuzj72SL+6wmGnsyEu3Z/XOgw6i6OdcBGk0JhKFMqvaktWYS7FRVGETU1oh95UAPqrwQ9ag=="
+  secret: "BTxDic/B26MEvf6PpSIhyWCvkTcPycf5YdlawylUpSesORL9r6FjY4RjU7W7UEXVHxMEujoJIa1u1hBpeblcZ4MXSM43LR5HRSAqD4uTkqp5UAPqrwQ9ag=="

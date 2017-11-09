@@ -33,9 +33,11 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public ProductEntity selectProductById(long id) {
+    public ProductEntity selectProductById(long id, boolean cascade) {
         try {
-            return productTpl.exec(productMapper -> productMapper.selectProductById(id));
+            return productTpl.exec(id,
+                    cascade ? ProductMapper::selectProductById :
+                            ProductMapper::selectProductByIdNoPictures);
         } catch (RuntimeException ex) {
             logger.error("error when select product because of " + ex);
             return null;

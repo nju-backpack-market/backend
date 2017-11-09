@@ -7,5 +7,5 @@ spring:
 upload:
   image:
     location: /var/site/static/image
-  image:
+  video:
     location: /var/site/static/video

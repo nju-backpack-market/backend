@@ -35,6 +35,16 @@ public interface ProductMapper {
     @Select("SELECT * FROM products WHERE pid=#{id}")
     ProductEntity selectProductById(long id);
 
+    @Results(id = "productMapNoPictures")
+    @ConstructorArgs({
+            @Arg(id = true, column = "pid", javaType = long.class),
+            @Arg(column = "pname", javaType = String.class),
+            @Arg(column = "price", javaType = double.class),
+            @Arg(column = "description", javaType = String.class),
+    })
+    @Select("SELECT * FROM products WHERE pid=#{id}")
+    ProductEntity selectProductByIdNoPictures(long id);
+
     @ResultMap("productMap")
     @Select("SELECT * FROM products")
     List<ProductEntity> selectAllProducts();

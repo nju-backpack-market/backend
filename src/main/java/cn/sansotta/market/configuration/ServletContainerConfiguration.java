@@ -6,9 +6,9 @@ import org.springframework.boot.context.embedded.Ssl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.crypto.Cipher;
+import java.util.Base64;
 
-import static cn.sansotta.market.common.Utils.string2ByteArray;
+import javax.crypto.Cipher;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -18,10 +18,8 @@ public class ServletContainerConfiguration {
     @Bean
     public static EmbeddedServletContainerCustomizer
     embeddedServletContainerCustomizer(Cipher cipher) {
-        return container -> {
-            decryptKeystorePassword(
-                    ((AbstractConfigurableEmbeddedServletContainer) container), cipher);
-        };
+        return container -> decryptKeystorePassword(
+                ((AbstractConfigurableEmbeddedServletContainer) container), cipher);
     }
 
     private static void decryptKeystorePassword(AbstractConfigurableEmbeddedServletContainer container,
@@ -29,7 +27,7 @@ public class ServletContainerConfiguration {
         try {
             Ssl ssl = container.getSsl();
             String actualPassword =
-                    new String(cipher.doFinal(string2ByteArray(ssl.getKeyStorePassword())));
+                    new String(cipher.doFinal(Base64.getDecoder().decode(ssl.getKeyStorePassword())));
             ssl.setKeyStorePassword(actualPassword);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
