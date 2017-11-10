@@ -53,7 +53,7 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
             try {
                 func()
             } catch (ex: RuntimeException) {
-                logger.error("Exception when $method caused by $ex")
+                logger.error("Exception when $method", ex)
                 defaultVal
             }
 
@@ -61,7 +61,7 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
             try {
                 func()
             } catch (ex: RuntimeException) {
-                logger.error("Exception when $method caused by $ex")
+                logger.error("Exception when $method", ex)
                 null
             }
 }

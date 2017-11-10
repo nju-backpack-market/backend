@@ -1,7 +1,10 @@
 package cn.sansotta.market.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payment;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +35,7 @@ import cn.sansotta.market.domain.value.Order;
 import cn.sansotta.market.domain.value.OrderStatus;
 import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.OrderService;
+import cn.sansotta.market.service.PaymentService;
 
 import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
 import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
@@ -51,13 +56,20 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @ExposesResourceFor(Order.class)
 @RequestMapping("/orders")
 public class OrdersController {
-    private final OrderService orderService;
     private final EntityLinks link;
     private final OrderAssembler assembler = new OrderAssembler();
+    private final PaymentService payPalService;
+    private final OrderService orderService;
 
-    public OrdersController(OrderService orderService, EntityLinks link) {
-        this.orderService = orderService;
+    private static final String PAYPAL = "paypal";
+    private static final String ALIPAY = "alipay";
+
+    public OrdersController(OrderService orderService,
+                            EntityLinks link,
+                            @Qualifier("payPalManager") PaymentService payPalService) {
         this.link = link;
+        this.orderService = orderService;
+        this.payPalService = payPalService;
     }
 
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
@@ -152,6 +164,40 @@ public class OrdersController {
     @RequestMapping(method = RequestMethod.HEAD)
     public void modifyOrderHead(HttpServletResponse response) {
         response.setHeader("Content-Type", HAL_MIME_TYPE);
+    }
+
+    @PostMapping("/{orderId}/payment")
+    public void
+    createPayment(@PathVariable("orderId") long orderId,
+                  @RequestParam("method") String method,
+                  HttpServletResponse response) throws IOException {
+        if(!PAYPAL.equals(method) && !ALIPAY.equals(method)) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        Order order = orderService.paymentBegin(orderId); // now order's status change to PAYING
+        if(order == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        switch (method) {
+            case PAYPAL:
+                payPalPayment(order, response);
+                break;
+        }
+    }
+
+    private void payPalPayment(Order order, HttpServletResponse response) throws IOException {
+        Payment payment = payPalService.createPayment(order);
+        if(payment == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        for (Links links : payment.getLinks())
+            if("approval_url".equals(links.getRel()))
+                response.sendRedirect(links.getHref());
     }
 
     private OrderResource assembleResource(Order order) {

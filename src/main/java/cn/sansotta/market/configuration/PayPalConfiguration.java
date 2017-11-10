@@ -1,12 +1,16 @@
 package cn.sansotta.market.configuration;
 
+import com.paypal.api.payments.RedirectUrls;
 import com.paypal.base.rest.PayPalRESTException;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
@@ -19,7 +23,6 @@ import javax.crypto.IllegalBlockSizeException;
 @Configuration
 @EnableConfigurationProperties(PayPalConfiguration.PayPalProperties.class)
 public class PayPalConfiguration {
-
     @Bean
     public static PayPalApiContextFactory apiContext(PayPalProperties props,
                                                      Cipher c)
@@ -28,6 +31,24 @@ public class PayPalConfiguration {
                 decrypt(props.getClientId(), c),
                 decrypt(props.getSecret(), c),
                 props.getMode());
+    }
+
+    @Bean
+    public static RedirectUrls payPalRedirect(Environment env, PayPalProperties props)
+            throws UnknownHostException {
+        String address = InetAddress.getLocalHost().getHostAddress();
+        String port = env.getProperty("server.port");
+        String root = env.getProperty("server.context-path");
+
+        if(root == null) root = "/";
+        if(address.startsWith("192.168")) address = "localhost";
+
+        String base = String.format("https://%s:%s%s", address, port, root);
+
+        RedirectUrls urls = new RedirectUrls();
+        urls.setCancelUrl(base + props.getCancelUrl());
+        urls.setReturnUrl(base + props.getReturnUrl());
+        return urls;
     }
 
     private static String decrypt(String str, Cipher c)
@@ -40,6 +61,8 @@ public class PayPalConfiguration {
         private String mode;
         private String clientId;
         private String secret;
+        private String cancelUrl;
+        private String returnUrl;
 
         public String getMode() { return mode; }
 
@@ -52,5 +75,13 @@ public class PayPalConfiguration {
         public String getSecret() { return secret; }
 
         public void setSecret(String secret) { this.secret = secret; }
+
+        public String getCancelUrl() { return cancelUrl; }
+
+        public void setCancelUrl(String cancelUrl) { this.cancelUrl = cancelUrl; }
+
+        public String getReturnUrl() { return returnUrl; }
+
+        public void setReturnUrl(String returnUrl) { this.returnUrl = returnUrl; }
     }
 }

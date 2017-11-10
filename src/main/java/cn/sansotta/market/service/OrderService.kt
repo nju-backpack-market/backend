@@ -19,4 +19,7 @@ interface OrderService {
     fun createOrderQuery(query: OrderQuery, authorized: Boolean): OrderQuery?
     fun getOrderQuery(queryId: Int): OrderQuery?
     fun queryOrders(page: Int, query: OrderQuery): PageInfo<Order>?
+
+    fun paymentBegin(orderId: Long): Order?
+    fun paymentDone(orderId: Long): Order?
 }

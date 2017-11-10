@@ -78,6 +78,21 @@ class OrderManager(private val billService: BillService, private val orderDao: O
                 .filter { hazard("update order", false) { orderDao.updateOrder(it.toEntity()) } }
     }
 
+    override fun paymentBegin(orderId: Long): Order? {
+        return modifyOrderStatus(orderId, OrderStatus.PAYING) ?: return null
+    }
+
+    override fun paymentDone(orderId: Long): Order? {
+        var modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT) ?: return null
+
+        // we must update its status
+        while (modified.getId() == -1L)
+            modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT)!! // it can't be null here
+
+        // TODO: add email notification here
+        return modified
+    }
+
     override fun allOrdersIndex(page: Int): PageInfo<Order>? {
         return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
     }
@@ -86,7 +101,7 @@ class OrderManager(private val billService: BillService, private val orderDao: O
             try {
                 func()
             } catch (ex: RuntimeException) {
-                logger.error("Exception when $method caused by $ex")
+                logger.error("Exception when $method", ex)
                 defaultVal
             }
 
@@ -94,7 +109,7 @@ class OrderManager(private val billService: BillService, private val orderDao: O
             try {
                 func()
             } catch (ex: RuntimeException) {
-                logger.error("Exception when $method caused by $ex")
+                logger.error("Exception when $method", ex)
                 null
             }
 }

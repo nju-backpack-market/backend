@@ -2,7 +2,6 @@ package cn.sansotta.market.controller;
 
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ import static cn.sansotta.market.common.HateoasUtils.toResponse;
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 @Controller
-@RequestMapping("/payments")
+@RequestMapping("/test_pay")
 public class PaymentsController {
     private final PaymentService manager;
 
@@ -41,20 +40,15 @@ public class PaymentsController {
         return content;
     }
 
-    @GetMapping(value = "/{orderId}/paypal/{money}")
+    @GetMapping
     public String
-    viaPayPal(@PathVariable("orderId") String orderId, @PathVariable("money") double money) {
-        try {
-            Payment payment = manager.createPayment(Order.mockObject(), "https://localhost:8080/success",
-                    "https://localhost:8080/cancel");
+    viaPayPal() {
+        Payment payment = manager.createPayment(Order.mockObject());
 
-            if(payment == null) return "redirect:/";
-            for (Links links : payment.getLinks())
-                if(links.getRel().equals("approval_url"))
-                    return "redirect:" + links.getHref();
-        } catch (PayPalRESTException ex) {
-            ex.printStackTrace();
-        }
+        if(payment == null) return "redirect:/";
+        for (Links links : payment.getLinks())
+            if(links.getRel().equals("approval_url"))
+                return "redirect:" + links.getHref();
         return "redirect:/";
     }
 
