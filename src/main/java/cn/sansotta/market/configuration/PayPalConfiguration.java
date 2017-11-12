@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+
+import static cn.sansotta.market.common.DecryptUtils.decrypt;
+import static cn.sansotta.market.common.WebUtils.contextBaseUrl;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -36,24 +37,12 @@ public class PayPalConfiguration {
     @Bean
     public static RedirectUrls payPalRedirect(Environment env, PayPalProperties props)
             throws UnknownHostException {
-        String address = InetAddress.getLocalHost().getHostAddress();
-        String port = env.getProperty("server.port");
-        String root = env.getProperty("server.context-path");
-
-        if(root == null) root = "/";
-        if(address.startsWith("192.168")) address = "localhost";
-
-        String base = String.format("https://%s:%s%s", address, port, root);
+        String base = contextBaseUrl(env);
 
         RedirectUrls urls = new RedirectUrls();
         urls.setCancelUrl(base + props.getCancelUrl());
         urls.setReturnUrl(base + props.getReturnUrl());
         return urls;
-    }
-
-    private static String decrypt(String str, Cipher c)
-            throws BadPaddingException, IllegalBlockSizeException {
-        return new String(c.doFinal(Base64.getDecoder().decode(str)));
     }
 
     @ConfigurationProperties(prefix = "paypal")

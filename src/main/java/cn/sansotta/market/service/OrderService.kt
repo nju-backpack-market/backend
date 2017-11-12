@@ -21,5 +21,6 @@ interface OrderService {
     fun queryOrders(page: Int, query: OrderQuery): PageInfo<Order>?
 
     fun paymentBegin(orderId: Long): Order?
+    fun paymentCancel(orderId: Long): Order?
     fun paymentDone(orderId: Long): Order?
 }

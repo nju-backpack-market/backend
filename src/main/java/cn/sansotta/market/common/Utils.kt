@@ -5,6 +5,7 @@ package cn.sansotta.market.common
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pagehelper.PageInfo
 import org.slf4j.Logger
+import java.nio.charset.Charset
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -52,4 +53,11 @@ fun Boolean.ifTrue(func: () -> Any): Boolean {
     if (!this) return false
     func()
     return true
+}
+
+fun Double.toMoneyAmount() = String.format("%.2f", this)
+
+fun String.getBytes(charset: Charset): ByteArray {
+    val stream = this.byteInputStream(charset)
+    return stream.readBytes(stream.available())
 }

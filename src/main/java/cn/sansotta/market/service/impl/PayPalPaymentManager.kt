@@ -1,11 +1,12 @@
 package cn.sansotta.market.service.impl
 
+import cn.sansotta.market.common.toMoneyAmount
 import cn.sansotta.market.configuration.PayPalApiContextFactory
 import cn.sansotta.market.domain.value.DeliveryInfo
 import cn.sansotta.market.domain.value.Order
 import cn.sansotta.market.domain.value.OrderStatus
 import cn.sansotta.market.domain.value.ShoppingItem
-import cn.sansotta.market.service.PaymentService
+import cn.sansotta.market.service.PayPalPaymentService
 import cn.sansotta.market.service.ProductService
 import com.paypal.api.payments.*
 import com.paypal.base.rest.PayPalRESTException
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Service
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Service("payPalManager")
+@Service
 class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
                            private val productService: ProductService,
-                           private val redirect: RedirectUrls) : PaymentService {
+                           private val redirect: RedirectUrls) : PayPalPaymentService {
     private val logger = LoggerFactory.getLogger(PayPalPaymentManager::class.java)
 
     private fun convertShoppingList(list: Iterable<ShoppingItem>,
@@ -46,8 +47,6 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
                 countryCode = "C2"
             }
 
-    private fun Double.toMoneyAmount() = String.format("%.2f", this)
-
     private fun Order.getAmount() =
             Amount("USD", bill.actualTotalPrice.toMoneyAmount())
                     .apply {
@@ -57,7 +56,6 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
                     }
 
     override fun createPayment(order: Order): Payment? {
-        if (order.status != OrderStatus.CREATE) return null
         // we trust the pass-in order instance because it is directly from data source
         val payment = Payment().apply {
             intent = "sale"
@@ -65,7 +63,7 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
             payer = Payer().apply { paymentMethod = "paypal" }
             transactions = listOf(
                     Transaction().apply {
-                        description = "Order from sansotta.cn"
+                        description = "Sansotta订单"
                         amount = order.getAmount()
                         referenceId = order.getId().toString()
                         itemList = convertShoppingList(order.bill, order.deliveryInfo)
@@ -74,6 +72,7 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
         return try {
             payment.create(factory.apiContext())
         } catch (ex: PayPalRESTException) {
+            // never attach here unless network error
             logger.error("error when create payment via PayPal", ex)
             null
         }

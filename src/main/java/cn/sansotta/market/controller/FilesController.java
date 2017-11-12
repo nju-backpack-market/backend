@@ -14,9 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.FileService;
 
-import static cn.sansotta.market.common.HateoasUtils.badRequestResponse;
-import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse;
-import static cn.sansotta.market.common.HateoasUtils.singletonHeader;
+import static cn.sansotta.market.common.WebUtils.badRequestResponse;
+import static cn.sansotta.market.common.WebUtils.insufficientStorageResponse;
+import static cn.sansotta.market.common.WebUtils.singletonHeader;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>

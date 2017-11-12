@@ -6,8 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
-
 import cn.sansotta.market.domain.entity.DeliveryInfoEntity;
 import cn.sansotta.market.domain.entity.PriceEntity;
 
@@ -32,7 +30,12 @@ public interface DummyMapper {
             @Arg(column = "c_name", javaType = String.class),
             @Arg(column = "c_phone_number", javaType = String.class),
             @Arg(column = "c_email", javaType = String.class),
-            @Arg(column = "c_address", javaType = String.class)})
+            @Arg(column = "c_country", javaType = String.class),
+            @Arg(column = "c_city", javaType = String.class),
+            @Arg(column = "c_province", javaType = String.class),
+            @Arg(column = "c_line1", javaType = String.class),
+            @Arg(column = "c_line2", javaType = String.class),
+            @Arg(column = "c_postal_code", javaType = String.class),})
     @Select("")
     DeliveryInfoEntity deliveryInfoEntity();
 }

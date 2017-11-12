@@ -60,8 +60,8 @@ class OrderManager(private val billService: BillService, private val orderDao: O
     override fun modifyOrderStatus(id: Long, status: OrderStatus): Order? {
         if (id <= 0L) return null
 
-        val origin = orderDao.selectOrderById(id)?.let(::Order) ?: return null
-        if (!origin.status.isValidTransfer(status)) return null
+        val origin = orderDao.selectOrderByIdLocked(id)?.let(::Order) ?: return null
+        if (!origin.status.canTransferTo(status)) return null
 
         if (hazard("update order", false) { orderDao.updateOrderStatus(id, status) })
             return origin.apply { this.status = status }
@@ -71,7 +71,7 @@ class OrderManager(private val billService: BillService, private val orderDao: O
     @Transactional
     override fun modifyOrders(orders: List<Order>): List<Order> {
         val valid = orders.filter { it.getId() > 0L }
-        return valid.map { orderDao.selectOrderById(it.getId()) }
+        return valid.map { orderDao.selectOrderByIdLocked(it.getId()) }
                 .zip(valid)
                 .filter { (origin, _) -> origin != null }
                 .mapNotNull { (origin, modified) -> Order.mergeAsUpdate(origin, modified) }
@@ -82,12 +82,20 @@ class OrderManager(private val billService: BillService, private val orderDao: O
         return modifyOrderStatus(orderId, OrderStatus.PAYING) ?: return null
     }
 
+    override fun paymentCancel(orderId: Long): Order? {
+        var modified = modifyOrderStatus(orderId, OrderStatus.CREATE) ?: return null
+        while (modified.getId() == -1L)
+            modified = modifyOrderStatus(orderId, OrderStatus.CREATE) ?: return null
+        return modified
+    }
+
     override fun paymentDone(orderId: Long): Order? {
         var modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT) ?: return null
 
-        // we must update its status
+        // we have to make sure its status has been updated
+        // if null means it has been modified by other thread
         while (modified.getId() == -1L)
-            modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT)!! // it can't be null here
+            modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT) ?: return null
 
         // TODO: add email notification here
         return modified

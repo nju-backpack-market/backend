@@ -1,6 +1,6 @@
 package cn.sansotta.market.service.impl
 
-import cn.sansotta.market.configuration.JwtProperties
+import cn.sansotta.market.configuration.JwtConfiguration.JwtProperties
 import cn.sansotta.market.domain.value.JwtToken
 import cn.sansotta.market.domain.value.parseJwt
 import cn.sansotta.market.domain.value.tokenString

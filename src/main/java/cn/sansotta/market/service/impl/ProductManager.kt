@@ -27,6 +27,11 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
             ?.let(productDao::selectAllProducts)
             ?.let { copyPageInfo(it, ::Product) }
 
+    override fun products(name: String, page: Int)
+            = page.takeIf { page >= 0 }
+            ?.let { productDao.selectProductByName(name, page) }
+            ?.let { copyPageInfo(it, ::Product) }
+
     override fun newProducts(products: List<Product>)
             = products
             .filter(Product.Companion::isValidEntity)

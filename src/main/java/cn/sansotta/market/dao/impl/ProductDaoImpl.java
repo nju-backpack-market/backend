@@ -39,7 +39,17 @@ public class ProductDaoImpl implements ProductDao {
                     cascade ? ProductMapper::selectProductById :
                             ProductMapper::selectProductByIdNoPictures);
         } catch (RuntimeException ex) {
-            logger.error("error when select product because of " + ex);
+            logger.error("error when select product ", ex);
+            return null;
+        }
+    }
+
+    @Override
+    public PageInfo<ProductEntity> selectProductByName(String name, int page) {
+        try {
+            return productTpl.paged(page, 30, "%" + name + '%', ProductMapper::selectProductByName);
+        } catch (RuntimeException ex) {
+            logger.error("error when select product ", ex);
             return null;
         }
     }

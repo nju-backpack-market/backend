@@ -11,7 +11,7 @@ enum class OrderStatus {
     PAYING,
     CREATE;
 
-    fun isValidTransfer(transfer: OrderStatus) =
+    fun canTransferTo(transfer: OrderStatus) =
             when (this) {
                 CREATE -> transfer == PAYING
                 PAYING -> transfer == CREATE || transfer == STOCK_OUT

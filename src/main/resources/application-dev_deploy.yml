@@ -9,3 +9,6 @@ upload:
     location: /var/site/static/image
   video:
     location: /var/site/static/video
+alipay:
+  return-url: https://clevelandalto.site:8080/payments/alipay/return
+  notify-url: https://clevelandalto.site:8080/payments/alipay/notify

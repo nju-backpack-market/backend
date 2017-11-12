@@ -12,23 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+
 import cn.sansotta.market.domain.value.Order;
-import cn.sansotta.market.service.PaymentService;
+import cn.sansotta.market.service.PayPalPaymentService;
 import cn.sansotta.market.service.impl.PayPalPaymentManager;
 
-import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
-import static cn.sansotta.market.common.HateoasUtils.okResponse;
-import static cn.sansotta.market.common.HateoasUtils.toResponse;
+import static cn.sansotta.market.common.WebUtils.notFoundResponse;
+import static cn.sansotta.market.common.WebUtils.okResponse;
+import static cn.sansotta.market.common.WebUtils.toResponse;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Controller
-@RequestMapping("/test_pay")
+//@Controller
+//@RequestMapping("/test_pay")
 public class PaymentsController {
-    private final PaymentService manager;
+    private final PayPalPaymentService manager;
 
-    @Autowired
     public PaymentsController(PayPalPaymentManager manager) {this.manager = manager;}
 
     @GetMapping(value = "/{id}", produces = "text/html")
@@ -41,15 +42,8 @@ public class PaymentsController {
     }
 
     @GetMapping
-    public String
-    viaPayPal() {
-        Payment payment = manager.createPayment(Order.mockObject());
-
-        if(payment == null) return "redirect:/";
-        for (Links links : payment.getLinks())
-            if(links.getRel().equals("approval_url"))
-                return "redirect:" + links.getHref();
-        return "redirect:/";
+    public void
+    viaAlipay(HttpServletResponse response) {
     }
 
     @GetMapping("/success")

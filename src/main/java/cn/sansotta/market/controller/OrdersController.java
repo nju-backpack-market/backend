@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -33,19 +33,20 @@ import cn.sansotta.market.controller.resource.OrderQueryResource;
 import cn.sansotta.market.controller.resource.OrderResource;
 import cn.sansotta.market.domain.value.Order;
 import cn.sansotta.market.domain.value.OrderStatus;
+import cn.sansotta.market.service.AlipayPaymentService;
 import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.OrderService;
-import cn.sansotta.market.service.PaymentService;
+import cn.sansotta.market.service.PayPalPaymentService;
 
-import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.badRequestResponse;
-import static cn.sansotta.market.common.HateoasUtils.conflictResponse;
-import static cn.sansotta.market.common.HateoasUtils.insufficientStorageResponse;
-import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
-import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
-import static cn.sansotta.market.common.HateoasUtils.toResponse;
-import static cn.sansotta.market.common.HateoasUtils.unauthorizedResponse;
+import static cn.sansotta.market.common.WebUtils.HAL_MIME_TYPE;
+import static cn.sansotta.market.common.WebUtils.JSON_MIME_TYPE;
+import static cn.sansotta.market.common.WebUtils.badRequestResponse;
+import static cn.sansotta.market.common.WebUtils.conflictResponse;
+import static cn.sansotta.market.common.WebUtils.insufficientStorageResponse;
+import static cn.sansotta.market.common.WebUtils.notFoundResponse;
+import static cn.sansotta.market.common.WebUtils.pagedResourcesBatch;
+import static cn.sansotta.market.common.WebUtils.toResponse;
+import static cn.sansotta.market.common.WebUtils.unauthorizedResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -58,7 +59,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class OrdersController {
     private final EntityLinks link;
     private final OrderAssembler assembler = new OrderAssembler();
-    private final PaymentService payPalService;
+    private final PayPalPaymentService payPalService;
+    private final AlipayPaymentService alipayService;
     private final OrderService orderService;
 
     private static final String PAYPAL = "paypal";
@@ -66,10 +68,12 @@ public class OrdersController {
 
     public OrdersController(OrderService orderService,
                             EntityLinks link,
-                            @Qualifier("payPalManager") PaymentService payPalService) {
+                            PayPalPaymentService payPalService,
+                            AlipayPaymentService alipayService) {
         this.link = link;
         this.orderService = orderService;
         this.payPalService = payPalService;
+        this.alipayService = alipayService;
     }
 
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
@@ -177,27 +181,49 @@ public class OrdersController {
         }
 
         Order order = orderService.paymentBegin(orderId); // now order's status change to PAYING
-        if(order == null) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        if(order == null || order.getStatus() != OrderStatus.PAYING) {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
             return;
         }
+        // paymentBegin is concurrency-safe, only the first call will succeed.
+        // so always only one thread for one order will continue from here.
 
         switch (method) {
             case PAYPAL:
                 payPalPayment(order, response);
                 break;
+            case ALIPAY:
+                alipayPayment(order, response);
+                break;
+            default:
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
     private void payPalPayment(Order order, HttpServletResponse response) throws IOException {
-        Payment payment = payPalService.createPayment(order);
+        final Payment payment = payPalService.createPayment(order);
         if(payment == null) {
+            orderService.paymentCancel(order.getId());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
         for (Links links : payment.getLinks())
             if("approval_url".equals(links.getRel()))
                 response.sendRedirect(links.getHref());
+    }
+
+    private void alipayPayment(Order order, HttpServletResponse response) throws IOException {
+        final String form = alipayService.createPayment(order);
+        if(form == null) {
+            orderService.paymentCancel(order.getId());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        final PrintWriter writer = response.getWriter();
+        response.setContentType("text/html;charset=utf-8");
+        writer.write(form);
+        writer.flush();
+        writer.close();
     }
 
     private OrderResource assembleResource(Order order) {

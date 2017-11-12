@@ -12,7 +12,7 @@ import cn.sansotta.market.domain.value.JwtToken;
 import cn.sansotta.market.service.TokenService;
 import cn.sansotta.market.service.UserService;
 
-import static cn.sansotta.market.common.HateoasUtils.unauthorizedResponse;
+import static cn.sansotta.market.common.WebUtils.unauthorizedResponse;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>

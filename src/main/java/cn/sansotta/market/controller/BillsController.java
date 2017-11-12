@@ -19,10 +19,10 @@ import cn.sansotta.market.domain.value.Bill;
 import cn.sansotta.market.domain.value.ShoppingItem;
 import cn.sansotta.market.service.BillService;
 
-import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
-import static cn.sansotta.market.common.HateoasUtils.toResponse;
+import static cn.sansotta.market.common.WebUtils.HAL_MIME_TYPE;
+import static cn.sansotta.market.common.WebUtils.JSON_MIME_TYPE;
+import static cn.sansotta.market.common.WebUtils.notFoundResponse;
+import static cn.sansotta.market.common.WebUtils.toResponse;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>

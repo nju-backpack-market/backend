@@ -44,6 +44,16 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    public OrderEntity selectOrderByIdLocked(long id) {
+        try {
+            return orderTpl.exec(id, OrderMapper::selectOrderByIdLocked);
+        } catch (RuntimeException ex) {
+            logger.error("error when select order because of " + ex);
+            return null;
+        }
+    }
+
+    @Override
     public PageInfo<OrderEntity> selectAllOrders(int pageNum) {
         try {
             return orderTpl.paged(pageNum, 30, OrderMapper::selectAllOrders);

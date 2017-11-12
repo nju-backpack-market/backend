@@ -8,7 +8,12 @@ CREATE TABLE IF NOT EXISTS orders
   c_name         VARCHAR(40)  NOT NULL,
   c_phone_number VARCHAR(40)  NOT NULL,
   c_email        VARCHAR(40)  NOT NULL,
-  c_address      VARCHAR(255) NOT NULL
+  c_country      VARCHAR(40)  NOT NULL,
+  c_province     VARCHAR(40)  NOT NULL,
+  c_city         VARCHAR(40)  NOT NULL,
+  c_line1        VARCHAR(110) NOT NULL,
+  c_line2        VARCHAR(110) NOT NULL,
+  c_postal_code  VARCHAR(20)  NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS products
@@ -36,4 +41,3 @@ CREATE TABLE IF NOT EXISTS users
   username VARCHAR(40) NOT NULL PRIMARY KEY,
   password VARCHAR(40) NOT NULL
 );
-

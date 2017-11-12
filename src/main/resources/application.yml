@@ -22,11 +22,12 @@ mybatis:
   type-aliases-package: cn.sansotta.market.domain.entity
 server:
   ssl:
-    key-store: classpath:keystore.p12
+    key-store: classpath:cert.pfx
     enabled: true
     key-store-password: "QzpYRKEZUEmaCSW7XVI/XQ=="
     key-store-type: PKCS12
-    key-alias: https
+    key-alias: alias
+    key-password: "T5TvpE0enm6gmOdERV88Lg=="
   port: 8080
 jwt:
   audience: frontend
@@ -39,3 +40,11 @@ paypal:
   secret: "BTxDic/B26MEvf6PpSIhyWCvkTcPycf5YdlawylUpSesORL9r6FjY4RjU7W7UEXVHxMEujoJIa1u1hBpeblcZ4MXSM43LR5HRSAqD4uTkqp5UAPqrwQ9ag=="
   return-url: /payments/paypal/return
   cancel-url: /payments/paypal/cancel
+alipay:
+  gateway: https://openapi.alipaydev.com/gateway.do
+  app-id: 2016090800463832
+  app-private-key-path: enc_sandbox_app_private_key
+  alipay-public-key-path: enc_sandbox_alipay_public_key
+  return-url: https://localhost:8080/payments/alipay/return
+  notify-url: https://localhost:8080/payments/alipay/notify
+  seller-id: 2088102174689848

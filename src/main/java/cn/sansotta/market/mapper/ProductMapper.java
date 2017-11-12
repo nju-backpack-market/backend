@@ -46,6 +46,10 @@ public interface ProductMapper {
     ProductEntity selectProductByIdNoPictures(long id);
 
     @ResultMap("productMap")
+    @Select("SELECT * FROM products WHERE pname LIKE #{name}")
+    List<ProductEntity> selectProductByName(String name);
+
+    @ResultMap("productMap")
     @Select("SELECT * FROM products")
     List<ProductEntity> selectAllProducts();
 

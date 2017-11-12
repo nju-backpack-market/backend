@@ -1,10 +1,11 @@
-@file:JvmName("HateoasUtils")
+@file:JvmName("WebUtils")
 
 package cn.sansotta.market.common
 
 import cn.sansotta.market.controller.resource.ResourceConverter
 import cn.sansotta.market.controller.resource.ResourcesConverter
 import com.github.pagehelper.PageInfo
+import org.springframework.core.env.Environment
 import org.springframework.hateoas.EntityLinks
 import org.springframework.hateoas.Link
 import org.springframework.hateoas.PagedResources
@@ -15,6 +16,8 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.util.CollectionUtils
+import java.net.InetAddress
+import java.net.NetworkInterface
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -65,4 +68,31 @@ fun ControllerLinkBuilder.query(name: String, vararg param: Any) =
 
 inline fun <reified T> api(name: String, endpoint: T.() -> Any)
         = linkTo(methodOn(T::class.java).endpoint()).withRel(name)
+
+fun contextBaseUrl(env: Environment): String {
+    var address = getIpAddress()
+    val port = env.getProperty("server.port")
+    var root = env.getProperty("server.context-path")
+
+    if (root == null) root = "/"
+    if (address.startsWith("192.168")) address = "localhost"
+    return "https://$address:$port$root"
+}
+
+fun getIpAddress(): String {
+    // Before we connect somewhere, we cannot be sure about what we'd be bound to; however,
+    // we only connect when the message where client ID is, is long constructed. Thus,
+    // just use whichever IP address we can find.
+    val interfaces = NetworkInterface.getNetworkInterfaces()
+    while (interfaces.hasMoreElements()) {
+        val current = interfaces.nextElement()
+        if (!current.isUp || current.isLoopback || current.isVirtual) continue
+        val addresses = current.inetAddresses
+        while (addresses.hasMoreElements()) {
+            val addr = addresses.nextElement().takeUnless(InetAddress::isLoopbackAddress) ?: continue
+            return addr.toString()
+        }
+    }
+    return "192.168.1.1"
+}
 

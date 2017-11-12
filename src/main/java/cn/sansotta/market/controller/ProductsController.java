@@ -25,11 +25,11 @@ import cn.sansotta.market.domain.value.Product;
 import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.ProductService;
 
-import static cn.sansotta.market.common.HateoasUtils.HAL_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.JSON_MIME_TYPE;
-import static cn.sansotta.market.common.HateoasUtils.notFoundResponse;
-import static cn.sansotta.market.common.HateoasUtils.pagedResourcesBatch;
-import static cn.sansotta.market.common.HateoasUtils.toResponse;
+import static cn.sansotta.market.common.WebUtils.HAL_MIME_TYPE;
+import static cn.sansotta.market.common.WebUtils.JSON_MIME_TYPE;
+import static cn.sansotta.market.common.WebUtils.notFoundResponse;
+import static cn.sansotta.market.common.WebUtils.pagedResourcesBatch;
+import static cn.sansotta.market.common.WebUtils.toResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -60,6 +60,14 @@ public class ProductsController {
     public ResponseEntity<PagedResources<ProductResource>>
     allProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         PageInfo<Product> pageInfo = productService.allProducts(page);
+        return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
+    }
+
+    @GetMapping(value = "/{name}",produces = HAL_MIME_TYPE)
+    public ResponseEntity<PagedResources<ProductResource>>
+    products(@PathVariable(value = "name") String name,
+             @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+        PageInfo<Product> pageInfo = productService.products(name, page);
         return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
     }
 

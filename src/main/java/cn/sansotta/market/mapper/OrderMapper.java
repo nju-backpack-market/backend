@@ -1,6 +1,5 @@
 package cn.sansotta.market.mapper;
 
-import cn.sansotta.market.controller.resource.OrderQuery;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Delete;
@@ -16,6 +15,7 @@ import org.apache.ibatis.annotations.Update;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import cn.sansotta.market.controller.resource.OrderQuery;
 import cn.sansotta.market.domain.entity.DeliveryInfoEntity;
 import cn.sansotta.market.domain.entity.OrderEntity;
 import cn.sansotta.market.domain.value.OrderStatus;
@@ -40,6 +40,9 @@ public interface OrderMapper {
     @Select("SELECT * FROM orders WHERE oid=#{id}")
     OrderEntity selectOrderById(long id);
 
+    @ResultMap("orderMap")
+    @Select("SELECT * FROM orders WHERE oid=#{id} FOR UPDATE")
+    OrderEntity selectOrderByIdLocked(long id);
 
     @ResultMap("orderMap")
     @Select("SELECT * FROM orders")
@@ -51,14 +54,23 @@ public interface OrderMapper {
     List<OrderEntity> selectOrdersByStatus(OrderStatus status);
 
 
-    @Insert("INSERT INTO orders(total_price, state, `time`, c_name, c_phone_number, c_email, c_address) " +
-            "VALUES (#{totalPrice}, #{status}, #{time}, #{deliveryInfo.name}, #{deliveryInfo.phoneNumber}, #{deliveryInfo.email}, #{deliveryInfo.address})")
+    @Insert("INSERT INTO " +
+            "orders(total_price, state, `time`, c_name, c_phone_number, c_email, c_country, " +
+            "c_city, c_province, c_line1, c_line2, c_postal_code) " +
+            "VALUES (#{totalPrice}, #{status}, #{time}, #{deliveryInfo.name}, " +
+            "#{deliveryInfo.phoneNumber}, #{deliveryInfo.email}, #{deliveryInfo.country}, " +
+            "#{deliveryInfo.province}, #{deliveryInfo.city}, #{deliveryInfo.addressLine1}, " +
+            "#{deliveryInfo.addressLine2}, #{deliveryInfo.postalCode})")
     @Options(useGeneratedKeys = true)
     int insertOrder(OrderEntity order);
 
 
     @Update("UPDATE orders SET " +
-            "total_price=#{totalPrice}, state=#{status}, c_name=#{deliveryInfo.name}, c_phone_number=#{deliveryInfo.phoneNumber}, c_email=#{deliveryInfo.email}, c_address=#{deliveryInfo.address}" +
+            "total_price=#{totalPrice}, state=#{status}, c_name=#{deliveryInfo.name}, " +
+            "c_phone_number=#{deliveryInfo.phoneNumber}, c_email=#{deliveryInfo.email}, " +
+            "c_country=#{deliveryInfo.country}, c_province=#{deliveryInfo.province}," +
+            "c_city=#{deliveryInfo.city}, c_line1=#{deliveryInfo.addressLine1}," +
+            "c_line2=#{deliveryInfo.addressLine2}, c_postal_code=#{deliveryInfo.postalCode} " +
             "WHERE oid=#{id}")
     int updateOrder(OrderEntity order);
 

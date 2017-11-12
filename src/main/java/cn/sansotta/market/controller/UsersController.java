@@ -15,10 +15,10 @@ import cn.sansotta.market.domain.value.User;
 import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.UserService;
 
-import static cn.sansotta.market.common.HateoasUtils.badRequestResponse;
-import static cn.sansotta.market.common.HateoasUtils.createdResponse;
-import static cn.sansotta.market.common.HateoasUtils.noContentResponse;
-import static cn.sansotta.market.common.HateoasUtils.okResponse;
+import static cn.sansotta.market.common.WebUtils.badRequestResponse;
+import static cn.sansotta.market.common.WebUtils.createdResponse;
+import static cn.sansotta.market.common.WebUtils.noContentResponse;
+import static cn.sansotta.market.common.WebUtils.okResponse;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>

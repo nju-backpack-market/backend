@@ -13,6 +13,8 @@ public interface ProductDao {
 
     ProductEntity selectProductById(long id, boolean cascade);
 
+    PageInfo<ProductEntity> selectProductByName(String name, int page);
+
     PageInfo<ProductEntity> selectAllProducts(int pageNum);
 
     ProductEntity insertProduct(ProductEntity product);
