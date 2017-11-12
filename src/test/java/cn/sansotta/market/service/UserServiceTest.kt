@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 @RunWith(SpringRunner::class)
 @Transactional
 @SqlConfig(encoding = "UTF8")
+@ActiveProfiles("dev_local")
 @Sql("classpath:test_schema.sql", "classpath:users_data.sql")
 class UserServiceTest : AbstractTransactionalJUnit4SpringContextTests() {
     @Autowired
