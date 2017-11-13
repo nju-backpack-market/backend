@@ -2,6 +2,8 @@ package cn.sansotta.market.domain.value
 
 import cn.sansotta.market.domain.ValueObject
 import cn.sansotta.market.domain.entity.ProductEntity
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.hateoas.Identifiable
 import org.springframework.hateoas.core.Relation
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.PagedResources;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,6 +55,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @RestController
 @ExposesResourceFor(Order.class)
 @RequestMapping("/orders")
@@ -76,6 +79,7 @@ public class OrdersController {
         this.alipayService = alipayService;
     }
 
+    @Authorized
     @GetMapping(value = "/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<OrderResource>
     order(@PathVariable("id") long id) {
@@ -88,9 +92,7 @@ public class OrdersController {
     public ResponseEntity<PagedResources<OrderResource>>
     orders(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
            @RequestParam(value = "full", required = false, defaultValue = "false") boolean full) {
-        PageInfo<Order> pageInfo;
-        if(full) pageInfo = orderService.allOrders(page);
-        else pageInfo = orderService.allOrdersIndex(page);
+        PageInfo<Order> pageInfo = orderService.allOrders(page, full);
         return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
     }
 
@@ -132,8 +134,7 @@ public class OrdersController {
     @GetMapping(value = "/query/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<OrderResource>>
     query(@PathVariable("id") int queryId,
-          @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-          @RequestParam(value = "full", required = false, defaultValue = "true") boolean full) {
+          @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         OrderQuery query = orderService.getOrderQuery(queryId);
         if(query == null) return badRequestResponse();
 
@@ -144,9 +145,9 @@ public class OrdersController {
     }
 
     @Authorized(intercept = false)
-    @PutMapping(value = "/{id}/status", produces = HAL_MIME_TYPE)
+    @PatchMapping(value = "/{id}", produces = HAL_MIME_TYPE)
     public ResponseEntity
-    modifyOrderStatus(@PathVariable("id") Long id, @RequestParam("modified") OrderStatus status) {
+    modifyOrderStatus(@PathVariable("id") Long id, @RequestParam("status") OrderStatus status) {
         Order updated = orderService.modifyOrderStatus(id, status);
         if(updated == null) return badRequestResponse();
         else if(updated.getId() == -1) return insufficientStorageResponse();

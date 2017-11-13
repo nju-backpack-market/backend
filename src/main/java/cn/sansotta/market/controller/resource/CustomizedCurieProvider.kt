@@ -15,7 +15,8 @@ object CustomizedCurieProvider
         mapOf("get" to docTemplate,
                 "post" to docTemplate,
                 "put" to docTemplate,
-                "delete" to docTemplate)) {
+                "delete" to docTemplate,
+                "patch" to docTemplate)) {
     private val linkMethods = mutableMapOf<String, HttpMethod?>()
 
     fun registerMethod(rel: String, method: HttpMethod) {

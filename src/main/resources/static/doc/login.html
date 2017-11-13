@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <title>login.md</title>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
+          rel='stylesheet' type='text/css'/>
+</head>
+<body class='typora-export'>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>POST
+    /tokens/{id}?password={password}</h1>
+    <h2><a name='header-n5' class='md-header-anchor '></a>Login.</h2>
+    <p>如果验证无误，这个接口会返回这样</p>
+    <pre class="md-fences md-end-block" lang="json"> <div class="CodeMirror cm-s-inner CodeMirror-wrap"
+                                                          lang="json"><div
+            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 4px;"></div><div
+            class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div
+            class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
+                                                                              tabindex="-1"><div
+            class="CodeMirror-sizer"
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 179px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
+            role="presentation" style="position: relative; outline: none;"><div
+            class="CodeMirror-measure"></div><div class="CodeMirror-measure"></div><div
+            style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"
+                                                               role="presentation"><div
+            class="CodeMirror-activeline" style="position: relative;"><div
+            class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div
+            class="CodeMirror-gutter-background CodeMirror-activeline-gutter"
+            style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;">{</span></pre></div><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"token"</span>: <span class="cm-string">"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYWNrZW5kIiwiYXVkIjoiZnJvbnRlbmQiLCJ1c2VybmFtZSI6IjEyMyIsIm5iZiI6MTUxMDU3MTcwNCwiZXhwIjoxNTEwNzQ0NTA0fQ.2hqz9v_TUF9uqvGlIyQFSRm9vwWEzV3_9a7gnFZhI0g"</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"token_type"</span>: <span
+            class="cm-string">"bearer"</span>,</span></pre><pre class=" CodeMirror-line "
+                                                                role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"expire_in"</span>: <span
+            class="cm-number">172800</span></span></pre><div class="" style="position: relative;"><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div></div><div
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 179px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 209px;"></div></div></div></pre>
+    <p>的json。把token取出来，放在<code>Authorization</code> 头中，即可通过权限接口的验证。</p></div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,6 +22,7 @@ import static cn.sansotta.market.common.DecryptUtils.urlDecrypy;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Configuration
 @EnableConfigurationProperties(AlipayConfiguration.AlipayConfigurationProperties.class)
 public class AlipayConfiguration {

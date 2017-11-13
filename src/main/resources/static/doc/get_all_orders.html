@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <title>get_all_orders.md</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
+          rel='stylesheet' type='text/css'/>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
+</head>
+<body class='typora-export'>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>GET /orders</h1>
+    <p>关于各种价格：</p>
+    <p>所有价格&gt;=0.0</p>
+    <p><code>origin</code> 开头的表示<strong>此订单创建时</strong>的<strong>原价</strong></p>
+    <p><code>actual</code>开头的表示<strong>此订单创建时</strong>的<strong>实际价格</strong> ，实际价格可能是经过折扣过后的。</p>
+    <p><code>unit_price</code>表示单个商品的价格</p>
+    <p><code>subtotal_price</code>表示单种商品（可能是多个）的价格</p>
+    <p><code>total_price</code>表示这个订单的总价</p>
+    <p><code>origin_subtotal_price</code> = <code>origin_unit_price</code> * <code>count</code></p>
+    <p><code>origin_total_price</code> = sum(<code>origin_subtotal_price</code>)</p>
+    <p>但是<code>actual_unit_price</code>, <code>actual_subtotal_price</code>,
+        <code>actual_total_price</code> 之间不一定有关系。</p>
+    <p><code>actual_total_price</code>就是最终的支付价格。</p>
+    <ul>
+        <li><p>GET /orders?full={full} 获取所有订单</p>
+            <p>参数：<code>full</code> 可选，默认false。false表示返回的每一个order中不包含关联的shopping items。<strong>请注意此时所有origin的price都是0</strong>，actual的price是正确的。true表示包含关联的shopping
+                item，此时origin的price是对的。</p>
+            <p>权限接口。</p></li>
+        <li><p>GET /orders/{id} 获取某个订单</p>
+            <p>权限接口</p></li>
+        <li><p>GET /order/query/{id} 发起查询</p>
+            <p>参阅create_query的文档</p></li>
+    </ul>
+</div>
+</body>
+</html>

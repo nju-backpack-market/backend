@@ -15,7 +15,7 @@ public interface OrderDao {
 
     OrderEntity selectOrderByIdLocked(long id);
 
-    PageInfo<OrderEntity> selectAllOrders(int pageNum);
+    PageInfo<OrderEntity> selectAllOrders(int pageNum, boolean cascade);
 
     PageInfo<OrderEntity> selectOrdersByQuery(int pageNum, OrderQuery query);
 

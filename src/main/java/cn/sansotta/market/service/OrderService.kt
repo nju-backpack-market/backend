@@ -10,8 +10,7 @@ import com.github.pagehelper.PageInfo
  */
 interface OrderService {
     fun order(id: Long): Order?
-    fun allOrders(page: Int): PageInfo<Order>?
-    fun allOrdersIndex(page: Int): PageInfo<Order>?
+    fun allOrders(page: Int, full: Boolean): PageInfo<Order>?
     fun newOrder(order: Order): Order?
     fun modifyOrders(orders: List<Order>): List<Order>
     fun modifyOrderStatus(id: Long, status: OrderStatus): Order?

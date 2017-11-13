@@ -4,6 +4,8 @@ import com.paypal.api.payments.Payment;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import cn.sansotta.market.service.impl.PayPalPaymentManager;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Controller
 @RequestMapping("/payments/paypal")
 public class PayPalPaymentsController {

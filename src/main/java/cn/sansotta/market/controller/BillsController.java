@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import cn.sansotta.market.controller.resource.BillResource;
 import cn.sansotta.market.domain.value.Bill;
 import cn.sansotta.market.domain.value.ShoppingItem;
+import cn.sansotta.market.service.Authorized;
 import cn.sansotta.market.service.BillService;
 
 import static cn.sansotta.market.common.WebUtils.HAL_MIME_TYPE;
@@ -44,6 +45,7 @@ public class BillsController {
         return bill == null ? notFoundResponse() : toResponse(new BillResource(bill, true));
     }
 
+    @Authorized
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<BillResource>
     billOfOrder(@RequestParam("oid") Long oid) {

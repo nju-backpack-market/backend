@@ -19,4 +19,7 @@ data class OrderEntity(
         val status: OrderStatus,
         val time: LocalDateTime,
         val deliveryInfo: DeliveryInfoEntity,
-        val shoppingItems: List<ShoppingItemEntity>)
+        val shoppingItems: List<ShoppingItemEntity>) {
+    constructor(id: Long, totalPrice: Double, status: OrderStatus, time: LocalDateTime, deliveryInfo: DeliveryInfoEntity)
+            : this(id, totalPrice, status, time, deliveryInfo, emptyList())
+}

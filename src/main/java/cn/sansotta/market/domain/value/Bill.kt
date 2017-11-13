@@ -1,6 +1,5 @@
 package cn.sansotta.market.domain.value
 
-import cn.sansotta.market.domain.value.ShoppingItem.Companion.isValidEntity
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -29,6 +28,10 @@ class Bill() : Iterable<ShoppingItem>, Cloneable {
             field.actual = value.actual
         }
 
+    @get:JsonIgnore
+    val size
+        get() = shoppingList.size
+
     constructor(items: Iterable<ShoppingItem>, totalPrice: Price) : this(items) {
         this.totalPrice = totalPrice
     }
@@ -43,10 +46,8 @@ class Bill() : Iterable<ShoppingItem>, Cloneable {
 
     override fun toString() = "Bill(shoppingList=$shoppingList, totalPrice=$totalPrice)"
 
-    @get:JsonIgnore
     val originTotalPrice
         get() = shoppingList.sumByDouble { it.originSubtotalPrice }
-    @get:JsonIgnore
     var actualTotalPrice
         get() = totalPrice.actual ?: originTotalPrice
         set(value) {

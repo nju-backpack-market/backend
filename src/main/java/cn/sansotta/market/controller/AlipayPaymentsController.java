@@ -1,5 +1,7 @@
 package cn.sansotta.market.controller;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import static cn.sansotta.market.common.WebUtils.toResponse;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Controller
 @RequestMapping("/payments/alipay")
 public class AlipayPaymentsController {

@@ -4,6 +4,7 @@ import cn.sansotta.market.controller.*
 import cn.sansotta.market.domain.value.Order
 import cn.sansotta.market.domain.value.OrderStatus
 import cn.sansotta.market.domain.value.Product
+import cn.sansotta.market.domain.value.User
 import org.springframework.hateoas.Link
 import org.springframework.hateoas.Resource
 import org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo
@@ -21,9 +22,7 @@ open class DocumentResource private constructor() : Resource<String>("Document")
     }
 
     init {
-        apis<PingController> {
-            api("get_api_info", HttpMethod.GET) { apiInfo() }
-        }
+        apis<PingController> { api("get_api_info", HttpMethod.GET) { apiInfo() } }
         apis<ProductsController> {
             api("get_all_products", HttpMethod.GET) { allProducts(0, false, false) }
             api("get_products_by_name", HttpMethod.GET) { products("包", 0, false, false) }
@@ -34,7 +33,7 @@ open class DocumentResource private constructor() : Resource<String>("Document")
             api("update_products", HttpMethod.PUT) {
                 modifyProducts(Collections.singletonList(Product.mockObject()))
             }
-            api("delete_products", HttpMethod.DELETE) { removeProducts(listOf(1)) }
+            api("delete_products", HttpMethod.DELETE) { removeProducts(listOf(1, 2)) }
         }
         apis<BillsController> {
             api("query_price", HttpMethod.POST) { createBill(listOf()) }
@@ -42,24 +41,26 @@ open class DocumentResource private constructor() : Resource<String>("Document")
         }
         apis<OrdersController> {
             api("create_order", HttpMethod.POST) { createOrder(Order.mockObject()) }
-            api("get_order", HttpMethod.GET) { order(1) }
             api("get_all_orders", HttpMethod.GET) { orders(0, true) }
-            api("get_all_orders_index", HttpMethod.GET) { orders(0, false) }
-            api("update_order_status", HttpMethod.PUT) { modifyOrderStatus(1L, OrderStatus.CREATE) }
+            api("get_order", HttpMethod.GET) { order(1) }
+            api("update_order_status", HttpMethod.PATCH) { modifyOrderStatus(1L, OrderStatus.CREATE) }
             api("update_order_info", HttpMethod.PUT) { modifyOrder(listOf(Order())) }
             api("create_query", HttpMethod.POST) { createQuery(OrderQuery().apply { id = 1 }, true) }
-            api("query_order", HttpMethod.GET) { query(OrderQuery().apply { id = 1 }.queryId, 0, false) }
+            api("query_order", HttpMethod.GET) { query(OrderQuery().apply { id = 1 }.queryId, 0) }
+            api("start_payment",HttpMethod.POST,"/orders/{id}/payment?method=alipay")
         }
         apis<FilesController> {
             api("upload_image", HttpMethod.POST, "/files/image")
             api("upload_video", HttpMethod.POST, "/files/image")
         }
-        apis<PaymentsController> { api("start_payment", HttpMethod.GET, "/payments/1") }
-        apis<TokensController> { api("create_token", HttpMethod.POST, "/tokens") }
+        apis<TokensController> {
+            api("login", HttpMethod.POST) { createToken("111", "111") }
+            api("logout", HttpMethod.DELETE) { deleteToken("111") }
+        }
         apis<UsersController> {
-            api("create_user", HttpMethod.POST, "/users")
-            api("delete_user", HttpMethod.DELETE, "/users")
-            api("modify_password", HttpMethod.PUT, "/users")
+            api("create_user", HttpMethod.POST) { createUser(User("111", "111")) }
+            api("delete_user", HttpMethod.DELETE) { deleteUser("111") }
+            api("modify_password", HttpMethod.PATCH) { modifyPassword("111", "222") }
         }
     }
 

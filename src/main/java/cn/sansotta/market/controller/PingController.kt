@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 class PingController {
     @Autowired
-    lateinit var m:CacheManager
+    lateinit var m: CacheManager
 
     @GetMapping("/ping")
     fun ping() = "Hello"
@@ -43,8 +43,9 @@ class PingController {
                     arrayOf("endpoint形如/{res_type}, res_type均为复数形式",
                             "直接GET返回所有资源，/{res_type}/[id]返回单个资源",
                             "返回所有资源时默认分页，页大小20，用?page=[int]来指示页数，缺省则page=0",
-                            "GET和DELETE方法没有文档，直接看例子。" +
-                                    "POST和PUT请查看文档并复制其中的例子，用例子进行NON-GET请求并查看返回值",
+                            "GET和DELETE方法在这个资源的复数GET接口下有文档，如get_all_products下有/products下" +
+                                    "所有GET和DELETE的文档。",
+                            "POST和PUT请查看文档并复制其中的例子，用例子进行NON-GET请求并查看返回值",
                             "POST成功默认状态值201，DELETE成功默认状态值204，未找到资源状态值404，无授权访问受限API状态值403, " +
                                     "数据库错误507（此错误为暂时，应尝试重新请求），内部错误500",
                             "大部分批量修改性api会返回修改成功了的实体列表。如PUT返回修改后的实体，DELETE返回成功删除了的id").

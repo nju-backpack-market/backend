@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.concurrent.ThreadLocalRandom
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -22,15 +23,16 @@ import org.springframework.transaction.annotation.Transactional
 @CacheConfig(cacheNames = arrayOf("queryCache"))
 class OrderManager(private val billService: BillService, private val orderDao: OrderDao) : OrderService {
     private val logger = LoggerFactory.getLogger(OrderManager::class.java)
+    private val random = ThreadLocalRandom.current()
 
     override fun order(id: Long)
             = id.takeIf { it > 0L }
             ?.let(orderDao::selectOrderById)
             ?.let(::Order)
 
-    override fun allOrders(page: Int)
+    override fun allOrders(page: Int, full: Boolean)
             = page.takeIf { it >= 0 }
-            ?.let(orderDao::selectAllOrders)
+            ?.let { orderDao.selectAllOrders(page, full) }
             ?.let { copyPageInfo(it, ::Order) }
 
     override fun newOrder(order: Order): Order? {
@@ -42,9 +44,9 @@ class OrderManager(private val billService: BillService, private val orderDao: O
                 ?.let { entity -> order.id = entity.id;order } ?: order.apply { id = -1 }
     }
 
-    @CachePut(key = "#result.hashCode()", condition = "#result != null")
+    @CachePut(key = "#result.getQueryId()", condition = "#result != null")
     override fun createOrderQuery(query: OrderQuery, authorized: Boolean): OrderQuery? {
-        query.queryId = query.hashCode()
+        query.queryId = random.nextInt()
         return query.getRationalQuery(authorized)
     }
 
@@ -99,10 +101,6 @@ class OrderManager(private val billService: BillService, private val orderDao: O
 
         // TODO: add email notification here
         return modified
-    }
-
-    override fun allOrdersIndex(page: Int): PageInfo<Order>? {
-        return copyPageInfo(PageInfo(listOf(1L, 2L, 3L))) { Order().apply { id = it } }
     }
 
     private inline fun <T> hazard(method: String, defaultVal: T, func: () -> T) =

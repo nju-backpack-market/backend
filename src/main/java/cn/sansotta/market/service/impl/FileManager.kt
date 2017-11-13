@@ -2,6 +2,7 @@ package cn.sansotta.market.service.impl
 
 import cn.sansotta.market.service.FileService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -12,6 +13,7 @@ import java.util.*
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Service
 class FileManager(@Value("${'$'}{upload.image.location}") imageLocation: String,
                   @Value("${'$'}{upload.video.location}") videoLocation: String) : FileService {

@@ -3,10 +3,10 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width initial-scale=1'>
-    <title>Orders.md</title>
+    <title>create_order.md</title>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
           rel='stylesheet' type='text/css'/>
-    <link rel='stylesheet' type='text/css' href='docstyle.css'/>
 </head>
 <body class='typora-export'>
 <div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>POST /orders</h1>
@@ -18,10 +18,10 @@
             class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
                                                                               tabindex="-1"><div
             class="CodeMirror-sizer"
-            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 426px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 605px; padding-right: 0px; padding-bottom: 0px;"><div
             style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
             role="presentation" style="position: relative; outline: none;"><div
-            class="CodeMirror-measure"></div><div class="CodeMirror-measure"></div><div
+            class="CodeMirror-measure"><pre>x</pre></div><div class="CodeMirror-measure"></div><div
             style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"
                                                                role="presentation"><div
             class="CodeMirror-activeline" style="position: relative;"><div
@@ -34,7 +34,10 @@
             class="cm-string cm-property">"bill"</span>: {</span></pre><pre class=" CodeMirror-line "
                                                                             role="presentation"><span
             role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
-            class="cm-string cm-property">"origin_total_price"</span>: [<span class="cm-variable">origin_total_price</span>],</span></pre><pre
+            class="cm-string cm-property">"origin_total_price"</span>: [<span class="cm-variable">origin_total_price</span>],</span></pre><div
+            class="" style="position: relative;"><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_total_price"</span>: [<span class="cm-variable">actual_total_price</span>],</span></pre></div><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
             class="cm-string cm-property">"shopping_list"</span>: [</span></pre><pre
@@ -53,7 +56,13 @@
             class="cm-string cm-property">"origin_unit_price"</span>: [<span class="cm-variable">origin_unit_price</span>],</span></pre><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string cm-property">"origin_subtotal_price"</span>: [<span class="cm-variable">origin_subtotal_price</span>]</span></pre><pre
+            class="cm-string cm-property">"origin_subtotal_price"</span>: [<span class="cm-variable">origin_subtotal_price</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_unit_price"</span>: [<span class="cm-variable">actual_unit_price</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_subtotal_price"</span>: [<span class="cm-variable">actual_subtotal_price</span>]</span></pre><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;"> &nbsp; &nbsp;  },<span
             class="cm-meta">...</span></span></pre><pre class=" CodeMirror-line "
@@ -77,86 +86,122 @@
             class="cm-variable">email</span>],</span></pre><pre class=" CodeMirror-line "
                                                                 role="presentation"><span
             role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
-            class="cm-string cm-property">"address"</span>: [<span
-            class="cm-variable">address</span>]</span></pre><pre class=" CodeMirror-line "
-                                                                 role="presentation"><span
+            class="cm-string cm-property">"country"</span>: [<span
+            class="cm-variable">country</span>],</span></pre><pre class=" CodeMirror-line "
+                                                                  role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"province"</span>: [<span class="cm-variable">province</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"city"</span>: [<span class="cm-variable">city</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"address_line_1"</span>: [<span class="cm-variable">address_line_1</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"address_line_2"</span>: [<span class="cm-variable">address_line_2</span>],</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"postal_code"</span>: [<span
+            class="cm-variable">postal_code</span>]</span></pre><pre class=" CodeMirror-line "
+                                                                     role="presentation"><span
             role="presentation" style="padding-right: 0.1px;">  }</span></pre><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div
-            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 426px;"></div><div
-            class="CodeMirror-gutters" style="display: none; height: 456px;"></div></div></div></pre>
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 605px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 635px;"></div></div></div></pre>
     <p></p>
     <h3><a name='header-n7' class='md-header-anchor '></a>Example:</h3>
-    <pre class="md-fences md-end-block" lang="json"> <div class="CodeMirror cm-s-inner CodeMirror-wrap"><div
-            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 4px;"></div><div
+    <pre class="md-fences md-end-block md-focus" lang="json"> <div
+            class="CodeMirror cm-s-inner CodeMirror-wrap CodeMirror-focused"><div
+            style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 246.4px; left: 304.825px;"></div><div
             class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div
             class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll"
                                                                               tabindex="-1"><div
             class="CodeMirror-sizer"
-            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 560px; padding-right: 0px; padding-bottom: 0px;"><div
+            style="margin-left: 0px; margin-bottom: 0px; border-right-width: 30px; min-height: 762px; padding-right: 0px; padding-bottom: 0px;"><div
             style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div
             role="presentation" style="position: relative; outline: none;"><div
-            class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div
+            class="CodeMirror-measure"><span><span>​</span>x</span></div><div
             class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div
-            class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline"
-                                                             style="position: relative;"><div
+            class="CodeMirror-code" role="presentation"><div class="" style="position: relative;"><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;">{</span></pre></div><div
+            class="" style="position: relative;"><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp;<span class="cm-string cm-property">"bill"</span>: {</span></pre></div><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"origin_total_price"</span>: <span class="cm-number">177</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_total_price"</span>: <span class="cm-number">177</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"shopping_list"</span>: [</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"pid"</span>: <span class="cm-number">1</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"count"</span>: <span class="cm-number">2</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"origin_subtotal_price"</span>: <span
+            class="cm-number">22.8</span>,</span></pre><pre class=" CodeMirror-line "
+                                                            role="presentation"><span role="presentation"
+                                                                                      style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_subtotal_price"</span>: <span
+            class="cm-number">22.8</span>,</span></pre><pre class=" CodeMirror-line "
+                                                            role="presentation"><span role="presentation"
+                                                                                      style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"origin_unit_price"</span>: <span class="cm-number">11.4</span>,</span></pre><div
+            class="CodeMirror-activeline" style="position: relative;"><div
             class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div
             class="CodeMirror-gutter-background CodeMirror-activeline-gutter"
             style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span
-            role="presentation" style="padding-right: 0.1px;">{</span></pre></div><pre
+            role="presentation"
+            style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_unit_price"</span>: <span class="cm-number">11.4</span></span></pre></div><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp;<span
-            class="cm-string cm-property">"bill"</span>: {</span></pre><pre class=" CodeMirror-line "
-                                                                            role="presentation"><span
-            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  },</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  {</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"pid"</span>: <span class="cm-number">2</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"count"</span>: <span class="cm-number">3</span>,</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
             class="cm-string cm-property">"origin_subtotal_price"</span>: <span
-            class="cm-number">2533.28</span>,</span></pre><pre class=" CodeMirror-line "
-                                                              role="presentation"><span
-            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-string">"shopping_list"</span>: [</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;  {</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"pid"</span>: <span class="cm-number">1</span>,</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"count"</span>: <span class="cm-number">2</span>,</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"origin_unit_price"</span>: <span class="cm-number">1145.14</span>,</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"origin_subtotal_price"</span>: <span
-            class="cm-number">2290.28</span></span></pre><pre class=" CodeMirror-line "
-                                                              role="presentation"><span
-            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;  },</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;  {</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"pid"</span>: <span class="cm-number">2</span>,</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"count"</span>: <span class="cm-number">3</span>,</span></pre><pre
-            class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"origin_unit_price"</span>: <span
-            class="cm-number">81.0</span>,</span></pre><pre class=" CodeMirror-line "
-                                                            role="presentation"><span role="presentation"
-                                                                                      style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp;<span
-            class="cm-string">"origin_subtotal_price"</span>: <span
-            class="cm-number">243.0</span></span></pre><pre class=" CodeMirror-line "
+            class="cm-number">154.2</span>,</span></pre><pre class=" CodeMirror-line "
                                                              role="presentation"><span
-            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;  }</span></pre><pre
+            role="presentation"
+            style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_subtotal_price"</span>: <span
+            class="cm-number">154.2</span>,</span></pre><pre class=" CodeMirror-line "
+                                                             role="presentation"><span
+            role="presentation"
+            style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"origin_unit_price"</span>: <span class="cm-number">51.4</span>,</span></pre><div
+            class="" style="position: relative;"><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation"
+            style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span
+            class="cm-string cm-property">"actual_unit_price"</span>: <span class="cm-number">51.4</span></span></pre></div><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
-                                                                style="padding-right: 0.1px;"> &nbsp;  ]</span></pre><pre
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp; &nbsp;  }</span></pre><div
+            class="" style="position: relative;"><pre class=" CodeMirror-line " role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp; ]</span></pre></div><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;">  },</span></pre><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;"> &nbsp;<span
-            class="cm-string">"delivery_info"</span>: {</span></pre><pre class=" CodeMirror-line "
-                                                                         role="presentation"><span
-            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"delivery_info"</span>: {</span></pre><pre
+            class=" CodeMirror-line " role="presentation"><span role="presentation"
+                                                                style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
             class="cm-string cm-property">"name"</span>: <span
             class="cm-string">"zhangsan"</span>,</span></pre><pre class=" CodeMirror-line "
                                                                   role="presentation"><span
@@ -169,14 +214,30 @@
             class="cm-string">"foo@bar.com"</span>,</span></pre><pre class=" CodeMirror-line "
                                                                      role="presentation"><span
             role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
-            class="cm-string cm-property">"address"</span>: <span
-            class="cm-string">"foobar"</span></span></pre><pre class=" CodeMirror-line "
+            class="cm-string cm-property">"country"</span>: <span
+            class="cm-string">"China"</span>,</span></pre><pre class=" CodeMirror-line "
+                                                               role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"city"</span>: <span
+            class="cm-string">"南京"</span>,</span></pre><pre class=" CodeMirror-line "
+                                                            role="presentation"><span role="presentation"
+                                                                                      style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"address_line1"</span>: <span
+            class="cm-string">"栖霞区仙林大道168号"</span>,</span></pre><pre class=" CodeMirror-line "
+                                                                     role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"address_line2"</span>: <span
+            class="cm-string">"南大和园99栋909室"</span>,</span></pre><pre class=" CodeMirror-line "
+                                                                     role="presentation"><span
+            role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span
+            class="cm-string cm-property">"postal_code"</span>: <span
+            class="cm-string">"210023"</span></span></pre><pre class=" CodeMirror-line "
                                                                role="presentation"><span
             role="presentation" style="padding-right: 0.1px;">  }</span></pre><pre
             class=" CodeMirror-line " role="presentation"><span role="presentation"
                                                                 style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div
-            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 560px;"></div><div
-            class="CodeMirror-gutters" style="display: none; height: 590px;"></div></div></div></pre>
+            style="position: absolute; height: 30px; width: 1px; border-bottom: 0px solid transparent; top: 762px;"></div><div
+            class="CodeMirror-gutters" style="display: none; height: 792px;"></div></div></div></pre>
     <p></p>
     <h3><a name='header-n11' class='md-header-anchor '></a>Response Code:</h3>
     <ul>
@@ -184,9 +245,13 @@
     </ul>
     <h3><a name='header-n16' class='md-header-anchor '></a>Note:</h3>
     <ul>
-        <li>事实上，直接把查询价格(POST /bills)的结果拿来用就行。</li>
+        <li>直接把查询价格(POST /bills)的结果拿来，加个地址就行。</li>
+        <li>现在actual的价格和origin的价格应该总是一样的，加着是为了未来可能会存在的拓展。如果不一样返回400</li>
         <li>需要在订单中写明价格的原因是为了防止在点击立即购买到点击付款（即在填写物流信息时），后台修改了商品价格。</li>
         <li>这一步若返回成功，请记录订单id，并跳转到选择支付方式的页面</li>
+        <li><code>country</code>现在其实没用的，后台一直会设置为中国</li>
+        <li><code>address_line_1</code>表示区，街道，门牌号</li>
+        <li><code>address_line_2</code>表示小区，几栋，几室</li>
     </ul>
 </div>
 </body>

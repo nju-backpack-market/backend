@@ -13,4 +13,5 @@ interface ProductService {
     fun newProducts(products: List<Product>): List<Product>
     fun modifyProducts(products: List<Product>): List<Product>
     fun removeProducts(ids: List<Long>): List<Long>
+    fun pullOffProducts(ids: List<Long>): List<Long>
 }

@@ -26,6 +26,7 @@ import static cn.sansotta.market.common.IOUtils.readFromFile;
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 @Configuration
+@Profile("!dev_test")
 public class DecryptPropertyConfiguration {
     @Primary
     @Bean

@@ -54,6 +54,12 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
         return ids.filter { it > 0L && hazard("delete product", false) { productDao.deleteProduct(it) } }
     }
 
+    override fun pullOffProducts(ids: List<Long>)
+            = ids.filter { it > 0 }
+            .mapNotNull { product(it, false)?.takeIf(Product::onSale)?.apply { onSale = false } }
+            .let(this::modifyProducts)
+            .map(Product::pid)
+
     private inline fun <T> hazard(method: String, defaultVal: T, func: () -> T) =
             try {
                 func()

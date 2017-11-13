@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <title>start_payment.md</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
+          rel='stylesheet' type='text/css'/>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
+</head>
+<body class='typora-export'>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>POST
+    /orders/{id}/payment?method={method}</h1>
+    <h2><a name='header-n5' class='md-header-anchor '></a>Start payment of an order.</h2>
+    <h3><a name='header-n16' class='md-header-anchor '></a>Note</h3>
+    <ul>
+        <li>参数： <code>method</code> alipay或paypal</li>
+        <li>如果订单不存在或状态不合法返回409，method参数不合法400</li>
+        <li>如果开始了正常的支付，<strong>页面应该会自动跳转</strong> ，不要做额外处理。</li>
+    </ul>
+</div>
+</body>
+</html>
