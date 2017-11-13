@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS products
     PRIMARY KEY,
   pname       VARCHAR(255) NOT NULL,
   price       DOUBLE       NOT NULL,
-  description TEXT         NOT NULL
+  description TEXT         NOT NULL,
+  on_sale     BOOLEAN      NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS shopping_items

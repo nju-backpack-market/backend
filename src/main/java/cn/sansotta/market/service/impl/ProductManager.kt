@@ -22,14 +22,14 @@ class ProductManager(private val productDao: ProductDao) : ProductService {
             ?.let { productDao.selectProductById(id, withPicture) }
             ?.let(::Product)
 
-    override fun allProducts(page: Int)
+    override fun allProducts(page: Int, all: Boolean)
             = page.takeIf { page >= 0 }
-            ?.let(productDao::selectAllProducts)
+            ?.let { productDao.selectAllProducts(it, !all) }
             ?.let { copyPageInfo(it, ::Product) }
 
-    override fun products(name: String, page: Int)
+    override fun products(name: String, page: Int, all: Boolean)
             = page.takeIf { page >= 0 }
-            ?.let { productDao.selectProductByName(name, page) }
+            ?.let { productDao.selectProductByName(name, page, !all) }
             ?.let { copyPageInfo(it, ::Product) }
 
     override fun newProducts(products: List<Product>)

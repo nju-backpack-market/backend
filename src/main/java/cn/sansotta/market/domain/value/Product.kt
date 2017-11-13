@@ -14,19 +14,20 @@ data class Product(
         var name: String,
         var price: Double,
         var description: String,
-        var images: List<String>
+        var images: List<String>,
+        var onSale: Boolean
 ) : ValueObject<ProductEntity>, Identifiable<Long> {
     override fun getId() = pid
 
-    constructor() : this(-1, "", -1.0, "", mutableListOf())
+    constructor() : this(-1, "", -1.0, "", mutableListOf(), false)
 
-    constructor(po: ProductEntity) : this(po.id, po.name, po.price, po.description, po.images)
+    constructor(po: ProductEntity) : this(po.id, po.name, po.price, po.description, po.images, po.onSale)
 
-    override fun toEntity() = ProductEntity(pid, name, price, description, images)
+    override fun toEntity() = ProductEntity(pid, name, price, description, images, onSale)
 
     companion object {
         @JvmStatic
-        fun mockObject() = Product(1, "MockProduct", 10000.0, "MOCK", mutableListOf())
+        fun mockObject() = Product(1, "MockProduct", 10000.0, "MOCK", mutableListOf(), true)
 
         @JvmStatic
         fun isValidEntity(product: Product) = product.name.isNotBlank() && product.price >= 0.0

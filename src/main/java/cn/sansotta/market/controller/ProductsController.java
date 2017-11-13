@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,18 +57,24 @@ public class ProductsController {
         return product == null ? notFoundResponse() : toResponse(assembleResource(product));
     }
 
+    @Authorized(intercept = false)
     @GetMapping(produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<ProductResource>>
-    allProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page) {
-        PageInfo<Product> pageInfo = productService.allProducts(page);
+    allProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                @RequestParam(value = "all", required = false, defaultValue = "false") boolean all,
+                @RequestAttribute("authorized") boolean authorized) {
+        PageInfo<Product> pageInfo = productService.allProducts(page, all && authorized);
         return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
     }
 
-    @GetMapping(value = "/{name}",produces = HAL_MIME_TYPE)
+    @Authorized(intercept = false)
+    @GetMapping(value = "/{name}", produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<ProductResource>>
     products(@PathVariable(value = "name") String name,
-             @RequestParam(value = "page", required = false, defaultValue = "0") int page) {
-        PageInfo<Product> pageInfo = productService.products(name, page);
+             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+             @RequestParam(value = "all") boolean all,
+             @RequestAttribute(value = "authorized") boolean authorized) {
+        PageInfo<Product> pageInfo = productService.products(name, page, all && authorized);
         return pageInfo == null ? notFoundResponse() : toResponse(assembleResources(pageInfo));
     }
 
@@ -105,14 +112,18 @@ public class ProductsController {
     private PagedResources<ProductResource> assembleResources(PageInfo<Product> info) {
         PagedResources<ProductResource> resources = pagedResourcesBatch(info, assembler::toResources);
         resources.add(
-                linkTo(methodOn(getClass()).allProducts(info.getPageNum())).withSelfRel(),
-                linkTo(methodOn(getClass()).allProducts(info.getNavigateFirstPage())).withRel("first"),
-                linkTo(methodOn(getClass()).allProducts(info.getNavigateLastPage())).withRel("last")
+                linkTo(methodOn(getClass()).allProducts(info.getPageNum(), false, true)).withSelfRel(),
+                linkTo(methodOn(getClass()).allProducts(info.getNavigateFirstPage(), false, true))
+                        .withRel("first"),
+                linkTo(methodOn(getClass()).allProducts(info.getNavigateLastPage(), false, true))
+                        .withRel("last")
         );
         if(info.isHasNextPage())
-            resources.add(linkTo(methodOn(getClass()).allProducts(info.getPrePage())).withRel("prev"));
+            resources.add(linkTo(methodOn(getClass()).allProducts(info.getPrePage(), false, true))
+                    .withRel("prev"));
         if(info.isHasNextPage())
-            resources.add(linkTo(methodOn(getClass()).allProducts(info.getNextPage())).withRel("next"));
+            resources.add(linkTo(methodOn(getClass()).allProducts(info.getNextPage(), false, true))
+                    .withRel("next"));
         return resources;
     }
 }

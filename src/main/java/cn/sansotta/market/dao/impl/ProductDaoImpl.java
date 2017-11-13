@@ -45,9 +45,11 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public PageInfo<ProductEntity> selectProductByName(String name, int page) {
+    public PageInfo<ProductEntity> selectProductByName(String name, int page, boolean onlyOnSale) {
         try {
-            return productTpl.paged(page, 30, "%" + name + '%', ProductMapper::selectProductByName);
+            return productTpl.paged(page, 30, "%" + name + '%',
+                    onlyOnSale ? ProductMapper::selectProductByNameOnSale :
+                            ProductMapper::selectProductByName);
         } catch (RuntimeException ex) {
             logger.error("error when select product ", ex);
             return null;
@@ -55,9 +57,11 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public PageInfo<ProductEntity> selectAllProducts(int pageNum) {
+    public PageInfo<ProductEntity> selectAllProducts(int pageNum, boolean onlyOnSale) {
         try {
-            return productTpl.paged(pageNum, 30, ProductMapper::selectAllProducts);
+            return productTpl.paged(pageNum, 30,
+                    onlyOnSale ? ProductMapper::selectAllProductsOnSale :
+                            ProductMapper::selectAllProducts);
         } catch (RuntimeException ex) {
             logger.error("error when select product because of " + ex);
             return null;
@@ -96,8 +100,7 @@ public class ProductDaoImpl implements ProductDao {
     @Transactional
     @Override
     public boolean deleteProduct(long id) {
-        int affectedRow = productTpl.exec(productMapper -> productMapper.deleteProduct(id));
-        productImageTpl.exec(productImageMapper -> productImageMapper.deleteProductImageByProductId(id));
+        int affectedRow = productTpl.exec(id, ProductMapper::deleteProduct);
         return affectedRow > 0;
     }
 

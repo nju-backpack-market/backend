@@ -13,4 +13,5 @@ class ProductResource(product: Product) : Resource<Product>(product) {
     val name = product.name
     val price = product.price
     val description = product.description
+    val onSale = product.onSale
 }

@@ -25,7 +25,8 @@ open class DocumentResource private constructor() : Resource<String>("Document")
             api("get_api_info", HttpMethod.GET) { apiInfo() }
         }
         apis<ProductsController> {
-            api("get_all_products", HttpMethod.GET) { allProducts(0) }
+            api("get_all_products", HttpMethod.GET) { allProducts(0, false, false) }
+            api("get_products_by_name", HttpMethod.GET) { products("包", 0, false, false) }
             api("get_product", HttpMethod.GET) { product(1) }
             api("create_products", HttpMethod.POST) {
                 newProducts(Collections.singletonList(Product.mockObject()))

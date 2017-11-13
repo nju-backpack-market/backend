@@ -30,7 +30,8 @@ public interface ProductMapper {
             @Arg(column = "description", javaType = String.class),
             @Arg(column = "pid",
                     select = "cn.sansotta.market.mapper.ProductMapper.selectProductImageByProductId",
-                    javaType = List.class)
+                    javaType = List.class),
+            @Arg(column = "on_sale", javaType = boolean.class)
     })
     @Select("SELECT * FROM products WHERE pid=#{id}")
     ProductEntity selectProductById(long id);
@@ -41,21 +42,30 @@ public interface ProductMapper {
             @Arg(column = "pname", javaType = String.class),
             @Arg(column = "price", javaType = double.class),
             @Arg(column = "description", javaType = String.class),
+            @Arg(column = "on_sale", javaType = boolean.class)
     })
     @Select("SELECT * FROM products WHERE pid=#{id}")
     ProductEntity selectProductByIdNoPictures(long id);
 
     @ResultMap("productMap")
     @Select("SELECT * FROM products WHERE pname LIKE #{name}")
-    List<ProductEntity> selectProductByName(String name);
+    List<ProductEntity> selectProductByName(@Param("name") String name);
+
+    @ResultMap("productMap")
+    @Select("SELECT * FROM products WHERE pname LIKE #{name} AND on_sale = TRUE")
+    List<ProductEntity> selectProductByNameOnSale(@Param("name") String name);
 
     @ResultMap("productMap")
     @Select("SELECT * FROM products")
     List<ProductEntity> selectAllProducts();
 
+    @ResultMap("productMap")
+    @Select("SELECT * FROM products WHERE on_sale = TRUE")
+    List<ProductEntity> selectAllProductsOnSale();
+
     @Options(useGeneratedKeys = true, keyColumn = "pid")
-    @Insert("INSERT INTO products(pname, price, description)" +
-            "VALUES (#{name}, #{price}, #{description})")
+    @Insert("INSERT INTO products(pname, price, description, on_sale)" +
+            "VALUES (#{name}, #{price}, #{description}, #{onSale})")
     int insertProduct(ProductEntity product);
 
     @Options(useGeneratedKeys = true, keyColumn = "pid")
@@ -70,12 +80,12 @@ public interface ProductMapper {
     int insertProducts(List<ProductEntity> products);
 
     @Update("UPDATE products SET " +
-            "pname=#{name}, price=#{price}, description=#{description} " +
+            "pname=#{name}, price=#{price}, description=#{description}, on_sale=#{onSale} " +
             "WHERE pid=#{id}")
     int updateProduct(ProductEntity product);
 
-    @Delete("DELETE FROM products WHERE pid=#{id}")
-    int deleteProduct(long id);
+    @Delete("UPDATE products SET on_sale = FALSE WHERE pid=#{id}")
+    int deleteProduct(@Param("id") long id);
 
     @Select("SELECT * FROM product_images WHERE pid = #{pid}")
     List<String> selectProductImageByProductId(@Param("pid") long pid);

@@ -7,8 +7,9 @@ VALUES
   (2, 'STOCK_OUT', now(), 68.0, 'foo2', '654321', 'foo2@software.com', 'China', 'JiangSu', 'Nanjing',
       'XiXia', 'XianLing', '226001');
 INSERT INTO orders (oid, state, time, total_price, c_name, c_phone_number, c_email, c_country, c_province, c_city, c_line1, c_line2, c_postal_code)
-VALUES (3, 'CREATE', now(), 10.0, 'foo3', '567890', 'foo3@software.com', 'China', 'JiangSu', 'Nanjing',
-           'XiXia', 'XianLing', '226001');
+VALUES
+  (3, 'CREATE', now(), 10.0, 'foo3', '567890', 'foo3@software.com', 'China', 'JiangSu', 'Nanjing',
+      'XiXia', 'XianLing', '226001');
 INSERT INTO orders (oid, state, time, total_price, c_name, c_phone_number, c_email, c_country, c_province, c_city, c_line1, c_line2, c_postal_code)
 VALUES
   (4, 'DELIVERING', now(), 40.0, 'foo4', '098765', 'foo4@software.com', 'China', 'JiangSu', 'Nanjing',
