@@ -1,6 +1,5 @@
 package cn.sansotta.market.service
 
-import cn.sansotta.market.service.TokenService
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner
  */
 @SpringBootTest
 @RunWith(SpringRunner::class)
-@ActiveProfiles("dev_local")
+@ActiveProfiles("dev_test")
 @DirtiesContext
 class TokenServiceTest {
     @Autowired

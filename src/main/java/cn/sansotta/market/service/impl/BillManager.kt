@@ -23,8 +23,11 @@ class BillManager(private val productDao: ProductDao) : BillService {
     }
 
     override fun checkPrice(bill: Bill)
-            = bill.all {
-        it.originUnitPrice >= 0.0 && // do mostly check before query db
-                it.originUnitPrice == productDao.selectProductById(it.pid, false)?.price
-    }
+            = bill.originTotalPrice == bill.actualTotalPrice &&
+            bill.all {
+                it.originUnitPrice >= 0.0 && // do mostly check before query db
+                        it.originUnitPrice == it.actualUnitPrice &&
+                        it.originSubtotalPrice == it.actualSubtotalPrice &&
+                        it.originUnitPrice == productDao.selectProductById(it.pid, false)?.price
+            }
 }

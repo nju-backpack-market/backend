@@ -4,7 +4,6 @@ import com.github.pagehelper.PageInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,9 +53,10 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public PageInfo<OrderEntity> selectAllOrders(int pageNum) {
+    public PageInfo<OrderEntity> selectAllOrders(int pageNum, boolean cascade) {
         try {
-            return orderTpl.paged(pageNum, 30, OrderMapper::selectAllOrders);
+            return orderTpl.paged(pageNum, 30,
+                    cascade ? OrderMapper::selectAllOrders : OrderMapper::selectAllOrdersNoItems);
         } catch (RuntimeException ex) {
             logger.error("error when select order because of " + ex);
             return null;
@@ -82,7 +82,8 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public OrderEntity insertOrder(OrderEntity order) {
         orderTpl.exec(order, OrderMapper::insertOrder);
-        shoppingItemTpl.exec(order.getShoppingItems(), order.getId(), ShoppingItemMapper::insertShoppingItems);
+        shoppingItemTpl
+                .exec(order.getShoppingItems(), order.getId(), ShoppingItemMapper::insertShoppingItems);
         return order;
     }
 

@@ -13,11 +13,14 @@ import com.alipay.api.internal.util.AlipaySignature
 import com.alipay.api.request.AlipayTradePagePayRequest
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Lazy
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Service
 class AlipayPaymentManager(val props: AlipayConfiguration.AlipayConfigurationProperties,
                            val alipayClient: AlipayClient,

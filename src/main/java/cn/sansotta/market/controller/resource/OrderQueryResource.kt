@@ -11,6 +11,6 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn
 class OrderQueryResource(orderQuery: OrderQuery) : Resource<OrderQuery>(orderQuery) {
     init {
         add(linkTo(
-                methodOn(OrdersController::class.java).query(orderQuery.queryId, 0, true)).withSelfRel())
+                methodOn(OrdersController::class.java).query(orderQuery.queryId, 0)).withSelfRel())
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @RunWith(SpringRunner::class)
 @SpringBootTest
-@ActiveProfiles("dev_local")
+@ActiveProfiles("dev_test")
 @Transactional
 @SqlConfig(encoding = "UTF8")
 @Sql("classpath:test_schema.sql", "classpath:products_data.sql")
@@ -60,10 +60,16 @@ class ProductServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
     }
 
     @Test
-    fun deleteProducts() {
-        assertEquals(2, service.removeProducts(listOf(1, 2, 5)).size)
+    fun pullOffProducts() {
+        assertEquals(2, service.pullOffProducts(listOf(1, 2, 5)).size)
         assertEquals(4, countRowsInTable("products"))
         assertFalse(service.product(1, false)!!.onSale)
+    }
+
+    @Test
+    fun deleteProducts() {
+        assertEquals(2, service.removeProducts(listOf(1, 2, 5)).size)
+        assertEquals(2, countRowsInTable("products"))
     }
 
     @Test

@@ -109,10 +109,11 @@
     <h3><a name='header-n13' class='md-header-anchor '></a>Note:</h3>
     <ul>
         <li>不需要指定pid，指定了也会被忽略但不会返回错误</li>
-        <li><code>name</code>和<code>price</code>是必选的，<code>name</code>不可为全空白，<code>price</code>不可为复数。
+        <li><code>name</code>和<code>price</code>是必选的，<code>name</code>不可为全空白，<code>price</code>不可为负数。
         </li>
         <li><code>description</code>是可选的，不填写则为空</li>
         <li>返回成功插入的实体的完整信息。不合法的对象会被忽略，但不会返回错误。</li>
+        <li><code>on_sale</code>如果不填则为false，即下架状态</li>
         <li>权限接口。</li>
     </ul>
 </div>

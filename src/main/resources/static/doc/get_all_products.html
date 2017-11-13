@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <title>get_all_products.md</title>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
+          rel='stylesheet' type='text/css'/>
+    /head>
+<body class='typora-export'>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>GET /products</h1>
+    <ul>
+        <li><p>GET /products/{id} 获得单个商品</p>
+            <p>返回指定的商品（如果存在的话），不管该商品是否处于上架状态</p>
+            <p>不存在则404</p></li>
+        <li><p>GET /products?all={all} 获取所有商品</p>
+            <p>参数: <code>all</code>
+                可选，默认为false，指示是否包括处于下架状态的商品。如果没有带有效的Token，那么all的值不会生效，始终为false。即只有管理员可以批量列出所有的商品</p>
+            <p>不会404，没有则空列表</p></li>
+        <li><p>GET /products/{name}?all={all} 按名字搜索商品</p>
+            <p>参数：<code>all</code> 同上</p>
+            <p>返回值同上</p></li>
+        <li><p>DELETE /products/{id} 下架商品</p>
+            <p><code>id</code>可以是用逗号分隔的多个值</p>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

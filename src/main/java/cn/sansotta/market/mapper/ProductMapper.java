@@ -84,7 +84,7 @@ public interface ProductMapper {
             "WHERE pid=#{id}")
     int updateProduct(ProductEntity product);
 
-    @Delete("UPDATE products SET on_sale = FALSE WHERE pid=#{id}")
+    @Delete("DELETE FROM products WHERE pid=#{id}")
     int deleteProduct(@Param("id") long id);
 
     @Select("SELECT * FROM product_images WHERE pid = #{pid}")

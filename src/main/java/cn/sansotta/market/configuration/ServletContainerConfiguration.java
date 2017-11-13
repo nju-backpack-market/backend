@@ -5,6 +5,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomi
 import org.springframework.boot.context.embedded.Ssl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import javax.crypto.Cipher;
 
@@ -13,6 +14,7 @@ import static cn.sansotta.market.common.DecryptUtils.decrypt;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Configuration
 public class ServletContainerConfiguration {
     @Bean

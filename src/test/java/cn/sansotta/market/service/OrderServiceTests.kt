@@ -25,7 +25,7 @@ import java.time.LocalDateTime
  */
 @RunWith(SpringRunner::class)
 @SpringBootTest
-@ActiveProfiles("dev_local")
+@ActiveProfiles("dev_test")
 @Transactional
 @SqlConfig(encoding = "UTF8")
 @Sql("classpath:test_schema.sql", "classpath:products_data.sql", "classpath:orders_data.sql")
@@ -48,12 +48,14 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
 
     @Test
     fun allOrders() {
-        assertNull(service.allOrders(-1))
+        assertNull(service.allOrders(-1, true))
 
-        val orders = service.allOrders(0)
+        val orders = service.allOrders(0, true)
         assertNotNull(orders)
         orders as PageInfo<Order>
         assertEquals(5, orders.size)
+        assertEquals(2, orders.list[0].bill.size)
+        assertEquals(0, service.allOrders(0, false)!!.list[0].bill.size)
     }
 
     @Test
@@ -122,11 +124,9 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         var res = service.createOrderQuery(query, true)
         assertNotNull(res)
         res as OrderQuery
-        assertEquals(query.hashCode(), res.queryId)
         res = service.getOrderQuery(res.queryId)
         assertNotNull(res)
         res as OrderQuery
-        assertEquals(query.hashCode(), res.queryId)
 
         query.id = null
         query.fromDate = LocalDate.MAX

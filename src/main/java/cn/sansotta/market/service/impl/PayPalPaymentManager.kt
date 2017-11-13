@@ -11,11 +11,14 @@ import cn.sansotta.market.service.ProductService
 import com.paypal.api.payments.*
 import com.paypal.base.rest.PayPalRESTException
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Lazy
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Service
 class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
                            private val productService: ProductService,

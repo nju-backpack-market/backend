@@ -3,10 +3,13 @@ package cn.sansotta.market.configuration;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.base.rest.PayPalRESTException;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 import java.net.UnknownHostException;
@@ -21,6 +24,7 @@ import static cn.sansotta.market.common.WebUtils.contextBaseUrl;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
+@Profile("!dev_test")
 @Configuration
 @EnableConfigurationProperties(PayPalConfiguration.PayPalProperties.class)
 public class PayPalConfiguration {

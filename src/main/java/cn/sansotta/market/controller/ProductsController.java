@@ -68,7 +68,7 @@ public class ProductsController {
     }
 
     @Authorized(intercept = false)
-    @GetMapping(value = "/{name}", produces = HAL_MIME_TYPE)
+    @GetMapping(value = "/name/{name}", produces = HAL_MIME_TYPE)
     public ResponseEntity<PagedResources<ProductResource>>
     products(@PathVariable(value = "name") String name,
              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
@@ -96,7 +96,7 @@ public class ProductsController {
     @DeleteMapping("/{id}")
     public ResponseEntity<List<Long>>
     removeProducts(@PathVariable("id") List<Long> ids) {
-        return toResponse(productService.removeProducts(ids));
+        return toResponse(productService.pullOffProducts(ids));
     }
 
     private ProductResource assembleResource(Product product) {

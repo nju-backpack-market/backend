@@ -4,29 +4,29 @@
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width initial-scale=1'>
     <title>update_order_status.md</title>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
           rel='stylesheet' type='text/css'/>
-    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
 </head>
 <body class='typora-export'>
-<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>PUT
-    /orders/{id}/status</h1>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>PATCH
+    /orders/{id}?status={status}</h1>
     <h2><a name='header-n2' class='md-header-anchor '></a>update order&#39;s status</h2>
     <h3><a name='header-n3' class='md-header-anchor '></a>Format</h3>
     <ul>
         <li>path variable: <code>id</code></li>
         <li>content type: <code>application/x-www-form-urlencoded</code></li>
-        <li>parameter: <code>modified</code> - the status which the order will change to</li>
+        <li>parameter: <code>status</code> - the status which the order will change to</li>
     </ul>
     <h3><a name='header-n15' class='md-header-anchor '></a>Example</h3>
-    <p><code>PUT /orders/1/status?modified=CREATE</code></p>
+    <p><code>PATCH /orders/1?status=STOCK_OUT</code></p>
     <p></p>
     <h3><a name='header-n20' class='md-header-anchor '></a>NOTE</h3>
     <p>当然Content-Type设为application/x-www-form-urlencoded然后参数放在Body里也ok，像这样。之后的文档就不重复说明了。</p>
-    <pre class='md-fences mock-cm' style='display:block;position:relative'>PUT /orders/1/status HTTP/1.1
+    <pre class='md-fences mock-cm' style='display:block;position:relative'>PATCH /orders/1/status HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 
-modified=CREATE</pre>
+status=STOCK_OUT</pre>
     <p></p></div>
 </body>
 </html>

@@ -40,13 +40,28 @@ public interface OrderMapper {
     @Select("SELECT * FROM orders WHERE oid=#{id}")
     OrderEntity selectOrderById(long id);
 
-    @ResultMap("orderMap")
+    @Results(id = "orderMapNoItems")
+    @ConstructorArgs({
+            @Arg(id = true, column = "oid", javaType = long.class),
+            @Arg(column = "total_price", javaType = double.class),
+            @Arg(column = "state", javaType = OrderStatus.class),
+            @Arg(column = "time", javaType = LocalDateTime.class),
+            @Arg(resultMap = "cn.sansotta.market.mapper.DummyMapper.deliveryInfoMap",
+                    javaType = DeliveryInfoEntity.class)})
+    @Select("SELECT * FROM orders WHERE oid=#{id}")
+    OrderEntity selectOrderByIdNoItems(long id);
+
+    @ResultMap("orderMapNoItems")
     @Select("SELECT * FROM orders WHERE oid=#{id} FOR UPDATE")
     OrderEntity selectOrderByIdLocked(long id);
 
     @ResultMap("orderMap")
     @Select("SELECT * FROM orders")
     List<OrderEntity> selectAllOrders();
+
+    @ResultMap("orderMapNoItems")
+    @Select("SELECT * FROM orders")
+    List<OrderEntity> selectAllOrdersNoItems();
 
 
     @ResultMap("orderMap")
@@ -95,7 +110,7 @@ public interface OrderMapper {
             "<if test= \"toDate != null\"><![CDATA[AND date(O.time) <= #{toDate}]]></if>",
             "<if test= \"onDate != null\">AND date(O.time) = #{onDate}</if>",
             "<if test= \"customerName != null\">AND O.c_name = #{customerName}</if>",
-            "<if test= \"phoneNumber != null\">AND O.c_phone = #{phoneNumber}</if>",
+            "<if test= \"phoneNumber != null\">AND O.c_phone_number = #{phoneNumber}</if>",
             "<if test= \"productIds != null\">AND S.pid IN <foreach collection='productIds' item='pid' open='(' close=')' separator=','>#{pid}</foreach></if>",
             "<if test= \"fromPrice != null\"><![CDATA[AND O.total_price >= #{fromPrice}]]></if>",
             "<if test = \"toPrice != null\"><![CDATA[AND O.total_price <= #{toPrice}]]></if>",
