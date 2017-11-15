@@ -51,6 +51,9 @@ public interface ProductMapper {
     @Select("SELECT * FROM products WHERE pname LIKE #{name}")
     List<ProductEntity> selectProductByName(@Param("name") String name);
 
+    @Select("SELECT * FROM products WHERE pid=#{id}")
+    String selectProductName(@Param("id") long id);
+
     @ResultMap("productMap")
     @Select("SELECT * FROM products WHERE pname LIKE #{name} AND on_sale = TRUE")
     List<ProductEntity> selectProductByNameOnSale(@Param("name") String name);

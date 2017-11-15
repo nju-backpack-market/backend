@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.pagehelper.PageInfo
 import org.slf4j.Logger
 import java.nio.charset.Charset
+import java.util.concurrent.Executors
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -61,3 +62,7 @@ fun String.getBytes(charset: Charset): ByteArray {
     val stream = this.byteInputStream(charset)
     return stream.readBytes(stream.available())
 }
+
+fun millisOfDays(day: Int) = 1000L * 60 * 60 * 24 * day
+
+val commonPool = Executors.newFixedThreadPool(10)

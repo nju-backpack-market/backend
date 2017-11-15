@@ -57,6 +57,16 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public String selectProductName(long id) {
+        try {
+            return productTpl.exec(id, ProductMapper::selectProductName);
+        } catch (RuntimeException ex) {
+            logger.error("error when select product ", ex);
+            return null;
+        }
+    }
+
+    @Override
     public PageInfo<ProductEntity> selectAllProducts(int pageNum, boolean onlyOnSale) {
         try {
             return productTpl.paged(pageNum, 30,

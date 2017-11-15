@@ -1,3 +1,4 @@
+USE market_test;
 CREATE TABLE IF NOT EXISTS orders
 (
   oid            BIGINT AUTO_INCREMENT
@@ -14,7 +15,8 @@ CREATE TABLE IF NOT EXISTS orders
   c_line1        VARCHAR(110) NOT NULL,
   c_line2        VARCHAR(110) NOT NULL,
   c_postal_code  VARCHAR(20)  NOT NULL
-);
+)
+  CHARSET = 'utf8';
 
 CREATE TABLE IF NOT EXISTS products
 (
@@ -24,13 +26,15 @@ CREATE TABLE IF NOT EXISTS products
   price       DOUBLE       NOT NULL,
   description TEXT         NOT NULL,
   on_sale     BOOLEAN      NOT NULL
-);
+)
+  CHARSET = 'utf8';
 
 CREATE TABLE IF NOT EXISTS product_images (
   pid        BIGINT      NOT NULL,
   image_name VARCHAR(40) NOT NULL,
   PRIMARY KEY (pid, image_name)
-);
+)
+  CHARSET = 'utf8';
 
 CREATE TABLE IF NOT EXISTS shopping_items
 (
@@ -41,13 +45,15 @@ CREATE TABLE IF NOT EXISTS shopping_items
   actual_price   DOUBLE NOT NULL,
   subtotal_price DOUBLE NOT NULL,
   PRIMARY KEY (oid, pid)
-);
+)
+  CHARSET = 'utf8';
 
 CREATE TABLE IF NOT EXISTS users
 (
   username VARCHAR(40) NOT NULL PRIMARY KEY,
   password VARCHAR(40) NOT NULL
-);
+)
+  CHARSET = 'utf8';
 
 INSERT INTO users (username, password) VALUES ('123', '123');
 INSERT INTO orders (oid, state, time, total_price, c_name, c_phone_number, c_email, c_country, c_province, c_city, c_line1, c_line2, c_postal_code)

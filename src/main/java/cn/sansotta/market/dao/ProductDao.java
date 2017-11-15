@@ -17,6 +17,8 @@ public interface ProductDao {
 
     PageInfo<ProductEntity> selectAllProducts(int pageNum, boolean onlyOnSale);
 
+    String selectProductName(long id);
+
     ProductEntity insertProduct(ProductEntity product);
 
     List<ProductEntity> insertProducts(List<ProductEntity> products);

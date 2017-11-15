@@ -10,6 +10,7 @@ interface ProductService {
     fun allProducts(page: Int, all: Boolean): PageInfo<Product>?
     fun product(id: Long, withPicture: Boolean): Product?
     fun products(name: String, page: Int, all: Boolean): PageInfo<Product>?
+    fun productName(id: Long): String?
     fun newProducts(products: List<Product>): List<Product>
     fun modifyProducts(products: List<Product>): List<Product>
     fun removeProducts(ids: List<Long>): List<Long>

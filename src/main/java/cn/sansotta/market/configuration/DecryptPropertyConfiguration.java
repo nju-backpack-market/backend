@@ -3,6 +3,7 @@ package cn.sansotta.market.configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -12,6 +13,7 @@ import org.springframework.core.ConfigurableObjectInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -32,7 +34,7 @@ public class DecryptPropertyConfiguration {
     @Bean
     @Profile({"dev_remote", "dev_deploy"})
     public static DataSourceProperties dataSourceProperties(Cipher cipher) {
-        return new DecryptedDatasourceProperties(cipher);
+        return new DecryptedDataSourceProperties(cipher);
     }
 
     @Bean("custom_key")
