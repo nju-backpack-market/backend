@@ -41,11 +41,9 @@ public class PayPalConfiguration {
     @Bean
     public static RedirectUrls payPalRedirect(Environment env, PayPalProperties props)
             throws UnknownHostException {
-        String base = contextBaseUrl(env);
-
         RedirectUrls urls = new RedirectUrls();
-        urls.setCancelUrl(base + props.getCancelUrl());
-        urls.setReturnUrl(base + props.getReturnUrl());
+        urls.setCancelUrl(props.getCancelUrl());
+        urls.setReturnUrl(props.getReturnUrl());
         return urls;
     }
 

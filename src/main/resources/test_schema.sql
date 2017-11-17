@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS trades (
   method      CHAR(10)    NOT NULL,
   create_time DATETIME    NOT NULL,
   trade_id    VARCHAR(50) NOT NULL,
-  extra       DATETIME    NULL
+  extra       VARCHAR(30)    NULL
 );
 
 INSERT INTO users (username, password) VALUES ('123', '123');

@@ -121,7 +121,7 @@ class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigur
                         (it.bill.actualTotalPrice == params["total_amount"]?.toDouble())
             } ?: false
 
-    private fun retryNewTrade(trade: Trade) = retry(5) { tradeService.newTrade(trade) }
+    private fun retryNewTrade(trade: Trade) = retry { tradeService.newTrade(trade) }
 
     private fun checkTradeStatus(orderId: Long): String? {
         if (orderId <= 0) return null

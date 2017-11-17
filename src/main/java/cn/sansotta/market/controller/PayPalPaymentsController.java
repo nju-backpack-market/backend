@@ -2,8 +2,6 @@ package cn.sansotta.market.controller;
 
 import com.paypal.api.payments.Payment;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +17,6 @@ import cn.sansotta.market.domain.value.Trade;
 import cn.sansotta.market.service.CommonPaymentService;
 import cn.sansotta.market.service.PayPalPaymentService;
 import cn.sansotta.market.service.TradeService;
-import cn.sansotta.market.service.impl.PayPalPaymentManager;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -66,24 +63,28 @@ public class PayPalPaymentsController {
                                HttpServletResponse response) throws IOException {
         final Payment payment = payPalService.executePayment(paymentId, payerId);
         if(payment == null) response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        else {
-            // PayPal's api will serve as fence here: only the first call succeed.
-            // always only one thread for one order will continue from here.
-            tryDone(payment, response);
-            response.sendRedirect("/api"); // TODO: replace placeholder
-        }
+        else tryDone(payment, response);
+        // PayPal's api will serve as fence here: only the first call succeed.
+        // always only one thread for one order will continue from here.
+
     }
 
     private void tryDone(Payment payment, HttpServletResponse response) throws IOException {
-        long orderId = Long.valueOf(payment.getTransactions().get(0).getReferenceId());
-        Order order = paymentService.paymentDone(orderId); // now order's status is STOCK_OUT
+        String tradeId = payment.getId();
+        Trade trade = tradeService.getTradeByTradeIdLocked(tradeId);
+        if(trade == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        Order order = paymentService.paymentDone(trade.getOid()); // now order's status is STOCK_OUT
 
         if(order == null)  // this condition indicate concurrent payment voiding
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         else {
-            tradeService.voidTradeExtra(orderId); // i find no document about the token, so i assume it
+            tradeService.voidTradeExtra(trade.getOid());
+            // I find no document about the token, so i assume it
             // will expire sometimes later? so delete it now. not mandatory so we don't care its result
-            response.sendRedirect("/"); // TODO: placeholder. redirect to really url.
+            response.sendRedirect("/api"); // TODO: placeholder. redirect to really url.
         }
     }
 }

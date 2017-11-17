@@ -25,7 +25,6 @@ data class Trade(
     companion object {
         fun isValidEntity(trade: Trade) = trade.oid > 0L &&
                 (trade.method == "paypal" || trade.method == "alipay") &&
-                trade.createTime.isBefore(LocalDateTime.now()) &&
                 trade.tradeId.isNotBlank()
     }
 }

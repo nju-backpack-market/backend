@@ -252,7 +252,7 @@ public class OrdersController {
     }
 
     private void alipayPayment(Order order, HttpServletResponse response) throws IOException {
-        final String form = paymentService.startPayPalPayment(order);
+        final String form = paymentService.startAlipayPayment(order);
         if(form == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;

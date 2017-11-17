@@ -48,7 +48,7 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
 
         // unlike alipay, trade is create before fee being paid
         val trade = Trade(order.getId(), "paypal", payment.id, token)
-        return if (retry(5) { tradeService.newTrade(trade) }) url
+        return if (retry { tradeService.newTrade(trade) }) url
         else {// this only happens when db down, we return null simply since trade isn't written
             // this may not succeed since db may be down, just try
             // anyway, this doesn't matter since PayPal requires no explicit trade cancellation
@@ -100,10 +100,10 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
                     }
 
 
-    private val tokenPattern = "token=(EC-[0-9A-Z])&?".toRegex()
+    private val tokenPattern = "token=(EC-[0-9A-Z]*)&?".toRegex()
 
     private fun extractPayPalToken(href: String) =
-            tokenPattern.find(href)?.let { it.groupValues[0] }
+            tokenPattern.find(href)?.let { it.groupValues[1] }
 
     private fun createPayment(order: Order): Payment? {
         // we trust the pass-in order instance because it is directly from data source
