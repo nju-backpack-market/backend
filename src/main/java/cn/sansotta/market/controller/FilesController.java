@@ -32,7 +32,7 @@ public class FilesController {
     @PostMapping(value = "/{type}", consumes = "multipart/form-data")
     public ResponseEntity
     uploadImage(@PathVariable("type") String type,
-                @RequestParam("image") MultipartFile file) {
+                @RequestParam("file") MultipartFile file) {
         String name = null;
         switch (type) {
             case "image":

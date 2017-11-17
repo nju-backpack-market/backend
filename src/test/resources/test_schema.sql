@@ -48,3 +48,11 @@ CREATE TABLE IF NOT EXISTS product_images (
   image_name VARCHAR(40) NOT NULL,
   PRIMARY KEY (pid, image_name)
 );
+
+CREATE TABLE IF NOT EXISTS trades (
+  oid         BIGINT PRIMARY KEY,
+  method      CHAR(10)    NOT NULL,
+  create_time DATETIME    NOT NULL,
+  trade_id    VARCHAR(50) NOT NULL,
+  extra       VARCHAR(30) NULL
+);

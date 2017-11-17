@@ -7,7 +7,6 @@ import cn.sansotta.market.domain.value.Order
 import cn.sansotta.market.domain.value.OrderStatus
 import cn.sansotta.market.service.BillService
 import cn.sansotta.market.service.OrderService
-import com.github.pagehelper.PageInfo
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -21,13 +20,20 @@ import java.util.concurrent.ThreadLocalRandom
  */
 @Service
 @CacheConfig(cacheNames = arrayOf("queryCache"))
-class OrderManager(private val billService: BillService, private val orderDao: OrderDao) : OrderService {
+class OrderManager(private val billService: BillService,
+                   private val orderDao: OrderDao) : OrderService {
+
     private val logger = LoggerFactory.getLogger(OrderManager::class.java)
     private val random = ThreadLocalRandom.current()
 
     override fun order(id: Long)
             = id.takeIf { it > 0L }
             ?.let(orderDao::selectOrderById)
+            ?.let(::Order)
+
+    override fun getOrderLocked(id: Long)
+            = id.takeIf { it > 0L }
+            ?.let(orderDao::selectOrderByIdLocked)
             ?.let(::Order)
 
     override fun allOrders(page: Int, full: Boolean)
@@ -78,29 +84,6 @@ class OrderManager(private val billService: BillService, private val orderDao: O
                 .filter { (origin, _) -> origin != null }
                 .mapNotNull { (origin, modified) -> Order.mergeAsUpdate(origin, modified) }
                 .filter { hazard("update order", false) { orderDao.updateOrder(it.toEntity()) } }
-    }
-
-    override fun paymentBegin(orderId: Long): Order? {
-        return modifyOrderStatus(orderId, OrderStatus.PAYING) ?: return null
-    }
-
-    override fun paymentCancel(orderId: Long): Order? {
-        var modified = modifyOrderStatus(orderId, OrderStatus.CREATE) ?: return null
-        while (modified.getId() == -1L)
-            modified = modifyOrderStatus(orderId, OrderStatus.CREATE) ?: return null
-        return modified
-    }
-
-    override fun paymentDone(orderId: Long): Order? {
-        var modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT) ?: return null
-
-        // we have to make sure its status has been updated
-        // if null means it has been modified by other thread
-        while (modified.getId() == -1L)
-            modified = modifyOrderStatus(orderId, OrderStatus.STOCK_OUT) ?: return null
-
-        // TODO: add email notification here
-        return modified
     }
 
     private inline fun <T> hazard(method: String, defaultVal: T, func: () -> T) =

@@ -66,3 +66,21 @@ fun String.getBytes(charset: Charset): ByteArray {
 fun millisOfDays(day: Int) = 1000L * 60 * 60 * 24 * day
 
 val commonPool = Executors.newFixedThreadPool(10)
+
+inline fun retry(times: Int = 5, func: () -> Boolean): Boolean {
+    for (i in 0..times) if (safe(func) ?: continue) return true
+
+    return false
+}
+
+inline fun <T> retry(times: Int = 5, judge: (T) -> Boolean, func: () -> T): T? {
+    for (i in 0..times) return safe(func)?.takeIf(judge) ?: continue
+    return null
+}
+
+inline fun <T> safe(func: () -> T) =
+        try {
+            func()
+        } catch (ex: Exception) {
+            null
+        }

@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo
  */
 interface OrderService {
     fun order(id: Long): Order?
+    fun getOrderLocked(id: Long): Order?
     fun allOrders(page: Int, full: Boolean): PageInfo<Order>?
     fun newOrder(order: Order): Order?
     fun modifyOrders(orders: List<Order>): List<Order>
@@ -18,8 +19,4 @@ interface OrderService {
     fun createOrderQuery(query: OrderQuery, authorized: Boolean): OrderQuery?
     fun getOrderQuery(queryId: Int): OrderQuery?
     fun queryOrders(page: Int, query: OrderQuery): PageInfo<Order>?
-
-    fun paymentBegin(orderId: Long): Order?
-    fun paymentCancel(orderId: Long): Order?
-    fun paymentDone(orderId: Long): Order?
 }

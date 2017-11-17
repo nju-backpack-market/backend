@@ -159,37 +159,4 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         query.productIds = listOf(1, 2)
         assertEquals(2, service.queryOrders(0, query)?.size)
     }
-
-    @Test
-    fun paymentBegin() {
-        val order = service.paymentBegin(3)
-        assertNotNull(order)
-        assertEquals(3, order!!.getId())
-        assertEquals(OrderStatus.PAYING, order.status)
-
-        assertNull(service.paymentBegin(1))
-        assertEquals(OrderStatus.PAYING, service.order(3)!!.status)
-    }
-
-    @Test
-    fun paymentCancel() {
-        val order = service.paymentCancel(1)
-        assertNotNull(order)
-        assertEquals(1, order!!.getId())
-        assertEquals(OrderStatus.CREATE, order.status)
-
-        assertNull(service.paymentCancel(3))
-        assertEquals(OrderStatus.CREATE, service.order(1)!!.status)
-    }
-
-    @Test
-    fun paymentDone() {
-        val order = service.paymentDone(1)
-        assertNotNull(order)
-        assertEquals(1, order!!.getId())
-        assertEquals(OrderStatus.STOCK_OUT, order.status)
-
-        assertNull(service.paymentDone(3))
-        assertEquals(OrderStatus.STOCK_OUT, service.order(1)!!.status)
-    }
 }
