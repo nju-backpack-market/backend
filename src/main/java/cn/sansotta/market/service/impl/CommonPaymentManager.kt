@@ -7,7 +7,6 @@ import cn.sansotta.market.service.AlipayPaymentService
 import cn.sansotta.market.service.CommonPaymentService
 import cn.sansotta.market.service.OrderService
 import cn.sansotta.market.service.PayPalPaymentService
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Profile
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional
 @Profile("!dev_test")
 @Service
 class CommonPaymentManager(private val orderService: OrderService) : CommonPaymentService {
-    private val logger = LoggerFactory.getLogger(javaClass)
     private lateinit var payPalService: PayPalPaymentService
     private lateinit var alipayService: AlipayPaymentService
 
@@ -57,6 +55,13 @@ class CommonPaymentManager(private val orderService: OrderService) : CommonPayme
     }
 
     @Transactional
+    override fun checkedPaymentCancel(orderId: Long, name: String, phone: String): Order? {
+        val info = orderService.getOrderLockedNoItems(orderId)?.deliveryInfo ?: return null
+        if (info.name != name || info.phoneNumber != phone) return null
+        return paymentCancel(orderId)
+    }
+
+    @Transactional
     override fun paymentDone(orderId: Long): Order? {
         val modified = retry(5, { o -> o.getId() != -1L }) {
             orderService.modifyOrderStatus(orderId, OrderStatus.STOCK_OUT) ?: return null
@@ -67,14 +72,14 @@ class CommonPaymentManager(private val orderService: OrderService) : CommonPayme
     }
 
     @Transactional
-    override fun startAlipayPayment(order: Order): String? {
-        orderService.getOrderLocked(order.getId()) ?: return null // lock from here
+    override fun startAlipayPayment(orderId: Long): String? {
+        val order = orderService.getOrderLocked(orderId) ?: return null // lock from here
         return alipayService.startPayment(order)
     }
 
     @Transactional
-    override fun startPayPalPayment(order: Order): String? {
-        orderService.getOrderLocked(order.getId()) ?: return null // lock from here
+    override fun startPayPalPayment(orderId: Long): String? {
+        val order = orderService.getOrderLocked(orderId) ?: return null // lock from here
         return payPalService.startPayment(order)
     }
 }

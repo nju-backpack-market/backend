@@ -31,6 +31,11 @@ class OrderManager(private val billService: BillService,
             ?.let(orderDao::selectOrderById)
             ?.let(::Order)
 
+    override fun getOrderLockedNoItems(id: Long)
+            = id.takeIf { it > 0L }
+            ?.let(orderDao::selectOrderByIdLockedNoItems)
+            ?.let(::Order)
+
     override fun getOrderLocked(id: Long)
             = id.takeIf { it > 0L }
             ?.let(orderDao::selectOrderByIdLocked)
@@ -68,7 +73,7 @@ class OrderManager(private val billService: BillService,
     override fun modifyOrderStatus(id: Long, status: OrderStatus): Order? {
         if (id <= 0L) return null
 
-        val origin = orderDao.selectOrderByIdLocked(id)?.let(::Order) ?: return null
+        val origin = orderDao.selectOrderByIdLockedNoItems(id)?.let(::Order) ?: return null
         if (!origin.status.canTransferTo(status)) return null
 
         if (hazard("update order", false) { orderDao.updateOrderStatus(id, status) })
@@ -79,7 +84,7 @@ class OrderManager(private val billService: BillService,
     @Transactional
     override fun modifyOrders(orders: List<Order>): List<Order> {
         val valid = orders.filter { it.getId() > 0L }
-        return valid.map { orderDao.selectOrderByIdLocked(it.getId()) }
+        return valid.map { orderDao.selectOrderByIdLockedNoItems(it.getId()) }
                 .zip(valid)
                 .filter { (origin, _) -> origin != null }
                 .mapNotNull { (origin, modified) -> Order.mergeAsUpdate(origin, modified) }

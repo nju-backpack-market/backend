@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo
 interface OrderService {
     fun order(id: Long): Order?
     fun getOrderLocked(id: Long): Order?
+    fun getOrderLockedNoItems(id: Long): Order?
     fun allOrders(page: Int, full: Boolean): PageInfo<Order>?
     fun newOrder(order: Order): Order?
     fun modifyOrders(orders: List<Order>): List<Order>

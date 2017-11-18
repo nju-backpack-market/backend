@@ -3,9 +3,11 @@ package cn.sansotta.market.configuration;
 import org.springframework.boot.context.embedded.AbstractConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.Ssl;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Cipher;
 
@@ -14,10 +16,10 @@ import static cn.sansotta.market.common.DecryptUtils.decrypt;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
 @Configuration
 public class ServletContainerConfiguration {
     @Bean
+    @Profile("!dev_test")
     public static EmbeddedServletContainerCustomizer
     embeddedServletContainerCustomizer(Cipher cipher) {
         return container -> decryptKeystorePassword(

@@ -61,15 +61,6 @@ class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigur
         }
     }
 
-    override fun checkSign(params: Map<String, String>) =
-            try {
-                AlipaySignature.rsaCheckV1(params, props.alipayPublicKey, "UTF-8", "RSA2")
-            } catch (ex: AlipayApiException) {
-                logger.error("error when check signature via alipay", ex)
-                false
-            }
-
-
     @Throws(RuntimeException::class)
     @Transactional
     override fun handleSuccessNotification(param: Map<String, String>): Boolean {
@@ -77,8 +68,7 @@ class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigur
 
         val orderId = param["out_trade_no"]!!.toLong()
 
-        if (orderService.getOrderLocked(orderId) == null || tradeService.getTradeLocked(orderId) != null)
-            return false
+        if (tradeService.getTradeLocked(orderId) != null) return false
 
         val order = paymentService.paymentDone(orderId) ?: return false
 
@@ -94,18 +84,20 @@ class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigur
     // this method must be called from CommonPaymentManager.cancelPayment to assure concurrent-safety
     @Transactional(propagation = Propagation.MANDATORY)
     override fun closePayment(oid: Long) {
-        val trade = tradeService.getTradeLocked(oid)?.takeIf { it.method == "alipay" } ?: return
-
         val request = AlipayTradeCloseRequest()
-        request.bizContent = "{\"out_trade_no\":\"$oid\",\"trade_no\":${trade.tradeId}"
+        request.bizContent = "{\"out_trade_no\":\"$oid\"}"
 
         try {
-            if (alipayClient.execute(request).isSuccess && !retry(5) { tradeService.voidTrade(oid) })
-                throw IllegalStateException("fail to void trade")
+            if (!alipayClient.execute(request).isSuccess)
+                throw AlipayApiException("fail to call alipay close payment api")
+            // cancellation is allowed only before paying,
+            // so as for alipay, no trade record in db, no need to call voidTrade
         } catch (ex: AlipayApiException) {
             // we should get AlipayApiException only when inconsistency between our system and alipay
             // system, so this cancel progress will re-sync, no need to rollback
-            if (checkTradeStatus(oid) != "WAIT_BUYER_PAY") return // synced
+            val status = checkTradeStatus(oid)
+            logger.info("STATUS IS [$status]")
+            if (status != "WAIT_BUYER_PAY") return // synced
 
             throw ex
         } catch (ex: Exception) {
@@ -113,10 +105,18 @@ class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigur
         }
     }
 
+    override fun checkSign(params: Map<String, String>) =
+            try {
+                AlipaySignature.rsaCheckV1(params, props.alipayPublicKey, "UTF-8", "RSA2")
+            } catch (ex: AlipayApiException) {
+                logger.error("error when check signature via alipay", ex)
+                false
+            }
+
     private fun checkValid(params: Map<String, String>)
             = params["seller_id"] == props.sellerId &&
             params["app_id"] == props.appId &&
-            params["out_trade_no"]?.toLong()?.let(orderService::order)?.let {
+            params["out_trade_no"]?.toLong()?.let(orderService::getOrderLockedNoItems)?.let {
                 (it.status == OrderStatus.PAYING) &&
                         (it.bill.actualTotalPrice == params["total_amount"]?.toDouble())
             } ?: false
@@ -125,10 +125,9 @@ class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigur
 
     private fun checkTradeStatus(orderId: Long): String? {
         if (orderId <= 0) return null
-        val tradeId = tradeService.getTradeId(orderId) ?: return null
         val query = AlipayTradeQueryRequest()
-        query.bizContent = "{\"out_trade_no\":\"$orderId\",\"trade_no\":$tradeId}"
-        return retry(judge = { it.isSuccess }) { alipayClient.execute(query) }?.tradeStatus
+        query.bizContent = "{\"out_trade_no\":\"$orderId\"}"
+        return alipayClient.execute(query).takeIf { it.isSuccess }?.tradeStatus
     }
 
     data class AlipayPayment(var outTradeNo: String,

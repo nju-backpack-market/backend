@@ -43,11 +43,14 @@ open class DocumentResource private constructor() : Resource<String>("Document")
             api("create_order", HttpMethod.POST) { createOrder(Order.mockObject()) }
             api("get_all_orders", HttpMethod.GET) { orders(0, true) }
             api("get_order", HttpMethod.GET) { order(1) }
-            api("update_order_status", HttpMethod.PATCH) { modifyOrderStatus(1L, OrderStatus.CREATE) }
+            api("update_order_status", HttpMethod.PATCH) {
+                modifyOrderStatus(1L, OrderStatus.CREATE, true)
+            }
             api("update_order_info", HttpMethod.PUT) { modifyOrder(listOf(Order())) }
             api("create_query", HttpMethod.POST) { createQuery(OrderQuery().apply { id = 1 }, true) }
             api("query_order", HttpMethod.GET) { query(OrderQuery().apply { id = 1 }.queryId, 0) }
-            api("start_payment",HttpMethod.POST,"/orders/{id}/payment?method=alipay")
+            api("start_payment", HttpMethod.POST, "/orders/{id}/payment?method=alipay")
+            api("cancel_payment", HttpMethod.DELETE) { voidPayment(1, "Alice", "1234567890") }
         }
         apis<FilesController> {
             api("upload_image", HttpMethod.POST, "/files/image")

@@ -45,7 +45,7 @@ paypal:
   client-id: "EE9THfjz2SEX+jFW57qiy906yroUTtIlK28tdxf5A8RN6J3iuzj72SL+6wmGnsyEu3Z/XOgw6i6OdcBGk0JhKFMqvaktWYS7FRVGETU1oh95UAPqrwQ9ag=="
   secret: "BTxDic/B26MEvf6PpSIhyWCvkTcPycf5YdlawylUpSesORL9r6FjY4RjU7W7UEXVHxMEujoJIa1u1hBpeblcZ4MXSM43LR5HRSAqD4uTkqp5UAPqrwQ9ag=="
   return-url: https://localhost:8080/payments/paypal/return
-  cancel-url: https://localhsot:8080/payments/paypal/cancel
+  cancel-url: https://localhost:8080/payments/paypal/cancel
 alipay:
   gateway: https://openapi.alipaydev.com/gateway.do
   app-id: 2016090800463832

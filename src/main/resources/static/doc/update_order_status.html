@@ -27,6 +27,10 @@
 Content-Type: application/x-www-form-urlencoded
 
 status=STOCK_OUT</pre>
+    <p>权限接口，无权限的情况下<code>status</code>只允许为<code>CLOSED</code>和<code>SIGNED</code>，
+        即从顾客端只能将订单状态改为关闭或签收。<code>PAYING</code>和<code>COMMENTED</code>状态是由支付接口和评论
+        接口触发的，不允许主动更改。
+    </p>
     <p></p></div>
 </body>
 </html>

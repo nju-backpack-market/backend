@@ -51,9 +51,13 @@ public interface OrderMapper {
     @Select("SELECT * FROM orders WHERE oid=#{id}")
     OrderEntity selectOrderByIdNoItems(long id);
 
-    @ResultMap("orderMapNoItems")
+    @ResultMap("orderMap")
     @Select("SELECT * FROM orders WHERE oid=#{id} FOR UPDATE")
     OrderEntity selectOrderByIdLocked(long id);
+
+    @ResultMap("orderMapNoItems")
+    @Select("SELECT * FROM orders WHERE oid=#{id} FOR UPDATE")
+    OrderEntity selectOrderByIdLockedNoItems(long id);
 
     @ResultMap("orderMap")
     @Select("SELECT * FROM orders")

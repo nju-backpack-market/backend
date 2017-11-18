@@ -3,14 +3,9 @@ package cn.sansotta.market.service.impl
 import cn.sansotta.market.common.retry
 import cn.sansotta.market.common.toMoneyAmount
 import cn.sansotta.market.configuration.PayPalApiContextFactory
-import cn.sansotta.market.domain.value.DeliveryInfo
+import cn.sansotta.market.domain.value.*
 import cn.sansotta.market.domain.value.Order
-import cn.sansotta.market.domain.value.ShoppingItem
-import cn.sansotta.market.domain.value.Trade
-import cn.sansotta.market.service.CommonPaymentService
-import cn.sansotta.market.service.PayPalPaymentService
-import cn.sansotta.market.service.ProductService
-import cn.sansotta.market.service.TradeService
+import cn.sansotta.market.service.*
 import com.paypal.api.payments.*
 import com.paypal.base.rest.PayPalRESTException
 import org.slf4j.LoggerFactory
@@ -28,6 +23,7 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
                            private val productService: ProductService,
                            private val paymentService: CommonPaymentService,
                            private val tradeService: TradeService,
+                           private val ratingService: ExchangeRatingService,
                            private val redirect: RedirectUrls) : PayPalPaymentService {
     private val logger = LoggerFactory.getLogger(PayPalPaymentManager::class.java)
 
@@ -57,77 +53,6 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
         }
     }
 
-    // this method must be called from CommonPaymentManager.cancelPayment to assure concurrent-safety
-    @Transactional(propagation = Propagation.MANDATORY)
-    override fun closePayment(orderId: Long) {
-        // PayPal tech support said it's not necessary to close trade manually, so just void the record
-        // in our db
-        tradeService.getTradeLocked(orderId) ?: return
-        if (!retry { tradeService.voidTrade(orderId) }) throw RuntimeException("unable void trade")
-    }
-
-    private fun convertShoppingList(list: Iterable<ShoppingItem>,
-                                    deliveryInfo: DeliveryInfo) =
-            ItemList().apply {
-                items = list.mapNotNull(this@PayPalPaymentManager::convertShoppingItem)
-                shippingAddress = convertDeliveryInfo(deliveryInfo)
-            }
-
-    private fun convertShoppingItem(item: ShoppingItem): Item?
-            = Item(productService.productName(item.pid)!!,
-            item.count.toString(),
-            item.actualUnitPrice.toMoneyAmount(),
-            "USD")
-
-    private fun convertDeliveryInfo(info: DeliveryInfo) =
-            ShippingAddress().apply {
-                recipientName = info.name
-                phone = info.phoneNumber
-                line1 = info.addressLine1
-                line2 = info.addressLine2
-                postalCode = info.postalCode
-                city = info.city
-                state = info.province
-                countryCode = "C2"
-            }
-
-    private fun Order.getAmount() =
-            Amount("USD", bill.actualTotalPrice.toMoneyAmount())
-                    .apply {
-                        details = Details().apply {
-                            subtotal = bill.sumByDouble { it.actualSubtotalPrice }.toMoneyAmount()
-                        }
-                    }
-
-
-    private val tokenPattern = "token=(EC-[0-9A-Z]*)&?".toRegex()
-
-    private fun extractPayPalToken(href: String) =
-            tokenPattern.find(href)?.let { it.groupValues[1] }
-
-    private fun createPayment(order: Order): Payment? {
-        // we trust the pass-in order instance because it is directly from data source
-        val payment = Payment().apply {
-            intent = "sale"
-            redirectUrls = redirect
-            payer = Payer().apply { paymentMethod = "paypal" }
-            transactions = listOf(
-                    Transaction().apply {
-                        description = "Sansotta商城订单"
-                        amount = order.getAmount()
-                        referenceId = order.getId().toString()
-                        itemList = convertShoppingList(order.bill, order.deliveryInfo)
-                    })
-        }
-        return try {
-            payment.create(factory.apiContext())
-        } catch (ex: PayPalRESTException) {
-            // never attach here unless network error
-            logger.error("error when create payment via PayPal", ex)
-            null
-        }
-    }
-
     @Transactional
     override fun executePayment(paymentId: String, payerId: String): Payment? {
         tradeService.getTradeByTradeIdLocked(paymentId) ?: return null
@@ -140,4 +65,79 @@ class PayPalPaymentManager(private val factory: PayPalApiContextFactory,
             null
         }
     }
+
+    // this method must be called from CommonPaymentManager.cancelPayment to assure concurrent-safety
+    @Transactional(propagation = Propagation.MANDATORY)
+    override fun closePayment(orderId: Long) {
+        // PayPal tech support said it's not necessary to close trade manually, so just void the record
+        // in our db
+        tradeService.getTradeLocked(orderId) ?: return
+        if (!retry { tradeService.voidTrade(orderId) }) throw RuntimeException("unable void trade")
+    }
+
+    private fun createPayment(order: Order): Payment? {
+        // we trust the pass-in order instance because it is directly from data source
+        return try {
+            val payment = makePayment(order, ratingService.getRating())
+            payment.create(factory.apiContext())
+        } catch (ex: Exception) {
+            // never attach here unless network error
+            logger.error("error when create payment via PayPal", ex)
+            null
+        }
+    }
+
+
+    private val defaultPayer = Payer().apply { paymentMethod = "paypal" }
+    private fun makePayment(order: Order, rating: Double): Payment {
+        return Payment().apply {
+            intent = "sale"
+            redirectUrls = redirect
+            payer = defaultPayer
+            transactions = listOf(makeTransaction(order, rating))
+        }
+    }
+
+    private fun makeTransaction(order: Order, rating: Double): Transaction {
+        return Transaction().apply {
+            description = "Sansotta商城订单"
+            amount = order.getAmount(rating)
+            referenceId = order.getId().toString()
+            itemList = makeItemList(order.bill, order.deliveryInfo, rating)
+        }
+    }
+
+    private fun Order.getAmount(rating: Double) =
+            Amount("USD", (bill.actualTotalPrice / rating).toMoneyAmount())
+                    .apply { details = Details().apply { subtotal = bill.defaultTotal(rating) } }
+
+    private fun Bill.defaultTotal(rating: Double) = (sumByDouble { it.actualSubtotalPrice } / rating).toMoneyAmount()
+
+    private fun makeItemList(list: Iterable<ShoppingItem>, deliveryInfo: DeliveryInfo, rating: Double) =
+            ItemList().apply {
+                items = list.map { makeItem(it, rating) }
+                shippingAddress = makeShippingAddress(deliveryInfo)
+            }
+
+    private fun makeItem(item: ShoppingItem, rating: Double): Item
+            = Item(productService.productName(item.pid)!!, "1",
+            (item.actualSubtotalPrice / rating).toMoneyAmount(), "USD")
+
+    private fun makeShippingAddress(info: DeliveryInfo) =
+            ShippingAddress().apply {
+                recipientName = info.name
+                phone = info.phoneNumber
+                line1 = info.addressLine1
+                line2 = info.addressLine2
+                postalCode = info.postalCode
+                city = info.city
+                state = info.province
+                countryCode = "C2"
+            }
+
+
+    private val tokenPattern = "token=(EC-[0-9A-Z]*)&?".toRegex()
+
+    private fun extractPayPalToken(href: String) =
+            tokenPattern.find(href)?.let { it.groupValues[1] }
 }

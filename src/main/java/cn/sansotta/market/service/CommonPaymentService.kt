@@ -8,7 +8,8 @@ import cn.sansotta.market.domain.value.Order
 interface CommonPaymentService {
     fun paymentBegin(orderId: Long): Order?
     fun paymentCancel(orderId: Long): Order?
+    fun checkedPaymentCancel(orderId: Long, name: String, phone: String): Order?
     fun paymentDone(orderId: Long): Order?
-    fun startAlipayPayment(order: Order): String?
-    fun startPayPalPayment(order: Order): String?
+    fun startAlipayPayment(orderId: Long): String?
+    fun startPayPalPayment(orderId: Long): String?
 }

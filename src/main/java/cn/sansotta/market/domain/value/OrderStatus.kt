@@ -12,7 +12,7 @@ enum class OrderStatus {
     SIGNED,  // 已签收
     COMMENTED, // 已评论
     COMPLETED, // 已完成
-    APPEALING, // 申诉中
+    //    APPEALING, // 申诉中
     CLOSED,  // 已关闭
     INVALID;
 
@@ -20,11 +20,11 @@ enum class OrderStatus {
             when (this) {
                 CREATE -> transfer == PAYING || transfer == CLOSED
                 PAYING -> transfer == CREATE || transfer == STOCK_OUT
-                STOCK_OUT -> transfer == DELIVERING || transfer == APPEALING
+                STOCK_OUT -> transfer == DELIVERING // || transfer == APPEALING
                 DELIVERING -> transfer == SIGNED
-                SIGNED -> transfer == COMMENTED || transfer == APPEALING
-                COMMENTED -> transfer == COMPLETED || transfer == APPEALING
-                APPEALING -> transfer == CLOSED
+                SIGNED -> transfer == COMMENTED // || transfer == APPEALING
+                COMMENTED -> transfer == COMPLETED // || transfer == APPEALING
+//                APPEALING -> transfer == CLOSED
                 else -> false
             }
 }

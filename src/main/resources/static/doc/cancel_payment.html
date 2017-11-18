@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width initial-scale=1'>
+    <title>cancel_payment.md</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext'
+          rel='stylesheet' type='text/css'/>
+    <link href='docstyle.css' rel='stylesheet' type='text/css'/>
+</head>
+<body class='typora-export'>
+<div id='write' class='is-node'><h1><a name='header-n0' class='md-header-anchor '></a>DELETE
+    /orders/{id}?name={name}&amp;phone={phone}</h1>
+    <h2><a name='header-n5' class='md-header-anchor '></a>Cancel a payment.</h2>
+    <h3><a name='header-n10' class='md-header-anchor '></a>Parameter</h3>
+    <ul>
+        <li><code>id</code> : order id</li>
+        <li><code>name</code>: buyer name</li>
+        <li><code>phone</code>: phone number</li>
+    </ul>
+    <h3><a name='header-n54' class='md-header-anchor '></a>Note</h3>
+    <ul>
+        <li><code>name</code>和<code>phone</code>用来验证是否是本人。因为只有本人才能根据姓名和电话号码搜索到订单而拿到订单编号。不验证的话随便填个id就可以取消订单，不安全。
+        </li>
+        <li>
+            务必在取消订单时二次确认，并提示用户“您正在取消订单。取消后请千万不要在之前已打开了的付款页面上进行支付。否则，由此带来的不必要麻烦将由您自行承担”。如果他真的这么干了，如果是支付宝的话，三个小时内无法再通过对这个订单进行支付，不过款项应该会退回去的。
+        </li>
+    </ul>
+</div>
+</body>
+</html>
