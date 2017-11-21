@@ -7,6 +7,7 @@ import cn.sansotta.market.mapper.CommentMapper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Hiki
  * @create 2017-11-13 22:05
  */
+@Repository
 public class CommentDaoImpl implements CommentDao{
 
 	private final static Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);

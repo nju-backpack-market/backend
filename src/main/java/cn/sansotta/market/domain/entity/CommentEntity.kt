@@ -13,5 +13,5 @@ data class CommentEntity(
         val oid: Long,
         val pid: Long,
         val rating: Double,
-        val comment: String
+        val content: String
 )
