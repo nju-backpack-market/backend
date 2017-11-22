@@ -51,6 +51,11 @@ fun <T> T?.toResponse(status: HttpStatus = HttpStatus.OK) = ResponseEntity(this,
 inline fun <reified T> EntityLinks.linkToSingleResource(id: Any?) =
         linkToSingleResource(T::class.java, id)
 
+fun <T> pagedResources(pageInfo: PageInfo<T>)
+        = PagedResources(pageInfo.list,
+                PagedResources.PageMetadata(pageInfo.pageSize.toLong(), pageInfo.size.toLong(),
+                        pageInfo.total, pageInfo.pages.toLong()))
+
 fun <T, R : Resource<T>> pagedResources(pageInfo: PageInfo<T>, converter: ResourceConverter<T, R>)
         : PagedResources<R> =
         PagedResources(pageInfo.list.map { converter.convert(it) },

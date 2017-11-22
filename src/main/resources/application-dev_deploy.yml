@@ -2,7 +2,7 @@ spring:
   datasource:
     username: dev
     password: "QzpYRKEZUEkVsm/J9ttWeg=="
-    url: jdbc:mysql://localhost:3306/market_test?autoReconnectForPool=true&failOverReadOnly=false
+    url: jdbc:mysql://localhost:3306/market_test?autoReconnect=true&failOverReadOnly=false
     driver-class-name: com.mysql.jdbc.Driver
 upload:
   image:

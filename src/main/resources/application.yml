@@ -26,6 +26,8 @@ pagehelper: # configuration for PageHelper
   auto-dialect: "true"
 mybatis:
   type-aliases-package: cn.sansotta.market.domain.entity
+  configuration:
+    database-id: mysql
 server:
   ssl:
     key-store: classpath:cert.pfx

@@ -65,7 +65,7 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         assertNull(service.newOrder(order))
 
         order.deliveryInfo = DeliveryInfo("TEST", "233333", "a@b.com", "China", "JiangSu",
-                "Nanjing", "NJU", "EDU", "222222")
+                "Nanjing", "NJU", "EDU", "222222", null, null)
         order.bill.addShoppingItem(ShoppingItem(1L, 1, 11.4))
         order.bill.addShoppingItem(ShoppingItem(2L, 2, 51.4))
         val result = service.newOrder(order)
@@ -106,6 +106,8 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
                 phoneNumber = "777777"
                 email = "foo@bar.com"
                 addressLine2 = "PKU"
+                logisticCompany = "EMS"
+                logisticCode = "abcdef"
             }
         }
         val updateInfo1 = Order().apply { id = -1L }
@@ -115,6 +117,8 @@ class OrderServiceTests : AbstractTransactionalJUnit4SpringContextTests() {
         assertEquals("zhangsan", updated[0].deliveryInfo.name)
         assertNotEquals(LocalDateTime.MAX, updated[0].time)
         assertEquals("777777", service.order(1)?.deliveryInfo?.phoneNumber)
+        assertEquals("EMS", service.order(1)?.deliveryInfo?.logisticCompany)
+        assertEquals("abcdef", service.order(1)?.deliveryInfo?.logisticCode)
     }
 
     @Test

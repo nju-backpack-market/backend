@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS orders
   c_city         VARCHAR(40)  NOT NULL,
   c_line1        VARCHAR(110) NOT NULL,
   c_line2        VARCHAR(110) NOT NULL,
-  c_postal_code  VARCHAR(20)  NOT NULL
+  c_postal_code  VARCHAR(20)  NOT NULL,
+  l_company      VARCHAR(20)  NULL,
+  l_code         VARCHAR(30)  NULL
 );
 
 CREATE TABLE IF NOT EXISTS products
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS products
 CREATE TABLE IF NOT EXISTS product_images (
   pid        BIGINT      NOT NULL,
   image_name VARCHAR(40) NOT NULL,
+  number     SMALLINT    NOT NULL,
   PRIMARY KEY (pid, image_name)
 );
 
@@ -54,10 +57,18 @@ CREATE TABLE IF NOT EXISTS trades (
   method      CHAR(10)    NOT NULL,
   create_time DATETIME    NOT NULL,
   trade_id    VARCHAR(50) NOT NULL,
-  extra       VARCHAR(30)    NULL
+  extra       VARCHAR(30) NULL
 );
 
-INSERT INTO users (username, password) VALUES ('123', '123');
+CREATE TABLE IF NOT EXISTS comments (
+  pid     BIGINT           NOT NULL,
+  oid     BIGINT           NOT NULL,
+  rating  TINYINT UNSIGNED NOT NULL,
+  content TEXT,
+  PRIMARY KEY (pid, oid)
+);
+
+INSERT INTO users (username, PASSWORD) VALUES ('123', '123');
 INSERT INTO orders (oid, state, time, total_price, c_name, c_phone_number, c_email, c_country, c_province, c_city, c_line1, c_line2, c_postal_code)
 VALUES
   (1, 'PAYING', now(), 109.0, 'foo1', '123456', 'foo1@software.com', 'China', 'JiangSu', 'Nanjing',
@@ -99,14 +110,23 @@ INSERT INTO products (pid, pname, price, description, on_sale) VALUES (1, '红�
 INSERT INTO products (pid, pname, price, description, on_sale) VALUES (2, '黄包', 51.4, 'Mock2', TRUE);
 INSERT INTO products (pid, pname, price, description, on_sale) VALUES (3, '绿包', 19.19, 'Mock3', FALSE);
 INSERT INTO products (pid, pname, price, description, on_sale) VALUES (4, '紫包', 81.0, 'Mock4', TRUE);
-INSERT INTO product_images (pid, image_name) VALUES (1, '1');
-INSERT INTO product_images (pid, image_name) VALUES (1, '2');
-INSERT INTO product_images (pid, image_name) VALUES (1, '3');
-INSERT INTO product_images (pid, image_name) VALUES (2, '5');
-INSERT INTO product_images (pid, image_name) VALUES (2, '6');
-INSERT INTO product_images (pid, image_name) VALUES (3, '2');
-INSERT INTO product_images (pid, image_name) VALUES (3, '1');
-INSERT INTO product_images (pid, image_name) VALUES (3, '3');
-INSERT INTO product_images (pid, image_name) VALUES (3, '7');
-INSERT INTO product_images (pid, image_name) VALUES (4, '8');
-INSERT INTO product_images (pid, image_name) VALUES (4, '1');
+
+INSERT INTO product_images (pid, image_name, number) VALUES (1, '1', 0);
+INSERT INTO product_images (pid, image_name, number) VALUES (1, '2', 1);
+INSERT INTO product_images (pid, image_name, number) VALUES (1, '3', 2);
+INSERT INTO product_images (pid, image_name, number) VALUES (2, '5', 0);
+INSERT INTO product_images (pid, image_name, number) VALUES (2, '6', 1);
+INSERT INTO product_images (pid, image_name, number) VALUES (3, '2', 0);
+INSERT INTO product_images (pid, image_name, number) VALUES (3, '1', 1);
+INSERT INTO product_images (pid, image_name, number) VALUES (3, '3', 2);
+INSERT INTO product_images (pid, image_name, number) VALUES (3, '7', 3);
+INSERT INTO product_images (pid, image_name, number) VALUES (4, '8', 0);
+INSERT INTO product_images (pid, image_name, number) VALUES (4, '1', 1);
+
+INSERT INTO comments (pid, oid, rating, content) VALUES (1, 1, 4, 'GOOD');
+INSERT INTO comments (pid, oid, rating, content) VALUES (1, 2, 4, 'GOOD!');
+INSERT INTO comments (pid, oid, rating, content) VALUES (1, 3, 4, 'GOOD');
+INSERT INTO comments (pid, oid, rating, content) VALUES (2, 2, 4, 'GOOD!');
+INSERT INTO comments (pid, oid, rating, content) VALUES (3, 4, 4, 'GOOD');
+INSERT INTO comments (pid, oid, rating, content) VALUES (4, 5, 4, 'GOOD!');
+INSERT INTO comments (pid, oid, rating, content) VALUES (4, 1, 4, 'GOOD');

@@ -3,11 +3,11 @@ package cn.sansotta.market.controller
 import cn.sansotta.market.common.HAL_MIME_TYPE
 import cn.sansotta.market.controller.resource.DocumentResource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.CacheManager
 import org.springframework.hateoas.Resource
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletResponse
+import javax.sql.DataSource
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
 @RestController
 class PingController {
     @Autowired
-    lateinit var m: CacheManager
+    lateinit var datasource: DataSource
 
     @GetMapping("/ping")
     fun ping() = "Hello"
@@ -31,6 +31,9 @@ class PingController {
 
     @GetMapping("/apiInfo", produces = arrayOf(HAL_MIME_TYPE))
     fun apiInfo() = apiInfoResource
+
+    @GetMapping("/conn")
+    fun conn() = datasource.javaClass
 
     open class ApiInfo(
             val version: String,

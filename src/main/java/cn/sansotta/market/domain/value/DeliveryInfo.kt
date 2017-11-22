@@ -47,20 +47,23 @@ data class DeliveryInfo(
         /**
          * Postal code.
          * */
-        var postalCode: String
+        var postalCode: String,
+        var logisticCompany: String?,
+        var logisticCode: String?
 ) : ValueObject<DeliveryInfoEntity> {
-    constructor() : this("", "", "", "", "", "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", "", "", null, null)
 
     constructor(po: DeliveryInfoEntity) : this(po.name, po.phoneNumber, po.email, po.country,
-            po.province, po.city, po.addressLine1, po.addressLine2, po.postalCode)
+            po.province, po.city, po.addressLine1, po.addressLine2, po.postalCode, po.logisticCompany,
+            po.logisticCode)
 
     override fun toEntity() = DeliveryInfoEntity(name, phoneNumber, email, country, province, city,
-            addressLine1, addressLine2, postalCode)
+            addressLine1, addressLine2, postalCode, logisticCompany, logisticCode)
 
     companion object {
         @JvmStatic
         fun mockObject() = DeliveryInfo("qinliu", "1234567890123", "qinliu@software.com", "China",
-                "JiangSu", "Nanjing", "nju", "se institution", "260023")
+                "JiangSu", "Nanjing", "nju", "se institution", "260023", "顺丰", "123456789012")
 
         @JvmStatic
         fun isValidEntity(info: DeliveryInfo): Boolean {
@@ -78,6 +81,8 @@ data class DeliveryInfo(
             if (modified.addressLine1.isBlank()) modified.addressLine1 = origin.addressLine1
             if (modified.addressLine2.isBlank()) modified.addressLine2 = origin.addressLine2
             if (modified.postalCode.isBlank()) modified.postalCode = origin.postalCode
+            if (modified.logisticCompany == null) modified.logisticCompany = origin.logisticCompany
+            if (modified.logisticCode == null) modified.logisticCode = origin.logisticCode
             return modified
         }
     }

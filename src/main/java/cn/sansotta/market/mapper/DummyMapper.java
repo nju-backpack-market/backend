@@ -35,7 +35,9 @@ public interface DummyMapper {
             @Arg(column = "c_province", javaType = String.class),
             @Arg(column = "c_line1", javaType = String.class),
             @Arg(column = "c_line2", javaType = String.class),
-            @Arg(column = "c_postal_code", javaType = String.class),})
+            @Arg(column = "c_postal_code", javaType = String.class),
+            @Arg(column = "l_company", javaType = String.class),
+            @Arg(column = "l_code", javaType = String.class),})
     @Select("")
     DeliveryInfoEntity deliveryInfoEntity();
 }

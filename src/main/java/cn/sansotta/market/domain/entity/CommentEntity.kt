@@ -10,8 +10,8 @@ package cn.sansotta.market.domain.entity
  * @create 2017-11-13 20:26
  */
 data class CommentEntity(
-        val oid: Long,
         val pid: Long,
-        val rating: Double,
+        val oid: Long,
+        val rating: Int,
         val content: String
 )

@@ -29,7 +29,7 @@ public interface ProductMapper {
             @Arg(column = "price", javaType = double.class),
             @Arg(column = "description", javaType = String.class),
             @Arg(column = "pid",
-                    select = "cn.sansotta.market.mapper.ProductMapper.selectProductImageByProductId",
+                    select = "cn.sansotta.market.mapper.ProductImageMapper.selectProductImageByProductId",
                     javaType = List.class),
             @Arg(column = "on_sale", javaType = boolean.class)
     })

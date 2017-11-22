@@ -13,7 +13,17 @@ CREATE TABLE IF NOT EXISTS orders
   c_city         VARCHAR(40)  NOT NULL,
   c_line1        VARCHAR(110) NOT NULL,
   c_line2        VARCHAR(110) NOT NULL,
-  c_postal_code  VARCHAR(20)  NOT NULL
+  c_postal_code  VARCHAR(20)  NOT NULL,
+  l_company      VARCHAR(20)  NULL,
+  l_code         VARCHAR(30)  NULL
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+  pid     BIGINT           NOT NULL,
+  oid     BIGINT           NOT NULL,
+  rating  TINYINT UNSIGNED NOT NULL,
+  content TEXT,
+  PRIMARY KEY (pid, oid)
 );
 
 CREATE TABLE IF NOT EXISTS products
@@ -46,6 +56,7 @@ CREATE TABLE IF NOT EXISTS users
 CREATE TABLE IF NOT EXISTS product_images (
   pid        BIGINT      NOT NULL,
   image_name VARCHAR(40) NOT NULL,
+  number     SMALLINT    NOT NULL,
   PRIMARY KEY (pid, image_name)
 );
 

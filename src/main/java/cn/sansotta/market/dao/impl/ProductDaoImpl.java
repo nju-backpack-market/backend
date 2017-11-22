@@ -102,10 +102,12 @@ public class ProductDaoImpl implements ProductDao {
     @Transactional
     @Override
     public boolean updateProduct(ProductEntity product) {
-        int affectedRow = productTpl.exec(productMapper -> productMapper.updateProduct(product));
+        int affectedRow = productTpl.exec(product, ProductMapper::updateProduct);
+        if(!product.getImages().isEmpty())
+            productImageTpl
+                    .exec(product.getImages(), product.getId(), ProductImageMapper::insertProductImages);
         return affectedRow > 0;
     }
-
 
     @Transactional
     @Override
@@ -115,10 +117,9 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public boolean deleteProductImage(String imageName) {
+    public boolean deleteProductImage(long pid, String imageName) {
         int affectedRow = productImageTpl
-                .exec(productImageMapper -> productImageMapper.deleteProductImage(imageName));
+                .exec(pid, imageName, ProductImageMapper::deleteProductImage);
         return affectedRow > 0;
     }
-
 }

@@ -1,0 +1,8 @@
+mybatis:
+  configuration:
+    database-id: h2
+upload:
+  image:
+    location: D:/image
+  video:
+    location: D:/video

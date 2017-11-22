@@ -22,5 +22,7 @@ data class DeliveryInfoEntity(
          * The second line of the address. For example, suite, apartment number, and so on. Maximum length is 100 characters.
          * */
         val addressLine2: String,
-        val postalCode: String
+        val postalCode: String,
+        val logisticCompany: String?,
+        val logisticCode: String?
 )

@@ -1,25 +1,23 @@
 package cn.sansotta.market.dao;
 
-import cn.sansotta.market.domain.entity.CommentEntity;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
+import cn.sansotta.market.domain.entity.CommentEntity;
+
 /**
  * @author Hiki
- * @create 2017-11-13 22:02
  */
 public interface CommentDao {
 
-	CommentEntity selectCommentsByOrderIdAndProductId(long oid, long pid);
+    CommentEntity selectCommentsByOrderIdAndProductId(long oid, long pid);
 
-	PageInfo<CommentEntity> selectCommentsByProductId(int pageNum, long pid);
+    PageInfo<CommentEntity> selectCommentsByProductId(int pageNum, long pid);
 
-	PageInfo<CommentEntity> selectCommentsByOrderId(int pageNum, long oid);
+    PageInfo<CommentEntity> selectCommentsByOrderId(int pageNum, long oid);
 
-	CommentEntity insertComment(CommentEntity comment);
+    boolean insertComment(CommentEntity comment);
 
-	List<CommentEntity> insertComments(List<CommentEntity> comments);
-
+    boolean insertComments(List<CommentEntity> comments);
 }

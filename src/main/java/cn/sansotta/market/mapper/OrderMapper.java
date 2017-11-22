@@ -89,7 +89,8 @@ public interface OrderMapper {
             "c_phone_number=#{deliveryInfo.phoneNumber}, c_email=#{deliveryInfo.email}, " +
             "c_country=#{deliveryInfo.country}, c_province=#{deliveryInfo.province}," +
             "c_city=#{deliveryInfo.city}, c_line1=#{deliveryInfo.addressLine1}," +
-            "c_line2=#{deliveryInfo.addressLine2}, c_postal_code=#{deliveryInfo.postalCode} " +
+            "c_line2=#{deliveryInfo.addressLine2}, c_postal_code=#{deliveryInfo.postalCode}," +
+            "l_company=#{deliveryInfo.logisticCompany}, l_code=#{deliveryInfo.logisticCode} " +
             "WHERE oid=#{id}")
     int updateOrder(OrderEntity order);
 

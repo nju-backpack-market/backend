@@ -1,23 +1,18 @@
 package cn.sansotta.market.service;
 
-import cn.sansotta.market.domain.entity.CommentEntity;
-import cn.sansotta.market.domain.value.Comment;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
+import cn.sansotta.market.domain.value.Comment;
+
 /**
  * @author Hiki
- * @create 2017-11-13 22:11
  */
 public interface CommentService {
+    Comment comment(long pid, long oid);
 
-	Comment getCommentByOrderIdAndProductId(long oid, long pid);
+    PageInfo<Comment> commentsOfProduct(long pid, int pageNum);
 
-	PageInfo<Comment> getCommentsByProductId(int pageNum, long pid);
-
-	List<Comment> addComments(List<Comment> comments);
-
-	Comment addComment(Comment comment);
-
+    List<Comment> addComments(List<Comment> comments);
 }

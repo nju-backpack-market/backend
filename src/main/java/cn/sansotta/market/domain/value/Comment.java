@@ -1,41 +1,96 @@
 package cn.sansotta.market.domain.value;
 
+import java.util.Objects;
+
 import cn.sansotta.market.domain.ValueObject;
 import cn.sansotta.market.domain.entity.CommentEntity;
 
 /**
  * @author Hiki
- * @create 2017-11-21 16:49
  */
-public class Comment implements ValueObject {
+public class Comment implements ValueObject<CommentEntity> {
 
-	private long oid;
+    private long pid;
+    private long oid;
+    private int rating;
+    private String content;
 
-	private long pid;
+    public Comment() {
+        this.oid = -1L;
+        this.pid = -1L;
+        this.rating = -1;
+        this.content = "";
+    }
 
-	private double rating;
+    public Comment(long pid, long oid, int rating, String content) {
+        this.pid = pid;
+        this.oid = oid;
+        this.rating = rating;
+        this.content = content;
+    }
 
-	private String content;
+    public Comment(CommentEntity entity) {
+        this.oid = entity.getOid();
+        this.pid = entity.getPid();
+        this.rating = entity.getRating();
+        this.content = entity.getContent();
+    }
 
-	public Comment(long oid, long pid, double rating, String content) {
-		this.oid = oid;
-		this.pid = pid;
-		this.rating = rating;
-		this.content = content;
-	}
+    @Override
+    public CommentEntity toEntity() {
+        return new CommentEntity(oid, pid, rating, content);
+    }
 
-	public Comment(CommentEntity entity) {
-		this.oid = entity.getOid();
-		this.pid = entity.getPid();
-		this.rating = entity.getRating();
-		this.content = entity.getContent();
-	}
+    public static boolean isValidEntity(Comment comment) {
+        return comment.oid > 0L && comment.pid > 0L && comment.rating >= 1 && comment.rating <= 5 &&
+                comment.content != null;
+    }
 
-	@Override
-	public Object toEntity() {
-		return new CommentEntity(oid, pid, rating, content);
-	}
+    public long getOid() {
+        return oid;
+    }
 
+    public void setOid(long oid) {
+        this.oid = oid;
+    }
 
+    public long getPid() {
+        return pid;
+    }
 
+    public void setPid(long pid) {
+        this.pid = pid;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(!(o instanceof Comment)) return false;
+        Comment comment = (Comment) o;
+        return pid == comment.pid &&
+                oid == comment.oid &&
+                rating == comment.rating &&
+                Objects.equals(content, comment.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pid, oid, rating, content);
+    }
 }

@@ -28,6 +28,7 @@ class BillManager(private val productDao: ProductDao) : BillService {
                 it.originUnitPrice >= 0.0 && // do mostly check before query db
                         it.originUnitPrice == it.actualUnitPrice &&
                         it.originSubtotalPrice == it.actualSubtotalPrice &&
-                        it.originUnitPrice == productDao.selectProductById(it.pid, false)?.price
+                        it.originUnitPrice == productDao.selectProductById(it.pid, false)
+                                ?.takeIf { it.onSale }?.price // products not on sale is disallowed
             }
 }

@@ -15,7 +15,7 @@ import cn.sansotta.market.mapper.TradeMapper;
  */
 @Repository
 public class TradeDaoImpl implements TradeDao {
-    private final static Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(TradeDaoImpl.class);
 
     private final MybatisUtils.MapperTemplate<TradeMapper> template;
 
