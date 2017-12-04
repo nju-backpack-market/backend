@@ -1,0 +1,12 @@
+spring:
+  profiles: dir_local
+upload:
+  image: D:/image
+  video: D:/video
+---
+spring:
+  profiles: dir_dpl
+upload:
+  image: /var/site/static/image
+  video: /var/site/static/video
+

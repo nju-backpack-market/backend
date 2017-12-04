@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:h2:mem:test
+    driver-class-name: org.h2.Driver
+    schema: classpath:test_schema.sql
+    druid:
+      test-while-idle: false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+mybatis:
+  configuration:
+    database-id: h2

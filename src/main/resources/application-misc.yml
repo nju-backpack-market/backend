@@ -1,0 +1,31 @@
+jwt:
+  audience: frontend
+  issuer: backend
+  expire-secs: 172800
+server:
+  port: 8080
+---
+spring:
+  profiles: misc_doc
+  data:
+    rest:
+      base-path: /api/v1
+---
+server:
+  ssl:
+    key-store: classpath:cert.pfx
+    enabled: true
+    key-store-password: "QzpYRKEZUEmaCSW7XVI/XQ=="
+    key-store-type: PKCS12
+    key-alias: alias
+    key-password: "T5TvpE0enm6gmOdERV88Lg=="
+spring:
+  profiles: misc_secure
+jwt:
+  secret: "4myWWEwR/92E8sl42D86TXlQA+qvBD1q"
+---
+spring:
+  profiles: misc_pro
+server:
+  address: localhost
+

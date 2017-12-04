@@ -1,0 +1,32 @@
+spring:
+  profiles: pay_dev
+alipay:
+  return-url: https://clevelandalto.site:8080/payments/alipay/return
+  notify-url: https://clevelandalto.site:8080/payments/alipay/notify
+  gateway: https://openapi.alipaydev.com/gateway.do
+  app-id: 2016090800463832
+  app-private-key-path: enc_sandbox_app_private_key
+  alipay-public-key-path: enc_sandbox_alipay_public_key
+  seller-id: 2088102174689848
+paypal:
+  mode: sandbox
+  return-url: https://clevelandalto.site:8080/payments/paypal/return
+  cancel-url: https://clevelandalto.site:8080/payments/paypal/cancel
+  client-id: "EE9THfjz2SEX+jFW57qiy906yroUTtIlK28tdxf5A8RN6J3iuzj72SL+6wmGnsyEu3Z/XOgw6i6OdcBGk0JhKFMqvaktWYS7FRVGETU1oh95UAPqrwQ9ag=="
+  secret: "BTxDic/B26MEvf6PpSIhyWCvkTcPycf5YdlawylUpSesORL9r6FjY4RjU7W7UEXVHxMEujoJIa1u1hBpeblcZ4MXSM43LR5HRSAqD4uTkqp5UAPqrwQ9ag=="
+---
+spring:
+  profiles: pay_pro
+alipay:
+  return-url: https://sansotta.cn/payments/alipay/return
+  notify-url: https://sansotta.cn/payments/alipay/notify
+  gateway:
+  app-id:
+  seller-id:
+  app-private-key-path: app_private_key
+  alipay-public-key-path: app_public_key
+paypal:
+  mode: live
+  return-url: https://sansotta.cn/payments/paypal/return
+  cancel-url: https://sansotta.cn/payments/paypal/cancel
+
