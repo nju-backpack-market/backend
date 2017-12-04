@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("pay")
 @Service
 class CommonPaymentManager(private val orderService: OrderService) : CommonPaymentService {
     private lateinit var payPalService: PayPalPaymentService

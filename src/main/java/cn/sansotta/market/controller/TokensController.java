@@ -21,7 +21,7 @@ import static cn.sansotta.market.common.WebUtils.unauthorizedResponse;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("enc")
 @RestController
 @RequestMapping("/tokens")
 public class TokensController {

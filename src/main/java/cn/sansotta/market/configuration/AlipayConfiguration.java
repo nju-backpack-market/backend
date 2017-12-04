@@ -17,21 +17,39 @@ import javax.crypto.Cipher;
 
 import cn.sansotta.market.Main;
 
-import static cn.sansotta.market.common.DecryptUtils.urlDecrypy;
+import static cn.sansotta.market.common.DecryptUtils.urlDecrypt;
 
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("pay")
 @Configuration
 @EnableConfigurationProperties(AlipayConfiguration.AlipayConfigurationProperties.class)
 public class AlipayConfiguration {
     @Bean
-    public static AlipayClient alipayClient(AlipayConfigurationProperties props,
+    @Profile("enc")
+    public static AlipayClient encAlipayClient(AlipayConfigurationProperties props,
                                             Cipher c) {
-        String alipayPublicKey = urlDecrypy(readFile(props.getAlipayPublicKeyPath()), c);
-        String appPrivateKey = urlDecrypy(readFile(props.getAppPrivateKeyPath()), c);
+        String alipayPublicKey = urlDecrypt(readFile(props.getAlipayPublicKeyPath()), c);
+        String appPrivateKey = urlDecrypt(readFile(props.getAppPrivateKeyPath()), c);
         props.alipayPublicKey = alipayPublicKey;
+        return new DefaultAlipayClient(
+                props.getGateway(),
+                props.getAppId(),
+                appPrivateKey,
+                "json",
+                "utf-8",
+                alipayPublicKey,
+                "RSA2");
+    }
+
+    @Bean
+    @Profile("!enc")
+    public static AlipayClient alipayClient(AlipayConfigurationProperties props) {
+        String alipayPublicKey = readFile(props.getAlipayPublicKeyPath());
+        String appPrivateKey = readFile(props.getAppPrivateKeyPath());
+        props.setAlipayPublicKey(alipayPublicKey);
+
         return new DefaultAlipayClient(
                 props.getGateway(),
                 props.getAppId(),

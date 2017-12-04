@@ -3,6 +3,7 @@ package cn.sansotta.market.controller
 import cn.sansotta.market.common.HAL_MIME_TYPE
 import cn.sansotta.market.controller.resource.DocumentResource
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 import org.springframework.hateoas.Resource
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -15,10 +16,8 @@ import javax.sql.DataSource
  * An endpoint just for test server's availability.
  */
 @RestController
+@Profile("!pro")
 class PingController {
-    @Autowired
-    lateinit var datasource: DataSource
-
     @GetMapping("/ping")
     fun ping() = "Hello"
 
@@ -31,9 +30,6 @@ class PingController {
 
     @GetMapping("/apiInfo", produces = arrayOf(HAL_MIME_TYPE))
     fun apiInfo() = apiInfoResource
-
-    @GetMapping("/conn")
-    fun conn() = datasource.javaClass
 
     open class ApiInfo(
             val version: String,

@@ -1,8 +1,7 @@
-mybatis:
-  configuration:
-    database-id: h2
-upload:
-  image:
-    location: D:/image
-  video:
-    location: D:/video
+spring:
+  profiles:
+    include:
+      - h2
+      - misc
+      - misc_secure
+

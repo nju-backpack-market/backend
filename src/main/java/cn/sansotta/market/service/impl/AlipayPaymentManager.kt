@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("pay")
 @Service
 class AlipayPaymentManager(private val props: AlipayConfiguration.AlipayConfigurationProperties,
                            private val alipayClient: AlipayClient,

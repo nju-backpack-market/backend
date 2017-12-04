@@ -1,18 +1,12 @@
 spring:
-  datasource:
-    username: dev
-    password: "QzpYRKEZUEkVsm/J9ttWeg=="
-    url: jdbc:mysql://localhost:3306/market_test?autoReconnect=true&failOverReadOnly=false
-    driver-class-name: com.mysql.jdbc.Driver
-upload:
-  image:
-    location: /var/site/static/image
-  video:
-    location: /var/site/static/video
-alipay:
-  return-url: https://clevelandalto.site:8080/payments/alipay/return
-  notify-url: https://clevelandalto.site:8080/payments/alipay/notify
-paypal:
-  mode: sandbox
-  return-url: https://clevelandalto.site:8080/payments/paypal/return
-  cancel-url: https://clevelandalto.site:8080/payments/paypal/cancel
+  profiles:
+    include:
+      - mysql
+      - mysql_dpl
+      - dir
+      - dir_dpl
+      - pay
+      - pay_dev
+      - misc
+      - misc_doc
+      - misc_pro

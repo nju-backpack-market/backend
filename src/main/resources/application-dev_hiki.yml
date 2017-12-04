@@ -1,6 +1,13 @@
 spring:
-  datasource:
-    username: root
-    password: aneureka
-    url: jdbc:mysql://localhost:3306/nju_backpack_market?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    driver-class-name: com.mysql.jdbc.Driver
+  profiles:
+    include:
+      - enc
+      - mysql
+      - mysql_hiki
+      - dir
+      - dir_local
+      - pay
+      - pay_dev
+      - misc
+      - misc_doc
+      - misc_secure

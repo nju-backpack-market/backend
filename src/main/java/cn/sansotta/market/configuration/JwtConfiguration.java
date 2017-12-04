@@ -1,18 +1,14 @@
 package cn.sansotta.market.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 
 import cn.sansotta.market.service.TokenService;
 import cn.sansotta.market.service.impl.TokenManager;
@@ -26,18 +22,16 @@ import static cn.sansotta.market.common.DecryptUtils.decrypt;
 @Configuration
 @EnableConfigurationProperties(JwtConfiguration.JwtProperties.class)
 public class JwtConfiguration {
-    @Profile("!dev_test")
     @Bean("embeddedTokenManager")
-    public static TokenService tokenManager(JwtProperties properties, Cipher cipher)
-            throws BadPaddingException, IllegalBlockSizeException {
+    @Profile("enc")
+    public static TokenService encTokenManager(JwtProperties properties, Cipher cipher) {
         properties.setSecret(decrypt(properties.secret, cipher));
         return new TokenManager(properties);
     }
 
-    @Profile("dev_test")
     @Bean("embeddedTokenManager")
-    public static TokenService testTokenManager(JwtProperties properties)
-            throws BadPaddingException, IllegalBlockSizeException {
+    @Profile("!enc")
+    public static TokenService tokenManager(JwtProperties properties) {
         // we don't have secret key in ci test, so just use the encrypted string as secret
         return new TokenManager(properties);
     }

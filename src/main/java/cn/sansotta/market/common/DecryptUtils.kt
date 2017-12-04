@@ -13,4 +13,4 @@ private val urlDecoder = Base64.getUrlDecoder()
 
 fun decrypt(encrypted: String, c: Cipher) = String(c.doFinal(decoder.decode(encrypted)))
 
-fun urlDecrypy(encrypted: String, c: Cipher) = String(c.doFinal(urlDecoder.decode(encrypted)))
+fun urlDecrypt(encrypted: String, c: Cipher) = String(c.doFinal(urlDecoder.decode(encrypted)))

@@ -29,7 +29,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 /**
  * @author Hiki
  */
-@Profile("!dev_test")
 @RestController
 @RequestMapping("/comments")
 public class CommentsController {

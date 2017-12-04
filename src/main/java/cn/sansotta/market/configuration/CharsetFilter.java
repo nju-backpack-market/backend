@@ -16,7 +16,7 @@ import javax.servlet.annotation.WebFilter;
 @WebFilter(filterName = "charset_filter", urlPatterns = "/*")
 public class CharsetFilter implements Filter {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException { }
+    public void init(FilterConfig filterConfig) { }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,

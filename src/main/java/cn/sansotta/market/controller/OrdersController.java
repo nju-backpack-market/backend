@@ -53,7 +53,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("pay")
 @RestController
 @ExposesResourceFor(Order.class)
 @RequestMapping("/orders")

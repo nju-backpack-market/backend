@@ -1,19 +1,12 @@
 spring:
-  datasource:
-    username: root
-    password: 123456
-    url: jdbc:h2:mem:test
-    driver-class-name: org.h2.Driver
-    schema: classpath:test_schema.sql
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  http:
-    multipart:
-      location: D:/tmp/
-upload:
-  image:
-    location: D:/image
-  video:
-    location: D:/video
+  profiles:
+    include:
+      - enc
+      - h2
+      - dir
+      - dir_local
+      - pay
+      - pay_dev
+      - misc
+      - misc_doc
+      - misc_secure

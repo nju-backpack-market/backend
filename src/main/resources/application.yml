@@ -1,22 +1,16 @@
 spring:
   profiles:
     active: dev_local
-  data:
-    rest:
-      base-path: /api/v1
   jackson:
     property-naming-strategy: SNAKE_CASE
   http:
     multipart:
       resolve-lazily: true
-      max-request-size: 10MB
+      max-request-size: 50MB
       max-file-size: 50MB
-#  mail:
-#    host: smtp.qq.com
-#    username: alto_cleveland@qq.com
-#        ssl:
-#          enable: true
-#          checkserveridentity: false
+  datasource:
+    druid:
+      test-while-idle: false
 pagehelper: # configuration for PageHelper
   page-size-zero: "false"
   offset-as-page-num: "true"
@@ -26,33 +20,4 @@ pagehelper: # configuration for PageHelper
   auto-dialect: "true"
 mybatis:
   type-aliases-package: cn.sansotta.market.domain.entity
-  configuration:
-    database-id: mysql
-server:
-  ssl:
-    key-store: classpath:cert.pfx
-    enabled: true
-    key-store-password: "QzpYRKEZUEmaCSW7XVI/XQ=="
-    key-store-type: PKCS12
-    key-alias: alias
-    key-password: "T5TvpE0enm6gmOdERV88Lg=="
-  port: 8080
-jwt:
-  audience: frontend
-  issuer: backend
-  secret: "4myWWEwR/92E8sl42D86TXlQA+qvBD1q"
-  expire-secs: 172800
-paypal:
-  mode: sandbox
-  client-id: "EE9THfjz2SEX+jFW57qiy906yroUTtIlK28tdxf5A8RN6J3iuzj72SL+6wmGnsyEu3Z/XOgw6i6OdcBGk0JhKFMqvaktWYS7FRVGETU1oh95UAPqrwQ9ag=="
-  secret: "BTxDic/B26MEvf6PpSIhyWCvkTcPycf5YdlawylUpSesORL9r6FjY4RjU7W7UEXVHxMEujoJIa1u1hBpeblcZ4MXSM43LR5HRSAqD4uTkqp5UAPqrwQ9ag=="
-  return-url: https://localhost:8080/payments/paypal/return
-  cancel-url: https://localhost:8080/payments/paypal/cancel
-alipay:
-  gateway: https://openapi.alipaydev.com/gateway.do
-  app-id: 2016090800463832
-  app-private-key-path: enc_sandbox_app_private_key
-  alipay-public-key-path: enc_sandbox_alipay_public_key
-  return-url: https://localhost:8080/payments/alipay/return
-  notify-url: https://localhost:8080/payments/alipay/notify
-  seller-id: 2088102174689848
+

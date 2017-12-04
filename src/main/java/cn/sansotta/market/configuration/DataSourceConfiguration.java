@@ -18,6 +18,5 @@ public class DataSourceConfiguration {
     @Bean
     public static DataSource dataSource(DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().type(DruidDataSource.class).build();
-
     }
 }

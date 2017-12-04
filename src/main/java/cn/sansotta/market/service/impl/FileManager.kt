@@ -4,6 +4,7 @@ import cn.sansotta.market.common.commonPool
 import cn.sansotta.market.service.FileService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
@@ -17,8 +18,9 @@ import javax.annotation.PostConstruct
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
 @Service
-class FileManager(@Value("${'$'}{upload.image.location}") imageLocation: String,
-                  @Value("${'$'}{upload.video.location}") videoLocation: String) : FileService {
+@Profile("dir")
+class FileManager(@Value("${'$'}{upload.image}") imageLocation: String,
+                  @Value("${'$'}{upload.video}") videoLocation: String) : FileService {
     private val imageDir = Files.createDirectories(Paths.get(imageLocation)).toFile()
     private val videoDir = Files.createDirectories(Paths.get(videoLocation)).toFile()
     private val nextId get() = UUID.randomUUID().toString()

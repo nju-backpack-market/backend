@@ -20,7 +20,7 @@ import static cn.sansotta.market.common.WebUtils.singletonHeader;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("dir")
 @RestController
 @RequestMapping("/files")
 public class FilesController {
@@ -30,7 +30,7 @@ public class FilesController {
 
     @Authorized
     @PostMapping(value = "/{type}", consumes = "multipart/form-data")
-    public ResponseEntity
+    public ResponseEntity<String>
     uploadImage(@PathVariable("type") String type,
                 @RequestParam("file") MultipartFile file) {
         String name = null;
@@ -46,6 +46,7 @@ public class FilesController {
         if(name == null) return badRequestResponse();
         if(name.isEmpty()) return insufficientStorageResponse();
         return new ResponseEntity<>(
+                name,
                 singletonHeader("Location", String.format("/static/%s/%s", type, name)),
                 HttpStatus.CREATED);
     }

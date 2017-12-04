@@ -20,7 +20,7 @@ import static cn.sansotta.market.common.WebUtils.toResponse;
 /**
  * @author <a href="mailto:tinker19981@hotmail.com">tinker</a>
  */
-@Profile("!dev_test")
+@Profile("pay")
 @Controller
 @RequestMapping("/payments/alipay")
 public class AlipayPaymentsController {
