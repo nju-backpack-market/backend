@@ -23,9 +23,9 @@ class PingController {
 
     @GetMapping("/api")
     fun redirect(response: HttpServletResponse)
-            = response.sendRedirect("/api/v1/browser/index.html#/api")
+            = response.sendRedirect("/api/v1/browser/index.html#/api/api-doc")
 
-    @GetMapping("/api", produces = arrayOf(HAL_MIME_TYPE))
+    @GetMapping("/api-doc", produces = arrayOf(HAL_MIME_TYPE))
     fun api() = DocumentResource.INSTANCE
 
     @GetMapping("/apiInfo", produces = arrayOf(HAL_MIME_TYPE))

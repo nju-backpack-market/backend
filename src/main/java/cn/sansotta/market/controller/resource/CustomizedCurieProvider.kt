@@ -30,4 +30,4 @@ object CustomizedCurieProvider
     private fun prefixOf(rel: String) = linkMethods.getOrDefault(rel, null)?.name?.toLowerCase()
 }
 
-private val docTemplate = UriTemplate("/doc/{rel}.html")
+private val docTemplate = UriTemplate("https://clevelandalto.site/api/doc/{rel}.html")
